@@ -1,4 +1,5 @@
-Road_To_Civilization
+#Road_To_Civilization
+
 Proyecto asignaturas de Simulación, Inteligencia Artificial y Compilación del 3er año de Ciencias de la Computación de la Universidad de la Habana.
 Desarrolladores:
 Alejandro Escobar Giraudy (C312)
@@ -19,3 +20,5 @@ Una vez que cumplamos con la base de nuestro simulador, nos tomaremos como meta 
 -Habilitar la evolución de las enfermedades, adaptación, surgimiento, cambio (tanto de enfermedades hereditarias como infecciosas).
 -Habilitar el cambio climático y evolución de este.
 El lenguaje, aún no definido claro está, lograremos que no se limite a la creación de la simulación, sino que también pueda ser capaz de modificar dinámicamente el comportamiento y evolución de todo lo que es posible implementar en esta simulación.
+
+Espereamos el proyecto sea de su agrado, muchas gracias por leer.
