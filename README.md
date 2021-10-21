@@ -21,4 +21,6 @@ Una vez que cumplamos con la base de nuestro simulador, nos tomaremos como meta 
 -Habilitar el cambio climático y evolución de este.
 El lenguaje, aún no definido claro está, lograremos que no se limite a la creación de la simulación, sino que también pueda ser capaz de modificar dinámicamente el comportamiento y evolución de todo lo que es posible implementar en esta simulación.
 
+Concretamente queremos crear un software que a nivel de problaciones de especies en un ambiente definido pueda simular el desarrollo de las mismas de tal manera que podamos obtener, a través de técnicas de visualización, las estadísticas de los parámetros de interés en el tiempo y espacio que querramos conociendo todas las interacciones entre la disímiles especies y/o poblaciones y el medio en que encuentran, además un entorno controlable en cualquier momento a partir del lenguaje creado específicamente para nuestro problema.
+
 Espereamos el proyecto sea de su agrado, muchas gracias por leer.
