@@ -23,43 +23,39 @@ class Species:
 
     # Con este método podemos eliminar una característica y su valor
     def Delete_Characteristic(self, name):
-        if(self.characteristic[name].get(name, True)):
+        if name in self.characteristic:
             del(self.characteristic[name])
 
     # Con este método podemos agregar una dependencia de la forma a -> b * c
     # Donde a es dependence_1, b es dependence_2 y c es value
     def Add_Dependences(self, dependence_1, dependence_2, value):
-        for i in range(self.characteristic_dependences):      #Revisamos que no exista esta dependencia
-            dependences = self.characteristic_dependences[i]
-            if dependence_1 in dependences and dependence_2 in dependences:
+        for dependences in self.characteristic_dependences:      #Revisamos que no exista esta dependencia
+            if dependences[0] == dependence_1 and dependences[1] == dependence_2:
                 return 0    #Si existe devolvemos 0
         self.characteristic_dependences.append([dependence_1, dependence_2, value]) #Agregamos la dependencia
 
-    # Con este método podemos eliinar una dependencia
+    # Con este método podemos eliminar una dependencia
     def Delete_Dependences(self, dependence_1, dependence_2):
-        for i in range(self.characteristic_dependences):
-            dependences = self.characteristic_dependences[i]
-            if dependence_1 in dependences and dependence_2 in dependences:
+        for i, dependences in enumerate(self.characteristic_dependences):
+            if dependences[0] == dependence_1 and dependences[1] == dependence_2:
                 del(self.characteristic_dependences[i])
                 return
 
     # Con este método podemos cambiar el value en una dependencia
     def Change_Dependences_Value(self, dependence_1, dependence_2, new_value):
-        for i in range(self.characteristic_dependences):
-            dependences = self.characteristic_dependences[i]
-            if dependence_1 in dependences and dependence_2 in dependences:
-                self.characteristic_dependences[i][2] = new_value
+        for dependences in self.characteristic_dependences:
+            if dependences[0] == dependence_1 and dependences[1] == dependence_2:
+                dependences[2] = new_value
                 return
 
 
     def Move_One_Day(self):
         
         #Vamos por todas las dependencias
-        for i in range(self.characteristic_dependeces):
+        for actual_dependence in self.characteristic_dependences:
             
             #Las dependencias se guardan de la forma a -> b * c, que se traduce como b += a * c
-
-            actual_dependence = self.characteristic_dependeces[i]    #Guardamos la dependencia actual
+            #Guardamos la dependencia actual
             a = self.characteristic[actual_dependence[0]]            #Extraemos a
             b = self.characteristic[actual_dependence[1]]            #Extraemos b
             c = actual_dependence[2]                                 #Extraemos c

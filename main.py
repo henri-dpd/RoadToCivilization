@@ -13,7 +13,7 @@ new_land.Set_Default_Dependences()
 
 new_species = Species("Human")
 new_species.Set_Default_Dependences()
-new_species.change_characteristic("population", 10)
+new_species.Change_Characteristic("population", 10)
 
 new_simulation = Simulation(1,1)
 

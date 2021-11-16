@@ -51,11 +51,10 @@ class Simulation:
 
     # Método para añadir una especie a la simulación
     def Add_Species(self, name):
-        for i in range(self.actual_species):
-            actual = self.actual_species[i]
+        for actual in self.actual_species:
             if actual.name == name:
                 return 0
-        self.actual_specie.append(Species(name))    
+        self.actual_species.append(Species(name))    
 
 
     #Método para eliminar una especie de la simulación
@@ -64,7 +63,7 @@ class Simulation:
             return 0
         #Ahora debemos eliminar toda interdependencia que incluya a esta especie
         characteristics = self.actual_species[pos].characteristic.keys()
-        for i in range(characteristics):
+        for i in range(len(characteristics)):
             self.Delete_All_Specific_Inter_Dependence(characteristics[i], pos)
         del(self.actual_species[pos])
 
@@ -74,7 +73,7 @@ class Simulation:
         return self.actual_species[pos].Change_Characteristic(characteristic, value)
 
 
-    #Método para cambiar las características de una especie de la simulación
+    #Método para eliminar una característica de una especie de la simulación
     def Delete_Species_Characteristic(self, pos, characteristic):
         return self.actual_species[pos].Delete_Characteristic(characteristic)
 
