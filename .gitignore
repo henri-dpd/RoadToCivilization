@@ -128,7 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-#Ignorea carpeta vscode
+#Ignora carpeta vscode
 .vscode/*
 
 #anaconda
