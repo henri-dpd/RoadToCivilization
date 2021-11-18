@@ -1,6 +1,8 @@
 
 import random
 from typing import List, Tuple
+import logging
+logging.basicConfig(filename='Logs/specie_log.log', filemode='w', format='%(levelname)s ~ %(asctime)s -> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
 class Species:
 
@@ -14,39 +16,51 @@ class Species:
 
         self.characteristic_dependences = []  # dependence_1 -> dependence_2 * value, lo que se traduce como:
                                               # dependence_2 += dependence_1 * value
+        logging.info("Specie %s was created", name)
 
 
 
     # Con este método podemos añadir o modificar una característica y su valor
     def Change_Characteristic(self, name, value):
         self.characteristic[name] = value
+        logging.info("%s has added/changed characteristic: %s with value:%s", self.name, name, value)
+        
 
     # Con este método podemos eliminar una característica y su valor
     def Delete_Characteristic(self, name):
         if name in self.characteristic:
             del(self.characteristic[name])
+            logging.info("%s has deleted characteristic: %s", self.name, name)
+        logging.warning("%s has not deleted characteristic: %s", self.name, name)
 
     # Con este método podemos agregar una dependencia de la forma a -> b * c
     # Donde a es dependence_1, b es dependence_2 y c es value
     def Add_Dependences(self, dependence_1, dependence_2, value):
         for dependences in self.characteristic_dependences:      #Revisamos que no exista esta dependencia
             if dependences[0] == dependence_1 and dependences[1] == dependence_2:
+                logging.warning("%s has not added dependece: %s -> %s * %s", self.name, dependence_1, dependence_2, value)
                 return 0    #Si existe devolvemos 0
         self.characteristic_dependences.append([dependence_1, dependence_2, value]) #Agregamos la dependencia
+        logging.info("%s has added dependece: %s -> %s * %s", self.name, dependence_1, dependence_2, value)
+        
 
     # Con este método podemos eliminar una dependencia
     def Delete_Dependences(self, dependence_1, dependence_2):
         for i, dependences in enumerate(self.characteristic_dependences):
             if dependences[0] == dependence_1 and dependences[1] == dependence_2:
                 del(self.characteristic_dependences[i])
+                logging.info("%s has deleted dependece: %s -> %s * %s", self.name, dependence_1, dependence_2, dependences[2])
                 return
+        logging.warning("%s has not deleted dependece: %s -> %s", self.name, dependence_1, dependence_2)
 
     # Con este método podemos cambiar el value en una dependencia
     def Change_Dependences_Value(self, dependence_1, dependence_2, new_value):
         for dependences in self.characteristic_dependences:
             if dependences[0] == dependence_1 and dependences[1] == dependence_2:
                 dependences[2] = new_value
+                logging.info("%s has changed dependece, new dependence: %s -> %s * %s", self.name, dependence_1, dependence_2, new_value)
                 return
+        logging.warning("%s has not changed dependece: %s -> %s * %s", self.name, dependence_1, dependence_2, new_value)
 
 
     def Move_One_Day(self):
@@ -85,6 +99,7 @@ class Species:
                     self.characteristic[actual_dependence[1]] = b + a * random.randint(c[0], c[1])
                 else:
                     self.characteristic[actual_dependence[1]] = b + a * c
+            logging.info("%s has update characteristic with dependece: %s -> %s * %s", self.name, actual_dependence[0], actual_dependence[1], actual_dependence[2])
             
 
     def Set_Default_Characteristics(self):
@@ -100,6 +115,7 @@ class Species:
         self.characteristic["actual_growth"] = 1           #Crecimiento Actual
         self.characteristic["economy"] = 1                 #Economía
         self.characteristic["foreign_tolerance"] = 1       #Tolerancia a extranjeros
+        logging.info("%s has added default characteristic", self.name)
 
     def Set_Default_Dependences(self):
         pass
