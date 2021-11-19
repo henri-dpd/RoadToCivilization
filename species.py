@@ -2,11 +2,11 @@
 import random
 from typing import List, Tuple
 import logging
+logging.basicConfig(filename='logs.log', filemode='w', format='%(levelname)s ~ %(asctime)s -> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
 class Species:
 
     def __init__(self, name):
-        logging.basicConfig(filename='Logs/specie_log.log', filemode='w', format='%(levelname)s ~ %(asctime)s -> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
         self.name = name
 
@@ -70,7 +70,6 @@ class Species:
         for actual_dependence in self.characteristic_dependences:
             
             #Las dependencias se guardan de la forma a -> b * c, que se traduce como b += a * c
-            #Guardamos la dependencia actual
             a = self.characteristic[actual_dependence[0]]            #Extraemos a
             b = self.characteristic[actual_dependence[1]]            #Extraemos b
             c = actual_dependence[2]                                 #Extraemos c
@@ -100,7 +99,8 @@ class Species:
                     self.characteristic[actual_dependence[1]] = b + a * random.randint(c[0], c[1])
                 else:
                     self.characteristic[actual_dependence[1]] = b + a * c
-            logging.info("%s has update characteristic with dependece: %s -> %s * %s", self.name, actual_dependence[0], actual_dependence[1], actual_dependence[2])
+            logging.info("%s has update characteristic with dependece: %s -> %s * %s: %s = %s", self.name, actual_dependence[0], actual_dependence[1], actual_dependence[2], actual_dependence[1], self.characteristic[actual_dependence[1]])
+        logging.info("%s has move one day", self.name)
             
 
     def Set_Default_Characteristics(self):

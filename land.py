@@ -1,6 +1,7 @@
-
 import random
 from typing import List, Tuple
+import logging
+logging.basicConfig(filename='logs.log', filemode='w', format='%(levelname)s ~ %(asctime)s -> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
 class Land:
 
@@ -8,63 +9,59 @@ class Land:
 
         self.characteristic = {}
         self.characteristic_dependences = [] # dependence_1 -> dependence_2 * value
+        
+        logging.info("Land was created")
 
-    def Set_Default_Characteristics(self):
-        self.characteristic["actual_resources"] = 1       #Recursos actuales
-        self.characteristic["resources_capacity"] = 1     #Capacidad de recursos
-        self.characteristic["temperature"] = [0, 1]       #Temperatura
-        self.characteristic["altitude"] = 1               #Altitud
-        self.characteristic["cozy_level"] = 1             #Nivel de Acogimiento
-        self.characteristic["fertility"] = [0, 1]         #Fertilidad
 
 
     # Con este método podemos añadir o modificar una característica y su valor
     def Change_Characteristic(self, name, value):
         self.characteristic[name] = value
+        logging.info("Land has added/changed characteristic: %s with value:%s", name, value)
 
     # Con este método podemos eliminar una característica y su valor
     def Delete_Characteristic(self, name):
-        if(self.characteristic[name].get(name, True)):
+        if name in self.characteristic:
             del(self.characteristic[name])
+            logging.info("Land has deleted characteristic: %s", name)
+            return
+        logging.warning("Land has not deleted characteristic: %s", name)
 
     # Con este método podemos agregar una dependencia de la forma a -> b * c
     # Donde a es dependence_1, b es dependence_2 y c es value
     def Add_Dependences(self, dependence_1, dependence_2, value):
-        for i in range(self.characteristic_dependences):      #Revisamos que no exista esta dependencia
-            dependences = self.characteristic_dependences[i]
-            if dependence_1 in dependences and dependence_2 in dependences:
+        for dependences in self.characteristic_dependences:      #Revisamos que no exista esta dependencia
+            if dependences[0] == dependence_1 and dependences[1] == dependence_2:
+                logging.warning("Land has not added dependece: %s -> %s * %s", dependence_1, dependence_2, value)
                 return 0    #Si existe devolvemos 0
         self.characteristic_dependences.append([dependence_1, dependence_2, value]) #Agregamos la dependencia
+        logging.info("Land has added dependece: %s -> %s * %s", dependence_1, dependence_2, value)
 
     # Con este método podemos eliinar una dependencia
     def Delete_Dependences(self, dependence_1, dependence_2):
-        for i in range(self.characteristic_dependences):
-            dependences = self.characteristic_dependences[i]
-            if dependence_1 in dependences and dependence_2 in dependences:
+        for i, dependences in enumerate(self.characteristic_dependences):
+            if dependences[0] == dependence_1 and dependences[1] == dependence_2:
                 del(self.characteristic_dependences[i])
+                logging.info("Land has deleted dependece: %s -> %s * %s", dependence_1, dependence_2, dependences[2])
                 return
+        logging.warning("Land has not deleted dependece: %s -> %s", dependence_1, dependence_2)
 
     # Con este método podemos cambiar el value en una dependencia
     def Change_Dependences_Value(self, dependence_1, dependence_2, new_value):
-        for i in range(self.characteristic_dependences):
-            dependences = self.characteristic_dependences[i]
-            if dependence_1 in dependences and dependence_2 in dependences:
-                self.characteristic_dependences[i][2] = new_value
+        for dependences in self.characteristic_dependences:
+            if dependences[0] == dependence_1 and dependences[1] == dependence_2:
+                dependences[2] = new_value
+                logging.info("Land has changed dependece, new dependence: %s -> %s * %s", dependence_1, dependence_2, new_value)
                 return
-
-
-    def Set_Default_Dependences(self):
-        pass
+        logging.warning("Land has not changed dependece: %s -> %s * %s", dependence_1, dependence_2, new_value)
 
 
     def Move_One_Day(self):
         
         #Vamos por todas las dependencias
-        for i in range(self.characteristic_dependeces):
+        for actual_dependence in self.characteristic_dependences:
             
             #Las dependencias se guardan de la forma a -> b * c, que se traduce como b += a * c
-
-            actual_dependence = self.characteristic_dependeces[i]    #Guardamos la dependencia actual
             a = self.characteristic[actual_dependence[0]]            #Extraemos a
             b = self.characteristic[actual_dependence[1]]            #Extraemos b
             c = actual_dependence[2]                                 #Extraemos c
@@ -82,7 +79,7 @@ class Land:
             #Si b es una coordenada y c un valor entonces se multiplica ambas a por c
 
             if(isinstance(a, List)):
-                a = random.randint(a[0], a[1])
+                a = random.randint(round(a[0]), round(a[1]))
 
             if(isinstance(b, List)):
                 if(isinstance(c, List)):
@@ -91,7 +88,21 @@ class Land:
                     self.characteristic[actual_dependence[1]] = [b[0] + c*a, b[1] + c*a]
             else:
                 if(isinstance(c, List)):
-                    self.characteristic[actual_dependence[1]] = b + a * random.randint(c[0], c[1])
+                    self.characteristic[actual_dependence[1]] = b + a * random.randint(round(c[0]), round(c[1]))
                 else:
                     self.characteristic[actual_dependence[1]] = b + a * c
+            logging.info("Land has update characteristic with dependece: %s -> %s * %s: %s = %s", actual_dependence[0], actual_dependence[1], actual_dependence[2], actual_dependence[1], self.characteristic[actual_dependence[1]])
+        logging.info("Land has move one day")
 
+
+    def Set_Default_Characteristics(self):
+        self.characteristic["actual_resources"] = 1       #Recursos actuales
+        self.characteristic["resources_capacity"] = 1     #Capacidad de recursos
+        self.characteristic["temperature"] = [0, 1]       #Temperatura
+        self.characteristic["altitude"] = 1               #Altitud
+        self.characteristic["cozy_level"] = 1             #Nivel de Acogimiento
+        self.characteristic["fertility"] = [0, 1]         #Fertilidad
+        logging.info("Land has added default characteristic")
+
+    def Set_Default_Dependences(self):
+        pass

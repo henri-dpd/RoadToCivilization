@@ -62,11 +62,25 @@ def test_species() -> None:
     humano.Add_Dependences('birth_rate', 'population', 3.5)
     assert humano.characteristic_dependences == [['gestation', 'birth_rate', 2],['birth_rate', 'population', 3.5]]
     
-    #No lo agrega, error o a proposito
     humano.Add_Dependences('population', 'population', 10)
     assert humano.characteristic_dependences == [['gestation', 'birth_rate', 2],['birth_rate', 'population', 3.5],['population', 'population', 10]]
-    humano.Delete_Dependences('population', 'population')
     
     assert humano.Move_One_Day() == None
     assert humano.characteristic['population'] > 50
+    
+    alien = Species('Alien')
+    assert alien.name == 'Alien'
+    assert alien.characteristic == {'population':1}
+    assert alien.characteristic_dependences == []
+    
+    alien.Set_Default_Characteristics()
+    assert len(alien.characteristic) == 13    
+    
+    alien.Change_Characteristic('population', 220)
+    assert alien.characteristic['population'] == 220
+    alien.Add_Dependences('economy', 'population', 0.2)
+    assert alien.characteristic_dependences == [['economy', 'population', 0.2]]
+    assert alien.Move_One_Day() == None
+    assert alien.characteristic['population'] > 220
+    
     
