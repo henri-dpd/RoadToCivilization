@@ -2,11 +2,11 @@
 import random
 from typing import List, Tuple
 import logging
-logging.basicConfig(filename='Logs/specie_log.log', filemode='w', format='%(levelname)s ~ %(asctime)s -> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
 class Species:
 
     def __init__(self, name):
+        logging.basicConfig(filename='Logs/specie_log.log', filemode='w', format='%(levelname)s ~ %(asctime)s -> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
         self.name = name
 
@@ -31,6 +31,7 @@ class Species:
         if name in self.characteristic:
             del(self.characteristic[name])
             logging.info("%s has deleted characteristic: %s", self.name, name)
+            return
         logging.warning("%s has not deleted characteristic: %s", self.name, name)
 
     # Con este método podemos agregar una dependencia de la forma a -> b * c
