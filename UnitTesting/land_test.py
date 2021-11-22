@@ -56,4 +56,5 @@ def test_land() -> None:
     assert terreno.Move_One_Day() == None
     assert terreno.Move_One_Day() == None
     assert terreno.characteristic['actual_resources'] > 500
+    assert terreno.characteristic['fertility'][0] > 0 and terreno.characteristic['fertility'][1] > 1
     

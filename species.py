@@ -87,7 +87,7 @@ class Species:
             #Si b es una coordenada y c un valor entonces se multiplica ambas a por c
 
             if(isinstance(a, List)):
-                a = random.randint(a[0], a[1])
+                a = random.randint(round(a[0]), round(a[1]))
 
             if(isinstance(b, List)):
                 if(isinstance(c, List)):
@@ -96,7 +96,7 @@ class Species:
                     self.characteristic[actual_dependence[1]] = [b[0] + c*a, b[1] + c*a]
             else:
                 if(isinstance(c, List)):
-                    self.characteristic[actual_dependence[1]] = b + a * random.randint(c[0], c[1])
+                    self.characteristic[actual_dependence[1]] = b + a * random.randint(round(c[0]), round(c[1]))
                 else:
                     self.characteristic[actual_dependence[1]] = b + a * c
             logging.info("%s has update characteristic with dependece: %s -> %s * %s: %s = %s", self.name, actual_dependence[0], actual_dependence[1], actual_dependence[2], actual_dependence[1], self.characteristic[actual_dependence[1]])

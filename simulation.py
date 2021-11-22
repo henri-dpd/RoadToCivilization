@@ -22,7 +22,7 @@ class Simulation:
         for i in range(rows):    #En cada posición de la matriz habrá un land vacío
             self.map.append([])
             for j in range(columns):
-                self.map.append(Land())
+                self.map[i].append(Land())
 
         self.actual_species = [] 
         self.inter_dependences = [] # dependence_1[pos_1] -> dependence_2[pos_2] * value, lo cual se traduce como:
@@ -30,24 +30,35 @@ class Simulation:
 
 
     #Método para redimensionar el mapa
-    #Nota: Está incompleto, le falta eliminar las interdependencias
-    #de los Land eliminados
     def Re_Dimention_Map(self, new_rows, new_columns):
         if new_rows <= 0 or new_columns <= 0:
             return 0
 
         new_map = []
         for i in range(new_rows):    #En cada posición de la matriz habrá un land vacío
-            self.map.append([])
+            new_map.append([])
             for j in range(new_columns):
                 if i < self.rows and j < self.columns:
-                    new_map[j] = self.map[i][j]
+                    new_map[i].append(self.map[i][j])
                 else:
-                    new_map[j] = Land()
+                    new_map[i].append(Land())
 
         self.rows = new_rows
         self.columns = new_columns
         self.map = new_map
+        
+        #Eliminar interdependencias de terrenos perdidos en la redimensión del mapa
+        for interdependence, i in enumerate(self.inter_dependences):
+            pos_1 = interdependence[1]
+            pos_2 = interdependence[3]
+            if isinstance(pos_1, List):
+                if pos_1[0]>=new_rows or pos_1[1]>=new_columns:
+                    del(self.inter_dependences[i])
+            if isinstance(pos_2, List):
+                if pos_2[0]>=new_rows or pos_2[1]>=new_columns:
+                    del(self.inter_dependences[i])
+            
+        
 
     # Método para añadir una especie a la simulación
     def Add_Species(self, name):
@@ -63,8 +74,8 @@ class Simulation:
             return 0
         #Ahora debemos eliminar toda interdependencia que incluya a esta especie
         characteristics = self.actual_species[pos].characteristic.keys()
-        for i in range(len(characteristics)):
-            self.Delete_All_Specific_Inter_Dependence(characteristics[i], pos)
+        for characteristic in characteristics:
+            self.Delete_All_Specific_Inter_Dependence(characteristic, pos)
         del(self.actual_species[pos])
 
 
@@ -93,6 +104,10 @@ class Simulation:
         return self.actual_species[pos].Change_Dependences_Value(dependence_1, dependence_2, value)
 
 
+    def Set_Default_Species_Characteristic(self, pos):
+        return self.actual_species[pos].Set_Default_Characteristics()
+
+
     #Método para cambiar las características de una terreno de la simulación
     def Change_Land_Characteristic(self, row, column, characteristic, value):
         return self.map[row][column].Change_Characteristic(characteristic, value)
@@ -118,16 +133,18 @@ class Simulation:
         return self.map[row][column].Change_Dependences_Value(dependence_1, dependence_2, value)
 
 
+    def Set_Default_Land_Characteristic(self, row, column):
+        return self.map[row][column].Set_Default_Characteristics()
+
+
     #Método para añadir una interdependencia
     def Add_Inter_Dependence(self, dependence_1, pos_1, dependence_2, pos_2, value):
-        self.inter_dependences.append([self, dependence_1, pos_1, dependence_2, pos_2, value])
-
+        self.inter_dependences.append([dependence_1, pos_1, dependence_2, pos_2, value])
 
 
     #Método para eliminar una interdependencia teniendo totalmente la dependencia a y b
     def Change_Inter_Dependence_Value(self, dependence_1, pos_1, dependence_2, pos_2, new_value):
-        for i in range(self.inter_dependences):
-            dependences = self.inter_dependences[i]
+        for dependences, i in enumerate(self.inter_dependences):
             if dependence_1 in dependences and pos_1 in dependences and dependence_2 in dependences and pos_2 in dependences:
                 self.inter_dependences[i][4] = new_value
                 return
@@ -135,8 +152,7 @@ class Simulation:
 
     #Método para eliminar una interdependencia teniendo totalmente la dependencia a y b
     def Delete_Inter_Dependence(self, dependence_1, pos_1, dependence_2, pos_2):
-        for i in range(self.inter_dependences):
-            dependences = self.inter_dependences[i]
+        for dependences, i in enumerate(self.inter_dependences):
             if dependence_1 in dependences and pos_1 in dependences and dependence_2 in dependences and pos_2 in dependences:
                 del(self.inter_dependences[i])
                 return
@@ -144,8 +160,7 @@ class Simulation:
 
     #Método para eliminar todas las interdependencias que incluyan a cierto a o b
     def Delete_All_Specific_Inter_Dependence(self, inter_dependence, pos):
-        for i in range(self.inter_dependences):
-            dependences = self.inter_dependences[i]
+        for dependences, i in enumerate(self.inter_dependences):
             dependence_1 = dependences[0]
             pos_1 = dependences[1]
             dependence_2 = dependences[2]
@@ -158,15 +173,12 @@ class Simulation:
         pass
 
 
-    def Move_One_Day_Inter_Dependences(self):
-        
-        for i in range(self.inter_dependences):
+    def Move_One_Day_Inter_Dependences(self):        
+        for actual_dependence in self.inter_dependences:
 
             # el inter_dependece es una lista que se guarda en el siguiente orden:
             # dependence_1[pos_1] -> dependence_2[pos_2] * value, lo cual se traduce como:
             # dependence_2[pos_2] += dependence_1[pos_1] * value
-
-            actual_dependence = self.inter_dependences[i]    #Guardamos la dependencia actual
 
             #Extraemos el pos_1 y pos_2 guardados en las inter_dependences
 
@@ -194,9 +206,9 @@ class Simulation:
                 second = self.actual_species[pos_2]
 
 
-            a = first[actual_dependence[0]]            #Extraemos a
-            b = first[actual_dependence[2]]            #Extraemos b
-            c = actual_dependence[4]                   #Extraemos c
+            a = first.characteristic[actual_dependence[0]]   #Extraemos a
+            b = second.characteristic[actual_dependence[2]]  #Extraemos b
+            c = actual_dependence[4]                         #Extraemos c
 
             #Aquí se hace una separación por casos:
             #Si a tiene dos coordenadas, entonces el valor de a es directamente un random de ese intervalo
@@ -211,28 +223,30 @@ class Simulation:
             #Si b es una coordenada y c un valor entonces se multiplica ambas a por c
 
             if(isinstance(a, List)):
-                a = random.randint(a[0], a[1])
+                a = random.randint(round(a[0]), round(a[1]))
 
             if(isinstance(b, List)):
                 if(isinstance(c, List)):
-                    self.characteristic[actual_dependence[1]] = [b[0] + c[0]*a, b[1] + c[1]*a]
+                    second.characteristic[actual_dependence[2]] = [b[0] + c[0]*a, b[1] + c[1]*a]
                 else:
-                    self.characteristic[actual_dependence[1]] = [b[0] + c*a, b[1] + c*a]
+                    second.characteristic[actual_dependence[2]] = [b[0] + c*a, b[1] + c*a]
             else:
                 if(isinstance(c, List)):
-                    self.characteristic[actual_dependence[1]] = b + a * random.randint(c[0], c[1])
+                    second.characteristic[actual_dependence[2]] = b + a * random.randint(round(c[0]), round(c[1]))
                 else:
-                    self.characteristic[actual_dependence[1]] = b + a * c
-
-
+                    second.characteristic[actual_dependence[2]] = b + a * c
+        
     # Mueve un día de la simulación
     def Move_One_Day_All(self):
+        #Primero avanzaremos un día en cada especie
+        for specie in self.actual_species:
+            specie.Move_One_Day()
         
-        for i in range(self.actual_species):
-            self.actual_species[i].Move_One_Day()
+        #Luego avanzan las interdependencias
+        self.Move_One_Day_Inter_Dependences()
 
+        #Al final avanzaremos un día en cada especie
         for i in range(self.rows):
             for j in range(self.columns):
-                self.map[i][j].Move_One_Day()
-
-        self.Move_One_Day_Inter_Dependences()
+                (self.map[i][j]).Move_One_Day()
+        #El orden de avance del día visto anteriormente se toma por conveniencia
