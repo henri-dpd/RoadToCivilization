@@ -1,13 +1,16 @@
 import pytest
 from pathlib import Path
 from sys import path, set_coroutine_origin_tracking_depth
+import logging
 
 path.append(str(Path(__file__).parent.parent.absolute()))
 
 from land import Land
 
 def test_land() -> None:
-    #Creando Land y poniendo caracteristicas por defecto
+    logging.basicConfig(filename='land_test.log', filemode='w', format='%(levelname)s ~ %(asctime)s -> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
+
+     #Creando Land y poniendo caracteristicas por defecto
     terreno = Land()
     assert terreno.characteristic == {}
     assert terreno.characteristic_dependences == []
@@ -16,9 +19,9 @@ def test_land() -> None:
     assert len(terreno.characteristic) == 6
     
     #Testeando caracteristicas
-    assert terreno.characteristic['actual_resources'] == 1
-    terreno.Change_Characteristic('actual_resources', 500)
-    assert terreno.characteristic['actual_resources'] == 500
+    assert terreno.Get_Characteristic_Value('actual_resources') == 1
+    terreno.Change_Characteristic('actual_resources', 500, 0, 21000)
+    assert terreno.Get_Characteristic_Value('actual_resources') == 500
     
     assert len(terreno.characteristic) == 6
     terreno.Delete_Characteristic('resources_capacity')
@@ -28,7 +31,7 @@ def test_land() -> None:
     assert len(terreno.characteristic) == 5
     
     terreno.Change_Characteristic('resources_capacity', 1000)
-    assert terreno.characteristic['resources_capacity'] == 1000
+    assert terreno.Get_Characteristic_Value('resources_capacity') == 1000
     assert len(terreno.characteristic) == 6
     
     #Testeando dependencias
@@ -53,8 +56,15 @@ def test_land() -> None:
     terreno.Add_Dependences('actual_resources', 'actual_resources', 0.005)
     assert terreno.characteristic_dependences == [['fertility', 'actual_resources', 20],['actual_resources', 'fertility', 0.001], ['actual_resources', 'actual_resources', 0.005]]
     
-    assert terreno.Move_One_Day() == None
-    assert terreno.Move_One_Day() == None
-    assert terreno.characteristic['actual_resources'] > 500
-    assert terreno.characteristic['fertility'][0] > 0 and terreno.characteristic['fertility'][1] > 1
+    terreno.Add_Influences('altitude', 'temperature', 5)
+    terreno.Add_Influences('fertility', 'cozy_level', 5)
+    for i in range(1000):
+        assert terreno.Move_One_Day() == None
+    #Altura no cambia por lo tanto temperatura se mantiene igual aunque este influenciado por la altura
+    assert terreno.Get_Characteristic_Value('temperature') == [0,1]
+    assert terreno.Get_Characteristic_Value('actual_resources') > 20000
+    assert terreno.Get_Characteristic_Value('fertility')[0] > 5000 and terreno.Get_Characteristic_Value('fertility')[1] > 5000
+    #Aqui sin embargo nivel de acogimiento esta influenciado por fertilidad, 
+    #como fertilidad cambia significativamente el nivel de acogimiento tambien
+    assert terreno.Get_Characteristic_Value('cozy_level') > 40000
     

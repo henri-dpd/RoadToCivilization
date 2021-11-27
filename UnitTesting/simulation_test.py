@@ -1,6 +1,8 @@
 import pytest
 from pathlib import Path
 from sys import path, set_coroutine_origin_tracking_depth
+import logging
+logging.basicConfig(filename='simulation_test.log', filemode='w', format='%(levelname)s ~ %(asctime)s -> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
 path.append(str(Path(__file__).parent.parent.absolute()))
 
@@ -40,8 +42,8 @@ def test_simulation_redimention_map_values() -> None:
     assert sim.columns == 4
     assert sim.rows == 2
 
-
-def test_simulation_add_delete_species() -> None:
+@pytest.mark.skip()
+def test_simulation() -> None:
     sim = Simulation(2,3)
     
     #Testeando annadir

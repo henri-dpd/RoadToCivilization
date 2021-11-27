@@ -1,12 +1,15 @@
 import pytest
 from pathlib import Path
 from sys import path, set_coroutine_origin_tracking_depth
+import logging
 
 path.append(str(Path(__file__).parent.parent.absolute()))
 
 from species import Species
 
 def test_species() -> None:
+    logging.basicConfig(filename='specie_test.log', filemode='w', format='%(levelname)s ~ %(asctime)s -> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
+
     #Creando especies y poniendo caracteristicas por defecto
     humano = Species('Humano')
     assert humano.name == 'Humano'

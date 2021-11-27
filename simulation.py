@@ -3,7 +3,7 @@ from pathlib import Path
 from sys import path, set_coroutine_origin_tracking_depth
 from typing import List, Tuple
 import random
-
+import logging
 
 path.append(Path(__file__).parent.absolute())
 
@@ -27,6 +27,17 @@ class Simulation:
         self.actual_species = [] 
         self.inter_dependences = [] # dependence_1[pos_1] -> dependence_2[pos_2] * value, lo cual se traduce como:
                                     # dependence_2[pos_2] += dependence_1[pos_1] * value
+        
+        self.operators = {
+            "dependence": (lambda a, b, c : self.sum(b, self.mul(a, c))),
+            "influence": (lambda old_a, act_a, b, c : self.sum(b, self.mul(self.sum(act_a, self.mul(old_a, -1)), c))),
+            #"limit": (lambda a, b, c : b if b < self.mul(a, c) else self.mul(a, c)),
+            }
+        self.distribitions = {
+            "default": lambda c: random.randint(round(c[0]), round(c[1])) if isinstance(c, List) else c
+        }                            
+        
+        logging.info("Simulation was created")
 
 
     #Método para redimensionar el mapa
@@ -57,6 +68,7 @@ class Simulation:
             if isinstance(pos_2, List):
                 if pos_2[0]>=new_rows or pos_2[1]>=new_columns:
                     del(self.inter_dependences[i])
+        logging.info("Map was resized: %s rows, %s columns", new_rows, new_columns)
             
         
 
@@ -64,19 +76,23 @@ class Simulation:
     def Add_Species(self, name):
         for actual in self.actual_species:
             if actual.name == name:
+                logging.warning("Specie %s alredy exists", name)
                 return 0
-        self.actual_species.append(Species(name))    
+        self.actual_species.append(Species(name))
+        logging.info("Specie %s has added", name) 
 
 
     #Método para eliminar una especie de la simulación
     def Delete_Species(self, pos):
         if pos < 0 or pos >= len(self.actual_species):
+            logging.warning("Specie was not added: index out of range")
             return 0
         #Ahora debemos eliminar toda interdependencia que incluya a esta especie
         characteristics = self.actual_species[pos].characteristic.keys()
         for characteristic in characteristics:
             self.Delete_All_Specific_Inter_Dependence(characteristic, pos)
         del(self.actual_species[pos])
+        logging.info("Specie %s was deleted", self.actual_species[pos].name)
 
 
     #Método para cambiar las características de una especie de la simulación
@@ -140,6 +156,7 @@ class Simulation:
     #Método para añadir una interdependencia
     def Add_Inter_Dependence(self, dependence_1, pos_1, dependence_2, pos_2, value):
         self.inter_dependences.append([dependence_1, pos_1, dependence_2, pos_2, value])
+        logging.info("interdependence was added")
 
 
     #Método para eliminar una interdependencia teniendo totalmente la dependencia a y b
@@ -147,7 +164,9 @@ class Simulation:
         for dependences, i in enumerate(self.inter_dependences):
             if dependence_1 in dependences and pos_1 in dependences and dependence_2 in dependences and pos_2 in dependences:
                 self.inter_dependences[i][4] = new_value
+                logging.info("Interdependence was changed")
                 return
+        logging.warning("Interdependence was not changed: interdependence does not exist")
 
 
     #Método para eliminar una interdependencia teniendo totalmente la dependencia a y b
@@ -155,7 +174,10 @@ class Simulation:
         for dependences, i in enumerate(self.inter_dependences):
             if dependence_1 in dependences and pos_1 in dependences and dependence_2 in dependences and pos_2 in dependences:
                 del(self.inter_dependences[i])
+                logging.info("Interdependence was deleted")
                 return
+        logging.warning("Interdependence was not deleted: interdependence does not exist")
+                
 
 
     #Método para eliminar todas las interdependencias que incluyan a cierto a o b
@@ -167,6 +189,8 @@ class Simulation:
             pos_2 = dependences[3]
             if (pos == pos_1 and dependence_1 == inter_dependence) or (pos == pos_2 and dependence_2 == inter_dependence):
                 del(self.inter_dependences[i])
+                logging.info("Interdependence was deleted")
+                
 
 
     def Set_Default_Inter_Dependences(self):
@@ -235,12 +259,14 @@ class Simulation:
                     second.characteristic[actual_dependence[2]] = b + a * random.randint(round(c[0]), round(c[1]))
                 else:
                     second.characteristic[actual_dependence[2]] = b + a * c
-        
+            logging.info("Simulation has update characteristic with interdependence")
+        logging.info("Simulations interdependences was move one day")
     # Mueve un día de la simulación
     def Move_One_Day_All(self):
         #Primero avanzaremos un día en cada especie
         for specie in self.actual_species:
             specie.Move_One_Day()
+        logging.info("Simulations species was move one day")
         
         #Luego avanzan las interdependencias
         self.Move_One_Day_Inter_Dependences()
@@ -249,4 +275,6 @@ class Simulation:
         for i in range(self.rows):
             for j in range(self.columns):
                 (self.map[i][j]).Move_One_Day()
+        logging.info("Simulations map was move one day")
         #El orden de avance del día visto anteriormente se toma por conveniencia
+        logging.info("Simulations was move one day")

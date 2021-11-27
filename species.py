@@ -2,7 +2,7 @@
 import random
 from typing import List, Tuple
 import logging
-logging.basicConfig(filename='logs.log', filemode='w', format='%(levelname)s ~ %(asctime)s -> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
+
 
 class Species:
 

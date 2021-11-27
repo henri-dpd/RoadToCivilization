@@ -4,9 +4,11 @@ import logging
 import math
 
 
-class Land:
+class Society:
 
-    def __init__(self):
+    def __init__(self, name):
+
+        self.name = name
 
         self.characteristic = {}
         self.characteristic_dependences = [] # dependence_1 -> dependence_2 * value
@@ -21,7 +23,7 @@ class Land:
             "default": lambda c: random.randint(round(c[0]), round(c[1])) if isinstance(c, List) else c
         }
         
-        logging.info("Land was created")
+        logging.info("Society was created")
 
     def sum(self,a, b):
         if isinstance(a,List):
@@ -63,18 +65,18 @@ class Land:
             if value > upper:
                 value = upper
         self.characteristic[name] = (value, lower, upper)
-        logging.info("Land has added/changed characteristic: %s with value:%s", name, value)
+        logging.info("Society has added/changed characteristic: %s with value:%s", name, value)
 
     # Con este método podemos eliminar una característica y su valor
     def Delete_Characteristic(self, name):
         if name in self.characteristic:
             del(self.characteristic[name])
-            logging.info("Land has deleted characteristic: %s", name)
+            logging.info("Society has deleted characteristic: %s", name)
             for i, dependence in enumerate(self.characteristic_dependences):
                 if name in dependence:
                     del(dependence[i])
             return
-        logging.warning("Land has not deleted characteristic: %s", name)
+        logging.warning("Society has not deleted characteristic: %s", name)
 
     def Update_Characteristic_Value(self, name, value):
         lower = self.characteristic[name][1]
@@ -86,37 +88,37 @@ class Land:
     def Add_Dependences(self, dependence_1, dependence_2, value):
         for dependences in self.characteristic_dependences:      #Revisamos que no exista esta dependencia
             if dependences[0] == dependence_1 and dependences[1] == dependence_2:
-                logging.warning("Land has not added dependece: %s -> %s * %s", dependence_1, dependence_2, value)
+                logging.warning("Society has not added dependece: %s -> %s * %s", dependence_1, dependence_2, value)
                 return 0    #Si existe devolvemos 0
         self.characteristic_dependences.append([dependence_1, dependence_2, value]) #Agregamos la dependencia
-        logging.info("Land has added dependece: %s -> %s * %s", dependence_1, dependence_2, value)
+        logging.info("Society has added dependece: %s -> %s * %s", dependence_1, dependence_2, value)
 
     # Con este método podemos eliinar una dependencia
     def Delete_Dependences(self, dependence_1, dependence_2):
         for i, dependences in enumerate(self.characteristic_dependences):
             if dependences[0] == dependence_1 and dependences[1] == dependence_2:
                 del(self.characteristic_dependences[i])
-                logging.info("Land has deleted dependece: %s -> %s * %s", dependence_1, dependence_2, dependences[2])
+                logging.info("Society has deleted dependece: %s -> %s * %s", dependence_1, dependence_2, dependences[2])
                 return
-        logging.warning("Land has not deleted dependece: %s -> %s", dependence_1, dependence_2)
+        logging.warning("Society has not deleted dependece: %s -> %s", dependence_1, dependence_2)
 
     # Con este método podemos cambiar el value en una dependencia
     def Change_Dependences_Value(self, dependence_1, dependence_2, new_value):
         for dependences in self.characteristic_dependences:
             if dependences[0] == dependence_1 and dependences[1] == dependence_2:
                 dependences[2] =  new_value
-                logging.info("Land has changed dependece, new dependence: %s -> %s * %s", dependence_1, dependence_2, new_value)
+                logging.info("Society has changed dependece, new dependence: %s -> %s * %s", dependence_1, dependence_2, new_value)
                 return
-        logging.warning("Land has not changed dependece: %s -> %s * %s", dependence_1, dependence_2, new_value)
+        logging.warning("Society has not changed dependece: %s -> %s * %s", dependence_1, dependence_2, new_value)
 
     def Add_Influences(self, influence_1, influence_2, value):
         for influences in self.characteristic_influences:      #Revisamos que no exista esta dependencia
             if influences[0] == influence_1 and influences[1] == influence_2:
-                logging.warning("Land has not added influence: %s -> %s * %s", influence_1, influence_2, value)
+                logging.warning("Society has not added influence: %s -> %s * %s", influence_1, influence_2, value)
                 return 0    #Si existe devolvemos 0
         
         self.characteristic_influences.append([influence_1, influence_2, value]) #Agregamos la dependencia
-        logging.info("Land has added influence: %s -> %s * %s", influence_1, influence_2, value)
+        logging.info("Society has added influence: %s -> %s * %s", influence_1, influence_2, value)
         """  # Ejecutamos la influencia, en el resto de la simulación solo se aplicará para cambios en a
         a = self.distribitions["default"](self.characteristic[influence_2])
         b = self.characteristic[influence_2]
@@ -127,45 +129,45 @@ class Land:
         for i, influences in enumerate(self.characteristic_influences):
             if influences[0] == influence_1 and influences[1] == influence_2:
                 del(self.characteristic_influences[i])                
-                logging.info("Land has deleted influence: %s -> %s * %s", influence_1, influence_2, influences[2])
+                logging.info("Society has deleted influence: %s -> %s * %s", influence_1, influence_2, influences[2])
                 return
-        logging.warning("Land has not deleted influence: %s -> %s", influence_1, influence_2)
+        logging.warning("Society has not deleted influence: %s -> %s", influence_1, influence_2)
 
     # Con este método podemos cambiar el value en una dependencia
     def Change_Influences_Value(self, influence_1, influence_2, new_value):
         for influences in self.characteristic_influences:
             if influences[0] == influence_1 and influences[1] == influence_2:
                 influences[2] =  new_value
-                logging.info("Land has changed influence, new influence: %s -> %s * %s", influence_1, influence_2, new_value)
+                logging.info("Society has changed influence, new influence: %s -> %s * %s", influence_1, influence_2, new_value)
                 return
-        logging.warning("Land has not changed influence: %s -> %s * %s", influence_1, influence_2, new_value)
+        logging.warning("Society has not changed influence: %s -> %s * %s", influence_1, influence_2, new_value)
 
     """ 
     def Add_Limit(self, limit_1, limit_2, value):
         for limits in self.characteristic_limits:      #Revisamos que no exista esta dependencia
             if limits[0] == limit_1 and limits[1] == limit_2:
-                logging.warning("Land has not added limit: %s -> %s * %s", limit_1, limit_2, value)
+                logging.warning("Society has not added limit: %s -> %s * %s", limit_1, limit_2, value)
                 return 0    #Si existe devolvemos 0        
         self.characteristic_limits.append([limit_1, limit_2, value]) #Agregamos la dependencia
-        logging.info("Land has added limit: %s -> %s * %s", limit_1, limit_2, value)
+        logging.info("Society has added limit: %s -> %s * %s", limit_1, limit_2, value)
 
     # Con este método podemos eliinar una dependencia
     def Delete_Limit(self, limit_1, limit_2):
         for i, limits in enumerate(self.characteristic_limits):
             if limits[0] == limit_1 and limits[1] == limit_2:
                 del(self.characteristic_limits[i])
-                logging.info("Land has deleted limit: %s -> %s * %s", limit_1, limit_2, limits[2])
+                logging.info("Society has deleted limit: %s -> %s * %s", limit_1, limit_2, limits[2])
                 return
-        logging.warning("Land has not deleted limit: %s -> %s", limit_1, limit_2)
+        logging.warning("Society has not deleted limit: %s -> %s", limit_1, limit_2)
 
     # Con este método podemos cambiar el value en una dependencia
     def Change_Limits_Value(self, limit_1, limit_2, new_value):
         for limits in self.characteristic_limits:
             if limits[0] == limit_1 and limits[1] == limit_2:
                 limits[2] =  new_value
-                logging.info("Land has changed dependece, new limit: %s -> %s * %s", limit_1, limit_2, new_value)
+                logging.info("Society has changed dependece, new limit: %s -> %s * %s", limit_1, limit_2, new_value)
                 return
-        logging.warning("Land has not changed limit: %s -> %s * %s", limit_1, limit_2, new_value)
+        logging.warning("Society has not changed limit: %s -> %s * %s", limit_1, limit_2, new_value)
 
     """
     def Move_One_Day(self):
@@ -191,7 +193,7 @@ class Land:
             # (b1, b2) = (b1, b2) + (c1*a, c2*a)
             #Si b es una coordenada y c un valor entonces se multiplica ambas a por c
             actual_status[actual_dependence[1]] = self.operators["dependence"](a, b, c)
-            logging.info("Land has update characteristic with dependece: %s -> %s * %s: %s = %s", actual_dependence[0], actual_dependence[1], actual_dependence[2], actual_dependence[1], self.characteristic[actual_dependence[1]])
+            logging.info("Society has update characteristic with dependece: %s -> %s * %s: %s = %s", actual_dependence[0], actual_dependence[1], actual_dependence[2], actual_dependence[1], self.characteristic[actual_dependence[1]])
         
         for actual_influence in self.characteristic_influences:
             #Las dependencias se guardan de la forma a -> b * c, que se traduce como b += a * c
@@ -215,21 +217,29 @@ class Land:
             # (b1, b2) = (b1, b2) + (c1*a, c2*a)
             #Si b es una coordenada y c un valor entonces se multiplica ambas a por c
             actual_status[actual_influence[1]] = self.operators["influence"](a, act_a, b, c)
-            logging.info("Land has update characteristic with influence: %s -> %s * %s: %s = %s", actual_influence[0], actual_influence[1], actual_influence[2], actual_influence[1], self.characteristic[actual_influence[1]])
+            logging.info("Society has update characteristic with influence: %s -> %s * %s: %s = %s", actual_influence[0], actual_influence[1], actual_influence[2], actual_influence[1], self.characteristic[actual_influence[1]])
         
         for update in actual_status:
             self.Update_Characteristic_Value(update, actual_status[update])
-        logging.info("Land has move one day")
+        logging.info("Society has move one day")
 
 
     def Set_Default_Characteristics(self):
-        self.Change_Characteristic("actual_resources", 1)       #Recursos actuales
-        self.Change_Characteristic("resources_capacity", 1)      #Capacidad de recursos
-        self.Change_Characteristic("temperature", [0,1])      #Temperatura
-        self.Change_Characteristic("altitude", 1)             #Altitud
-        self.Change_Characteristic("cozy_level", 1)             #Nivel de Acogimiento
-        self.Change_Characteristic("fertility", [0,1])         #Fertilidad
-        logging.info("Land has added default characteristic")
+        
+        self.Change_Characteristic("population", 1)              #Poblacion
+        self.Change_Characteristic("death_rate", [0, 1])         #Mortalidad
+        self.Change_Characteristic("birth_rate", [0, 1])         #Natalidad
+        self.Change_Characteristic("life_expectation", 1)        #Esperanza de vida
+        self.Change_Characteristic("gestation", 1)               #Período de Gestación
+        self.Change_Characteristic("reproduction_number", [0,1]) #Número de reproducción
+        self.Change_Characteristic("size", 1)                    #Tamaño
+        self.Change_Characteristic("intellect", 1)               #Intelecto
+        self.Change_Characteristic("strength", 1)                #Fuerza
+        self.Change_Characteristic("evolution_rate", 1)          #Capacidad de evolución
+        self.Change_Characteristic("actual_growth", 1)           #Crecimiento Actual
+        self.Change_Characteristic("economy", 1)                 #Economía
+        self.Change_Characteristic("foreign_tolerance", 1)       #Tolerancia a extranjeros
+        logging.info("Society has added default characteristic")
 
     def Set_Default_Dependences(self):
         pass

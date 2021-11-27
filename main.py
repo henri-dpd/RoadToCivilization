@@ -1,6 +1,9 @@
 
 from pathlib import Path
 from sys import path
+import logging
+logging.basicConfig(filename='logs.log', filemode='w', format='%(levelname)s ~ %(asctime)s -> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
+
 
 path.append(Path(__file__).parent.absolute())
 
