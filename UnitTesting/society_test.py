@@ -11,7 +11,7 @@ def test_society() -> None:
     logging.basicConfig(filename='society_test.log', filemode='w', format='%(levelname)s ~ %(asctime)s -> %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO)
 
      #Creando society y poniendo caracteristicas por defecto
-    cuba = Society('Cuba')
+    cuba = Society('Cuba', "Humanos")
     assert cuba.name == 'Cuba'
     assert cuba.characteristic == {}
     assert cuba.characteristic_dependences == []
@@ -74,7 +74,7 @@ def test_society() -> None:
     assert cuba.Move_One_Day() == None
     assert cuba.Get_Characteristic_Value('population') > 100
     
-    china = Society('China')
+    china = Society('China', "Humanos")
     assert china.name == 'China'
     assert china.characteristic == {}
     assert china.characteristic_dependences == []

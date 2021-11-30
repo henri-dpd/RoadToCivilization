@@ -68,3 +68,14 @@ def test_land() -> None:
     #como fertilidad cambia significativamente el nivel de acogimiento tambien
     assert terreno.Get_Characteristic_Value('cozy_level') > 40000
     
+    terreno.Add_Society("Cuba", "Humanos")
+    terreno.Delete_Society("Cuba")
+    terreno.Add_Society("Cuba", "Homo-sapiens")
+    
+    terreno.Set_Default_Societies_Characteristic("Cuba")
+    terreno.Add_Societies_Dependences("Cuba", "population", "population", 100)
+    
+    terreno.Add_Inter_Dependence("Cuba", "population", "", "altitude", 2)
+    assert terreno.Get_Characteristic_Value('altitude') < 100
+    assert terreno.Move_One_Day() == None
+    assert terreno.Get_Characteristic_Value('altitude') > 100

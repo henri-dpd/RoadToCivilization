@@ -6,9 +6,10 @@ import math
 
 class Society:
 
-    def __init__(self, name):
+    def __init__(self, name,specie):
 
         self.name = name
+        self.specie = specie
 
         self.characteristic = {}
         self.characteristic_dependences = [] # dependence_1 -> dependence_2 * value
@@ -142,34 +143,7 @@ class Society:
                 return
         logging.warning("Society has not changed influence: %s -> %s * %s", influence_1, influence_2, new_value)
 
-    """ 
-    def Add_Limit(self, limit_1, limit_2, value):
-        for limits in self.characteristic_limits:      #Revisamos que no exista esta dependencia
-            if limits[0] == limit_1 and limits[1] == limit_2:
-                logging.warning("Society has not added limit: %s -> %s * %s", limit_1, limit_2, value)
-                return 0    #Si existe devolvemos 0        
-        self.characteristic_limits.append([limit_1, limit_2, value]) #Agregamos la dependencia
-        logging.info("Society has added limit: %s -> %s * %s", limit_1, limit_2, value)
 
-    # Con este método podemos eliinar una dependencia
-    def Delete_Limit(self, limit_1, limit_2):
-        for i, limits in enumerate(self.characteristic_limits):
-            if limits[0] == limit_1 and limits[1] == limit_2:
-                del(self.characteristic_limits[i])
-                logging.info("Society has deleted limit: %s -> %s * %s", limit_1, limit_2, limits[2])
-                return
-        logging.warning("Society has not deleted limit: %s -> %s", limit_1, limit_2)
-
-    # Con este método podemos cambiar el value en una dependencia
-    def Change_Limits_Value(self, limit_1, limit_2, new_value):
-        for limits in self.characteristic_limits:
-            if limits[0] == limit_1 and limits[1] == limit_2:
-                limits[2] =  new_value
-                logging.info("Society has changed dependece, new limit: %s -> %s * %s", limit_1, limit_2, new_value)
-                return
-        logging.warning("Society has not changed limit: %s -> %s * %s", limit_1, limit_2, new_value)
-
-    """
     def Move_One_Day(self):
         
         actual_status = {}
@@ -192,7 +166,11 @@ class Society:
             #Si b es una coordenada (b1, b2), y c una coordenada (c1, c2), entonces se debe hacer:
             # (b1, b2) = (b1, b2) + (c1*a, c2*a)
             #Si b es una coordenada y c un valor entonces se multiplica ambas a por c
-            actual_status[actual_dependence[1]] = self.operators["dependence"](a, b, c)
+            if actual_status.get(actual_dependence[1]) == None:
+                actual_status[actual_dependence[1]] = self.operators["dependence"](a, b, c)
+            else:
+                actual_status[actual_dependence[1]] = self.sum(actual_status[actual_dependence[1]], self.operators["dependence"](a, b, c))
+                
             logging.info("Society has update characteristic with dependece: %s -> %s * %s: %s = %s", actual_dependence[0], actual_dependence[1], actual_dependence[2], actual_dependence[1], self.characteristic[actual_dependence[1]])
         
         for actual_influence in self.characteristic_influences:
@@ -216,7 +194,10 @@ class Society:
             #Si b es una coordenada (b1, b2), y c una coordenada (c1, c2), entonces se debe hacer:
             # (b1, b2) = (b1, b2) + (c1*a, c2*a)
             #Si b es una coordenada y c un valor entonces se multiplica ambas a por c
-            actual_status[actual_influence[1]] = self.operators["influence"](a, act_a, b, c)
+            if actual_status.get(actual_influence[1]) == None:
+                actual_status[actual_influence[1]] = self.operators["influence"](a, act_a, b, c)
+            else:
+                actual_status[actual_influence[1]] = self.sum(actual_status[actual_influence[1]], self.operators["influence"](a, act_a, b, c))
             logging.info("Society has update characteristic with influence: %s -> %s * %s: %s = %s", actual_influence[0], actual_influence[1], actual_influence[2], actual_influence[1], self.characteristic[actual_influence[1]])
         
         for update in actual_status:
@@ -226,15 +207,15 @@ class Society:
 
     def Set_Default_Characteristics(self):
         
-        self.Change_Characteristic("population", 1)              #Poblacion
-        self.Change_Characteristic("death_rate", [0, 1])         #Mortalidad
-        self.Change_Characteristic("birth_rate", [0, 1])         #Natalidad
-        self.Change_Characteristic("life_expectation", 1)        #Esperanza de vida
-        self.Change_Characteristic("gestation", 1)               #Período de Gestación
-        self.Change_Characteristic("reproduction_number", [0,1]) #Número de reproducción
-        self.Change_Characteristic("size", 1)                    #Tamaño
-        self.Change_Characteristic("intellect", 1)               #Intelecto
-        self.Change_Characteristic("strength", 1)                #Fuerza
+        self.Change_Characteristic("population", 1, 0)              #Poblacion
+        self.Change_Characteristic("death_rate", [0, 1], 0)         #Mortalidad
+        self.Change_Characteristic("birth_rate", [0, 1], 0)         #Natalidad
+        self.Change_Characteristic("life_expectation", 1, 0)        #Esperanza de vida
+        self.Change_Characteristic("gestation", 1, 0)               #Período de Gestación
+        self.Change_Characteristic("reproduction_number", [0,1], 0) #Número de reproducción
+        self.Change_Characteristic("size", 1, 0)                    #Tamaño
+        self.Change_Characteristic("intellect", 1, 0)               #Intelecto
+        self.Change_Characteristic("strength", 1, 0)                #Fuerza
         self.Change_Characteristic("evolution_rate", 1)          #Capacidad de evolución
         self.Change_Characteristic("actual_growth", 1)           #Crecimiento Actual
         self.Change_Characteristic("economy", 1)                 #Economía

@@ -3,6 +3,8 @@ from typing import List, Tuple
 import logging
 import math
 
+from society import Society
+
 
 class Land:
 
@@ -12,10 +14,11 @@ class Land:
         self.characteristic_dependences = [] # dependence_1 -> dependence_2 * value
         self.characteristic_influences = [] # influence_1 -> influence_2 * value
         #self.characteristic_limits = [] # limit_1 -> limit_2 * value
+        self.societies = {} # Diccionario de sociedades{ especie: Sociedad}
+        self.inter_dependences = [] # interpedendencias espedie terreno, especie especie
         self.operators = {
             "dependence": (lambda a, b, c : self.sum(b, self.mul(a, c))),
-            "influence": (lambda old_a, act_a, b, c : self.sum(b, self.mul(self.sum(act_a, self.mul(old_a, -1)), c))),
-            #"limit": (lambda a, b, c : b if b < self.mul(a, c) else self.mul(a, c)),
+            "influence": (lambda old_a, act_a, b, c : self.sum(b, self.mul(self.sum(act_a, self.mul(old_a, -1)), c)))
             }
         self.distribitions = {
             "default": lambda c: random.randint(round(c[0]), round(c[1])) if isinstance(c, List) else c
@@ -23,22 +26,47 @@ class Land:
         
         logging.info("Land was created")
 
-    def sum(self,a, b):
-        if isinstance(a,List):
-            if isinstance(b,List):
-                return [a[0] + b[0], a[1] + b[1]]
-            return [a[0] + b, a[1] + b]
-        return a + self.distribitions["default"](b)
+    def Add_Society(self, name, specie):
+        for society in self.societies:
+            if society == name:
+                logging.warning("Society %s alredy exists", name)
+                return False
+        self.societies[name] = Society(name, specie)
+        logging.info("Society %s was added", name)
+        
+    def Delete_Society(self, name):
+        if name not in self.societies.keys():
+            logging.warning("Society was not added: Society do not exists")
+            return 0
+        #Ahora debemos eliminar toda interdependencia que incluya a esta especie
+        for characteristic in self.societies[name].characteristic:
+            self.Delete_All_Specific_Inter_Dependence(characteristic, name)
+        del(self.societies[name])
+        logging.info("Society %s was deleted", name)
 
-    def mul(self,a, b):
-        if isinstance(b,List):
-            return [b[0] * a, b[1] * a]
-        return a * b
-    
-    def comp(self, a, b):
-        if isinstance(a,List) and isinstance(a,List):
-            return a[0] > b[0] and a[1] < b[1] 
-        return a * b
+    #Método para cambiar las características de una especie de la simulación
+    def Change_Societies_Characteristic(self, name, characteristic, value):
+        return self.societies[name].Change_Characteristic(characteristic, value)
+
+    #Método para eliminar una característica de una especie de la simulación
+    def Delete_Societies_Characteristic(self, name, characteristic):
+        return self.societies[name].Delete_Characteristic(characteristic)
+
+    #Método para añadir una dependencia de una especie en la simulación
+    def Add_Societies_Dependences(self, name, dependence_1, dependence_2, value):
+        return self.societies[name].Add_Dependences(dependence_1, dependence_2, value)
+
+    #Método para eliminar una dependencia de una especie en la simulación
+    def Delete_Societies_Dependences(self, name, dependence_1, dependence_2):
+        return self.societies[name].Delete_Dependences(dependence_1, dependence_2)
+
+    #Método para cambiar el valor de una dependencia de una especie en la simulación
+    def Change_Societies_Dependences_Value(self, name, dependence_1, dependence_2, value):
+        return self.societies[name].Change_Dependences_Value(dependence_1, dependence_2, value)
+
+    def Set_Default_Societies_Characteristic(self, name):
+        return self.societies[name].Set_Default_Characteristics()
+
 
     def Get_Characteristic_Value(self, name):
         return self.characteristic[name][0]
@@ -140,36 +168,65 @@ class Land:
                 return
         logging.warning("Land has not changed influence: %s -> %s * %s", influence_1, influence_2, new_value)
 
-    """ 
-    def Add_Limit(self, limit_1, limit_2, value):
-        for limits in self.characteristic_limits:      #Revisamos que no exista esta dependencia
-            if limits[0] == limit_1 and limits[1] == limit_2:
-                logging.warning("Land has not added limit: %s -> %s * %s", limit_1, limit_2, value)
-                return 0    #Si existe devolvemos 0        
-        self.characteristic_limits.append([limit_1, limit_2, value]) #Agregamos la dependencia
-        logging.info("Land has added limit: %s -> %s * %s", limit_1, limit_2, value)
 
-    # Con este método podemos eliinar una dependencia
-    def Delete_Limit(self, limit_1, limit_2):
-        for i, limits in enumerate(self.characteristic_limits):
-            if limits[0] == limit_1 and limits[1] == limit_2:
-                del(self.characteristic_limits[i])
-                logging.info("Land has deleted limit: %s -> %s * %s", limit_1, limit_2, limits[2])
+    #Método para añadir una interdependencia
+    def Add_Inter_Dependence(self, entity_1, dependence_1, entity_2, dependence_2, value):
+        if entity_1 == entity_2 or (entity_1 != '' and entity_1 not in self.societies.keys()) or (entity_2 != '' and entity_2 not in self.societies.keys()):
+            logging.warning("interdependence has not added: Unrecognized entities")
+            return
+        for inter in self.inter_dependences:
+            if (entity_1, dependence_1) in inter and (entity_2, dependence_2) in inter:
+                logging.warning("interdependence has not added: Interdependence alredy exists")
                 return
-        logging.warning("Land has not deleted limit: %s -> %s", limit_1, limit_2)
+        self.inter_dependences.append([(entity_1, dependence_1), (entity_2, dependence_2), value])
+        logging.info("interdependence was added")
 
-    # Con este método podemos cambiar el value en una dependencia
-    def Change_Limits_Value(self, limit_1, limit_2, new_value):
-        for limits in self.characteristic_limits:
-            if limits[0] == limit_1 and limits[1] == limit_2:
-                limits[2] =  new_value
-                logging.info("Land has changed dependece, new limit: %s -> %s * %s", limit_1, limit_2, new_value)
+
+    #Método para cambiar una interdependencia teniendo totalmente la dependencia a y b
+    def Change_Inter_Dependence_Value(self, entity_1, dependence_1, entity_2, dependence_2, new_value):
+        for inter, i in enumerate(self.inter_dependences):
+            if (entity_1, dependence_1) in inter and (entity_2, dependence_2) in inter:
+                self.inter_dependences[i][2] = new_value
+                logging.info("Interdependence was changed")
                 return
-        logging.warning("Land has not changed limit: %s -> %s * %s", limit_1, limit_2, new_value)
+        logging.warning("Interdependence was not changed: interdependence does not exist")
 
-    """
-    def Move_One_Day(self):
-        
+
+    #Método para eliminar una interdependencia teniendo totalmente la dependencia a y b
+    def Delete_Inter_Dependence(self, entity_1, dependence_1, entity_2, dependence_2):
+        for inter, i in enumerate(self.inter_dependences):
+            if (entity_1, dependence_1) in inter and (entity_2, dependence_2) in inter:
+                del(self.inter_dependences[i])
+                logging.info("Interdependence was deleted")
+                return
+        logging.warning("Interdependence was not deleted: interdependence does not exist")
+                
+    #Método para eliminar todas las interdependencias que incluyan a cierto a o b
+    def Delete_All_Specific_Inter_Dependence(self, dependence, entity):
+        for inter, i in enumerate(self.inter_dependences):
+            if (entity, dependence) in inter:
+                del(self.inter_dependences[i])
+                logging.info("Interdependence was deleted")
+                
+
+    def sum(self,a, b):
+        if isinstance(a,List):
+            if isinstance(b,List):
+                return [a[0] + b[0], a[1] + b[1]]
+            return [a[0] + b, a[1] + b]
+        return a + self.distribitions["default"](b)
+
+    def mul(self,a, b):
+        if isinstance(b,List):
+            return [b[0] * a, b[1] * a]
+        return a * b
+    
+    def comp(self, a, b):
+        if isinstance(a,List) and isinstance(a,List):
+            return a[0] > b[0] and a[1] < b[1] 
+        return a * b
+    
+    def Move_Land_One_Day(self):
         actual_status = {}
         #Vamos por todas las dependencias
         for actual_dependence in self.characteristic_dependences:
@@ -219,8 +276,52 @@ class Land:
         
         for update in actual_status:
             self.Update_Characteristic_Value(update, actual_status[update])
-        logging.info("Land has move one day")
+        
+        
+    def Move_One_Day(self):
+        
+        for society in self.societies.values():
+            society.Move_One_Day()
+        
+        actual_status={}
+        for actual_inter in self.inter_dependences:
+            a=0
+            b=0
+            c=0
+            #Las dependencias se guardan de la forma a -> b * c, que se traduce como b += a * c
+            if actual_inter[0][0] == '':
+                a = self.distribitions["default"](self.Get_Characteristic_Value(actual_inter[0][1]))            #Extraemos a
+            else:
+                a = self.distribitions["default"](self.societies[actual_inter[0][0]].Get_Characteristic_Value(actual_inter[0][1]))            #Extraemos a
+            if actual_inter[1][0] == '':
+                b = self.Get_Characteristic_Value(actual_inter[1][1])           #Extraemos b
+            else:
+                b = self.societies[actual_inter[1][0]].Get_Characteristic_Value(actual_inter[1][1])           #Extraemos b
+            c = actual_inter[2]  #Extraemos c
 
+            #Aquí se hace una separación por casos:
+            #Si a tiene dos coordenadas, entonces el valor de a es directamente un random de ese intervalo
+            #Si a es un valor, entonces a es directamente igual a ese valor
+            #Ya sea que b tiene un valor, o dos coordenadas, estos no se verifican mediante un random, sino que
+            #se multiplican a partir de los casos de c:
+
+            #Si b es un valor y c una coordenada, entonces a se multiplica por un random proporcionado por el intervalo de c
+            #Si b es un valor y c un valor, se multiplican
+            #Si b es una coordenada (b1, b2), y c una coordenada (c1, c2), entonces se debe hacer:
+            # (b1, b2) = (b1, b2) + (c1*a, c2*a)
+            #Si b es una coordenada y c un valor entonces se multiplica ambas a por c
+            actual_status[(actual_inter[1][0], actual_inter[1][1])] = self.operators["dependence"](a, b, c)
+            logging.info("Land has update characteristic")
+        
+        for update in actual_status:
+            if update[0] == '':
+                self.Update_Characteristic_Value(update[1], actual_status[update])
+            else:
+                self.societies[update[0]].Update_Characteristic_Value(update[1], actual_status[update])
+                
+        self.Move_Land_One_Day()
+        
+        logging.info("Land has move one day")
 
     def Set_Default_Characteristics(self):
         self.Change_Characteristic("actual_resources", 1)       #Recursos actuales
@@ -233,3 +334,4 @@ class Land:
 
     def Set_Default_Dependences(self):
         pass
+    
