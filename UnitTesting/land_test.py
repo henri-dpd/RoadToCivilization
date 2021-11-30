@@ -35,29 +35,33 @@ def test_land() -> None:
     assert len(terreno.characteristic) == 6
     
     #Testeando dependencias
-    terreno.Add_Dependences('altitude', 'temperature', 1)
-    assert terreno.characteristic_dependences == [['altitude', 'temperature', 1]]
-    terreno.Add_Dependences('fertility', 'actual_resources', 20)
-    assert terreno.characteristic_dependences == [['altitude', 'temperature', 1],['fertility', 'actual_resources', 20]]
-    terreno.Add_Dependences('fertility', 'actual_resources', 20)
-    assert terreno.characteristic_dependences == [['altitude', 'temperature', 1],['fertility', 'actual_resources', 20]]
+    terreno.Add_Dependence('','altitude', '','temperature', 1)
+    assert terreno.characteristic_dependences == [[('','altitude'), ('','temperature'), 1]]
+    terreno.Add_Dependence('','fertility', '','actual_resources', 20)
+    assert terreno.characteristic_dependences == [[('','altitude'), ('','temperature'), 1],[('','fertility'), ('','actual_resources'), 20]]
+    terreno.Add_Dependence('', 'fertility', '', 'actual_resources', 20)
+    assert terreno.characteristic_dependences == [[('','altitude'), ('','temperature'), 1],[('','fertility'), ('','actual_resources'), 20]]
     #orden de las dependencias
-    terreno.Add_Dependences('actual_resources', 'fertility', 10)
-    assert terreno.characteristic_dependences == [['altitude', 'temperature', 1],['fertility', 'actual_resources', 20],['actual_resources', 'fertility', 10]]
-    terreno.Delete_Dependences('altitude', 'temperature')
+    terreno.Add_Dependence('', 'actual_resources','',  'fertility', 10)
+    assert terreno.characteristic_dependences == [[('','altitude'), ('','temperature'), 1],[('','fertility'), ('','actual_resources'), 20],[('','actual_resources'), ('','fertility'), 10]]
+    terreno.Delete_Dependence('','altitude', '','temperature')
+    assert terreno.characteristic_dependences == [[('','fertility'), ('','actual_resources'), 20],[('','actual_resources'), ('','fertility'), 10]]
     
-    #orden de las dependencias
-    terreno.Change_Dependences_Value('actual_resources', 'fertility', 0.001)
-    assert terreno.characteristic_dependences == [['fertility', 'actual_resources', 20],['actual_resources', 'fertility', 0.001]]   
+    terreno.Change_Dependences_Value('','actual_resources','', 'fertility', 0.001)
+    assert terreno.characteristic_dependences == [[('','fertility'), ('','actual_resources'), 20],[('','actual_resources'), ('','fertility'), 0.001]]
     
-    terreno.Delete_Dependences('altitude', 'temperature')
-    assert terreno.characteristic_dependences == [['fertility', 'actual_resources', 20],['actual_resources', 'fertility', 0.001]] 
+    terreno.Delete_Dependence('', 'altitude', '', 'temperature')
+    assert terreno.characteristic_dependences == [[('','fertility'), ('','actual_resources'), 20],[('','actual_resources'), ('','fertility'), 0.001]]
+
+    terreno.Add_Dependence('', 'actual_resources', '', 'actual_resources', 0.005)
+    assert terreno.characteristic_dependences == [[('','fertility'), ('','actual_resources'), 20],[('','actual_resources'), ('','fertility'), 0.001],[('', 'actual_resources'), ('', 'actual_resources'), 0.005]]
     
-    terreno.Add_Dependences('actual_resources', 'actual_resources', 0.005)
-    assert terreno.characteristic_dependences == [['fertility', 'actual_resources', 20],['actual_resources', 'fertility', 0.001], ['actual_resources', 'actual_resources', 0.005]]
-    
-    terreno.Add_Influences('altitude', 'temperature', 5)
-    terreno.Add_Influences('fertility', 'cozy_level', 5)
+    terreno.Add_Influences('','altitude', '', 'temperature', 5)
+    terreno.Add_Influences('','fertility','', 'cozy_level', 5)
+    assert terreno.characteristic_influences == [[('','altitude'), ('','temperature'), 5],[('','fertility'), ('','cozy_level'), 5]]
+    assert terreno.Get_Characteristic_Value('actual_resources') == 500
+    assert terreno.Move_One_Day() == None
+    assert terreno.Get_Characteristic_Value('actual_resources') > 500
     for i in range(1000):
         assert terreno.Move_One_Day() == None
     #Altura no cambia por lo tanto temperatura se mantiene igual aunque este influenciado por la altura
@@ -72,10 +76,14 @@ def test_land() -> None:
     terreno.Delete_Society("Cuba")
     terreno.Add_Society("Cuba", "Homo-sapiens")
     
-    terreno.Set_Default_Societies_Characteristic("Cuba")
-    terreno.Add_Societies_Dependences("Cuba", "population", "population", 100)
+    terreno.Set_Default_Entities_Characteristic("Cuba")
+    terreno.Add_Dependence("Cuba", "population", "Cuba", "population", 100)
     
-    terreno.Add_Inter_Dependence("Cuba", "population", "", "altitude", 2)
-    assert terreno.Get_Characteristic_Value('altitude') < 100
+    terreno.Add_Dependence("Cuba", "population", "", "altitude", 2)
+    assert terreno.Get_Characteristic_Value('altitude') == 1
     assert terreno.Move_One_Day() == None
-    assert terreno.Get_Characteristic_Value('altitude') > 100
+    assert terreno.Get_Entities_Characteristic_value("Cuba","population") == 101
+    assert terreno.Get_Characteristic_Value('altitude') == 3
+    assert terreno.Move_One_Day() == None
+    assert terreno.Get_Entities_Characteristic_value("Cuba","population") == 10201
+    assert terreno.Get_Characteristic_Value('altitude') == 205

@@ -84,6 +84,7 @@ class Society:
         upper = self.characteristic[name][2]
         self.Change_Characteristic(name, value, lower, upper) 
     
+    """ 
     # Con este método podemos agregar una dependencia de la forma a -> b * c
     # Donde a es dependence_1, b es dependence_2 y c es value
     def Add_Dependences(self, dependence_1, dependence_2, value):
@@ -111,7 +112,8 @@ class Society:
                 logging.info("Society has changed dependece, new dependence: %s -> %s * %s", dependence_1, dependence_2, new_value)
                 return
         logging.warning("Society has not changed dependece: %s -> %s * %s", dependence_1, dependence_2, new_value)
-
+    """
+    
     def Add_Influences(self, influence_1, influence_2, value):
         for influences in self.characteristic_influences:      #Revisamos que no exista esta dependencia
             if influences[0] == influence_1 and influences[1] == influence_2:
