@@ -25,6 +25,7 @@ class Land:
         
         logging.info("Land was created")
 
+    #Añadir sociedad a la lista de entidades, crea una sociedad con el nombre y especie de entrada 
     def Add_Society(self, name, specie):
         if name == '':
             logging.warning("Society was not added")
@@ -35,38 +36,45 @@ class Land:
                 return False
         self.entities[name] = Society(name, specie)
         logging.info("Society %s was added", name)
-        
+
+    #Eliminar sociedad de nombre de la entrada
     def Delete_Society(self, name):
         if name not in self.entities.keys() or name == '':
             logging.warning("Society was not delete: Society do not exists")
             return 0
         #Ahora debemos eliminar toda interdependencia que incluya a esta especie
         for characteristic in self.entities[name].characteristic:
-            self.Delete_All_Specific_Inter_Dependence(characteristic, name)
+            self.Delete_All_Specific_Dependence(name, characteristic)
+            self.Delete_All_Specific_Influence(name, characteristic)
         del(self.entities[name])
         logging.info("Society %s was deleted", name)
 
+    #Tomar el valor de la caracteristica de entrada perteneciente a la sociedad de nombre: name
+    #Si name = '' entonces se refiere a este terreno 
     def Get_Entities_Characteristic_value(self, name, characteristic):
         return self.entities[name].Get_Characteristic_Value(characteristic)
         
+    #Cambiar el valor de la caracteristica de entrada perteneciente a la sociedad de nombre: name
     def Change_Entities_Characteristic(self, name, characteristic, value, lower = -math.inf, upper = math.inf):
         return self.entities[name].Change_Characteristic(characteristic, value, lower, upper)
     
-    #Método para actualizar las características de una especie de la simulación
+    #Método para actualizar las características de la entidad de nombre name
     def Update_Entities_Characteristic(self, name, characteristic, value):
         return self.entities[name].Update_Characteristic_Value(characteristic, value)
 
-    #Método para eliminar una característica de una especie de la simulación
+    #Método para eliminar una característica de la entidad de nombre name
     def Delete_Entities_Characteristic(self, name, characteristic):
         return self.entities[name].Delete_Characteristic(characteristic)
      
+    #Poner caracteristicas por defecto de la entidad de nombre name
     def Set_Default_Entities_Characteristic(self, name):
         return self.entities[name].Set_Default_Characteristics()
 
+    #Tomar el valor de la caracteristica name de este terreno 
     def Get_Characteristic_Value(self, name):
         return self.characteristic[name][0]
 
-    # Con este método podemos añadir o modificar una característica y su valor
+    # Con este método podemos añadir o modificar el valor de la caracteristica name de este terreno
     def Change_Characteristic(self, name, value, lower = -math.inf, upper = math.inf):
         if lower > upper:
             lower = upper - 1
@@ -88,7 +96,7 @@ class Land:
         self.characteristic[name] = (value, lower, upper)
         logging.info("Land has added/changed characteristic: %s with value:%s", name, value)
 
-    # Con este método podemos eliminar una característica y su valor
+    # Con este método podemos eliminar el valor de la caracteristica name de este terreno
     def Delete_Characteristic(self, name):
         if name in self.characteristic:
             del(self.characteristic[name])
@@ -99,7 +107,8 @@ class Land:
             return
         logging.warning("Land has not deleted characteristic: %s", name)
 
-    # Con este método podemos actualizar una característica y su valor
+    # Con este método podemos actualizar el valor de la caracteristica name de este terreno
+    # lower y upper de la caracteristica a actualizar
     def Update_Characteristic_Value(self, name, value):
         lower = self.characteristic[name][1]
         upper = self.characteristic[name][2]
@@ -118,7 +127,7 @@ class Land:
         self.characteristic_dependences.append([(entity_1, dependence_1), (entity_2, dependence_2), value])
         logging.info("interdependence was added")
 
-    #Método para cambiar una interdependencia teniendo totalmente la dependencia a y b
+    #Método para cambiar una dependencia teniendo totalmente la dependencia a y b
     def Change_Dependences_Value(self, entity_1, dependence_1, entity_2, dependence_2, new_value):
         if entity_1 not in self.entities.keys() and entity_2 not in self.entities.keys():
             logging.warning("dependence was not added: Unrecognized entities")
@@ -130,7 +139,7 @@ class Land:
                 return
         logging.warning("dependence was not changed: interdependence does not exist")
 
-    #Método para eliminar una interdependencia teniendo totalmente la dependencia a y b
+    #Método para eliminar una dependencia teniendo totalmente la dependencia a y b
     def Delete_Dependence(self, entity_1, dependence_1, entity_2, dependence_2):
         for i, dependence in enumerate(self.characteristic_dependences):
             if (entity_1, dependence_1) == dependence[0] and (entity_2, dependence_2) == dependence[1]:
@@ -139,14 +148,14 @@ class Land:
                 return
         logging.warning("dependence was not deleted: interdependence does not exist")
                 
-    #Método para eliminar todas las interdependencias que incluyan a cierto a o b
+    #Método para eliminar todas las dependencias que incluyan la caracteristica characteristic de la entidad name
     def Delete_All_Specific_Dependence(self, entity, characteristic):
         for i, dependence in enumerate(self.characteristic_dependences):
             if (entity, characteristic) in dependence:
                 del(self.characteristic_dependences[i])
                 logging.info("dependence was deleted")
                 
-
+    # Con este método podemos cambiar el value en una influencia
     def Add_Influences(self, entity_1, influence_1, entity_2, influence_2, value):
         for influences in self.characteristic_influences:      #Revisamos que no exista esta dependencia
             if influences[0] == (entity_1, influence_1) and influences[1] == (entity_2, influence_2):
@@ -160,7 +169,7 @@ class Land:
         b = self.characteristic[influence_2]
         self.characteristic[influence_2] = self.sum(b, self.mul(a, value))  """
 
-    # Con este método podemos cambiar el value en una dependencia
+    # Con este método podemos cambiar el value en una influencia
     def Change_Influences_Value(self, entity_1, influence_1, entity_2, influence_2, new_value):
         for influences in self.characteristic_influences:
             if influences[0] == (entity_1, influence_1) and influences[1] == (entity_2, influence_2):
@@ -169,7 +178,7 @@ class Land:
                 return
         logging.warning("Land has not changed influence: %s -> %s * %s", influence_1, influence_2, new_value)
     
-    # Con este método podemos eliinar una dependencia
+    # Con este método podemos eliinar una influencia
     def Delete_Influences(self, entity_1, influence_1, entity_2, influence_2):
         for i, influences in enumerate(self.characteristic_influences):
             if influences[0] == (entity_1, influence_1) and influences[1] == (entity_2, influence_2):
@@ -178,14 +187,14 @@ class Land:
                 return
         logging.warning("Land has not deleted influence: %s -> %s", influence_1, influence_2)
 
-    #Método para eliminar todas las interdependencias que incluyan a cierto a o b
+    #Método para eliminar todas las influencias que incluyan la caracteristica characteristic de la entidad name
     def Delete_All_Specific_Influence(self, entity, characteristic):
         for i, influence in enumerate(self.characteristic_influences):
             if (entity, characteristic) in influence:
                 del(self.characteristic_influences[i])
                 logging.info("dependence was deleted")
 
-
+    #nuestras operaciones para operar con rangos o valores numericos 
     def sum(self,a, b):
         if isinstance(a,List):
             if isinstance(b,List):
@@ -203,7 +212,9 @@ class Land:
             return a[0] > b[0] and a[1] < b[1] 
         return a * b
     
-    def Move_One_Day(self):        
+    #Avanzar un dia en el terreno, modifica las caracteristicas del terreno y sus sociedades con las dependencias e influencias previamente establecidas
+    def Move_One_Day(self):   
+        #Se guarda un diccionario de modificaciones de las dependencias     
         actual_status={}
         for actual_dependence in self.characteristic_dependences:
             #Las dependencias se guardan de la forma a -> b * c, que se traduce como b += a * c
@@ -211,7 +222,7 @@ class Land:
             b = self.entities[actual_dependence[1][0]].Get_Characteristic_Value(actual_dependence[1][1])           #Extraemos b
             c = actual_dependence[2]  #Extraemos c
 
-            #Aquí se hace una separación por casos:
+            #se hace una separación por casos:
             #Si a tiene dos coordenadas, entonces el valor de a es directamente un random de ese intervalo
             #Si a es un valor, entonces a es directamente igual a ese valor
             #Ya sea que b tiene un valor, o dos coordenadas, estos no se verifican mediante un random, sino que
@@ -225,7 +236,7 @@ class Land:
             actual_status[(actual_dependence[1][0], actual_dependence[1][1])] = self.operators["dependence"](a, b, c)
             logging.info("Land has update characteristic")
         
-        
+        #Se guarda el diccionario final resultado de aplicar las dependencias y luego las influenncias que traen las mismas
         final_status= actual_status.copy()
         for actual_influence in self.characteristic_influences:
             #Las dependencias se guardan de la forma a -> b * c, que se traduce como b += a * c
@@ -237,30 +248,23 @@ class Land:
                 act_a = a
             else:
                 act_a = self.distribitions["default"](act_a)
-            #Aquí se hace una separación por casos:
-            #Si a tiene dos coordenadas, entonces el valor de a es directamente un random de ese intervalo
-            #Si a es un valor, entonces a es directamente igual a ese valor
-            #Ya sea que b tiene un valor, o dos coordenadas, estos no se verifican mediante un random, sino que
-            #se multiplican a partir de los casos de c:
-
-            #Si b es un valor y c una coordenada, entonces a se multiplica por un random proporcionado por el intervalo de c
-            #Si b es un valor y c un valor, se multiplican
-            #Si b es una coordenada (b1, b2), y c una coordenada (c1, c2), entonces se debe hacer:
-            # (b1, b2) = (b1, b2) + (c1*a, c2*a)
-            #Si b es una coordenada y c un valor entonces se multiplica ambas a por c
+            
+            #Opera parecido a las dependencias pero no nos interesa modificar atendiendo al valor sino a los cambios surgidos mientras avanza el día
+            
             final_status[(actual_influence[1][0], actual_influence[1][1])] = self.operators["influence"](a, act_a, b, c)
             logging.info("Land has update characteristic with influence: %s -> %s * %s", actual_influence[0], actual_influence[1], actual_influence[2])
-            
+        
+        #Los cambios finales resultantes de las dependencias e influencias actualizan las caracteristicas modificadas
         for update in final_status:
             self.entities[update[0]].Update_Characteristic_Value(update[1], final_status[update])        
         logging.info("Land has move one day")
 
     def Set_Default_Characteristics(self):
-        self.Change_Characteristic("actual_resources", 1)       #Recursos actuales
-        self.Change_Characteristic("resources_capacity", 1)      #Capacidad de recursos
+        self.Change_Characteristic("actual_resources", 1, 0)       #Recursos actuales
+        self.Change_Characteristic("resources_capacity", 1, 0)      #Capacidad de recursos
         self.Change_Characteristic("temperature", [0,1])      #Temperatura
         self.Change_Characteristic("altitude", 1)             #Altitud
-        self.Change_Characteristic("cozy_level", 1)             #Nivel de Acogimiento
+        self.Change_Characteristic("cozy_level", 1, 0)             #Nivel de Acogimiento
         self.Change_Characteristic("fertility", [0,1])         #Fertilidad
         logging.info("Land has added default characteristic")
 
