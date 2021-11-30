@@ -122,10 +122,10 @@ class Land:
             return
         for dependence in self.characteristic_dependences:
             if (entity_1, dependence_1) == dependence[0] and (entity_2, dependence_2) == dependence[1]:
-                logging.warning("dependence was not added: Interdependence alredy exists")
+                logging.warning("dependence was not added: dependence alredy exists")
                 return
         self.characteristic_dependences.append([(entity_1, dependence_1), (entity_2, dependence_2), value])
-        logging.info("interdependence was added")
+        logging.info("dependence was added")
 
     #Método para cambiar una dependencia teniendo totalmente la dependencia a y b
     def Change_Dependences_Value(self, entity_1, dependence_1, entity_2, dependence_2, new_value):
@@ -137,7 +137,7 @@ class Land:
                 self.characteristic_dependences[i][2] = new_value
                 logging.info("dependence was changed")
                 return
-        logging.warning("dependence was not changed: interdependence does not exist")
+        logging.warning("dependence was not changed: dependence does not exist")
 
     #Método para eliminar una dependencia teniendo totalmente la dependencia a y b
     def Delete_Dependence(self, entity_1, dependence_1, entity_2, dependence_2):
@@ -146,7 +146,7 @@ class Land:
                 del(self.characteristic_dependences[i])
                 logging.info("dependence was deleted")
                 return
-        logging.warning("dependence was not deleted: interdependence does not exist")
+        logging.warning("dependence was not deleted: dependence does not exist")
                 
     #Método para eliminar todas las dependencias que incluyan la caracteristica characteristic de la entidad name
     def Delete_All_Specific_Dependence(self, entity, characteristic):
@@ -164,10 +164,7 @@ class Land:
         
         self.characteristic_influences.append([(entity_1, influence_1), (entity_2, influence_2), value]) #Agregamos la dependencia
         logging.info("Land has added influence: %s -> %s * %s", influence_1, influence_2, value)
-        """  # Ejecutamos la influencia, en el resto de la simulación solo se aplicará para cambios en a
-        a = self.distribitions["default"](self.characteristic[influence_2])
-        b = self.characteristic[influence_2]
-        self.characteristic[influence_2] = self.sum(b, self.mul(a, value))  """
+        
 
     # Con este método podemos cambiar el value en una influencia
     def Change_Influences_Value(self, entity_1, influence_1, entity_2, influence_2, new_value):
