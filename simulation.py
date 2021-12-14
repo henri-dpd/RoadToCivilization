@@ -4,6 +4,7 @@ from sys import path, set_coroutine_origin_tracking_depth
 from typing import List, Tuple
 import random
 import logging
+import math
 
 path.append(Path(__file__).parent.absolute())
 
@@ -24,7 +25,7 @@ class Simulation:
             for j in range(columns):
                 self.map[i].append(Land())
 
-        self.actual_species = [] 
+        self.actual_species = {}
         self.inter_dependences = [] # dependence_1[pos_1] -> dependence_2[pos_2] * value, lo cual se traduce como:
                                     # dependence_2[pos_2] += dependence_1[pos_1] * value
         
@@ -33,7 +34,7 @@ class Simulation:
             "influence": (lambda old_a, act_a, b, c : self.sum(b, self.mul(self.sum(act_a, self.mul(old_a, -1)), c))),
             #"limit": (lambda a, b, c : b if b < self.mul(a, c) else self.mul(a, c)),
             }
-        self.distribitions = {
+        self.distributions = {
             "default": lambda c: random.randint(round(c[0]), round(c[1])) if isinstance(c, List) else c
         }                            
         
@@ -74,30 +75,35 @@ class Simulation:
 
     # Método para añadir una especie a la simulación
     def Add_Species(self, name):
-        for actual in self.actual_species:
-            if actual.name == name:
-                logging.warning("Specie %s alredy exists", name)
-                return 0
-        self.actual_species.append(Species(name))
+        if name in self.actual_species:
+            logging.warning("Specie %s alredy exists", name)
+            return 0
+        self.actual_species[name] = Species(name)
         logging.info("Specie %s has added", name) 
 
 
     #Método para eliminar una especie de la simulación
-    def Delete_Species(self, pos):
-        if pos < 0 or pos >= len(self.actual_species):
-            logging.warning("Specie was not added: index out of range")
-            return 0
-        #Ahora debemos eliminar toda interdependencia que incluya a esta especie
-        characteristics = self.actual_species[pos].characteristic.keys()
-        for characteristic in characteristics:
-            self.Delete_All_Specific_Inter_Dependence(characteristic, pos)
-        del(self.actual_species[pos])
-        logging.info("Specie %s was deleted", self.actual_species[pos].name)
+    def Delete_Species(self, name):
+        if not name in self.actual_species:
+            logging.info("Specie %s was not exist", name)
+            return
+        for i in range(self.rows):
+            for j in range(self.columns):
+                for society in self.map[i][j].entities:
+                    if society == '':
+                        continue
+                    if self.map[i][j].entities[society].specie == name:
+                        for dependence in self.map[i][j].entities[society].characteristic:
+                            del(self.inter_dependences[[i,j], society, dependence])
+                        del(self.map[i][j].entities[society])
+        #Falta trabajar interdependencias
+        del(self.actual_species[name])
+        logging.info("Specie %s was deleted", name)
 
 
     #Método para cambiar las características de una especie de la simulación
-    def Change_Species_Characteristic(self, pos, characteristic, value):
-        return self.actual_species[pos].Change_Characteristic(characteristic, value)
+    def Change_Species_Characteristic(self, pos, characteristic, method):
+        return self.actual_species[pos].Change_Characteristic(characteristic, method)
 
 
     #Método para eliminar una característica de una especie de la simulación
@@ -105,48 +111,80 @@ class Simulation:
         return self.actual_species[pos].Delete_Characteristic(characteristic)
 
 
-    #Método para añadir una dependencia de una especie en la simulación
-    def Add_Species_Dependences(self, pos, dependence_1, dependence_2, value):
-        return self.actual_species[pos].Add_Dependences(dependence_1, dependence_2, value)
+    def Set_Default_Species_Characteristic(self, name):
+        self.actual_species[name].Set_Default_Characteristics()
+        for i in range(self.rows):
+            for j in range(self.columns):
+                for society in self.map[i][j].entities:
+                    if society == '':
+                        continue
+                    if self.map[i][j].entities[society].specie == name:
+                        self.map[i][j].Set_Default_Entities_Characteristic(society)
 
 
-    #Método para eliminar una dependencia de una especie en la simulación
-    def Delete_Species_Dependences(self, pos, dependence_1, dependence_2):
-        return self.actual_species[pos].Delete_Dependences(dependence_1, dependence_2)
+     #Añadir sociedad a la lista de entidades, crea una sociedad con el nombre y especie de entrada 
+    def Add_Society(self, row, column, name, specie):
+        return self.map[row][column].Add_Society(name, specie)
+
+    #Eliminar sociedad de nombre de la entrada
+    def Delete_Society(self, row, column, name):
+        return self.map[row][column].Delete_Society(name)
 
 
-    #Método para cambiar el valor de una dependencia de una especie en la simulación
-    def Change_Species_Dependences_Value(self, pos, dependence_1, dependence_2, value):
-        return self.actual_species[pos].Change_Dependences_Value(dependence_1, dependence_2, value)
+    #Método para cambiar las características de una sociedad en un terreno de la simulación
+    def Change_Society_Characteristic(self, row, column, name, characteristic, value, lower = -math.inf, upper = math.inf):
+        return self.map[row][column].Change_Entities_Characteristic(name, characteristic, value, lower, upper)
 
+    #Método para cambiar las características de una sociedad en un terreno de la simulación
+    def Delete_Society_Characteristic(self, row, column, name, characteristic):
+        return self.map[row][column].Delete_Characteristic(name, characteristic)
 
-    def Set_Default_Species_Characteristic(self, pos):
-        return self.actual_species[pos].Set_Default_Characteristics()
-
+    #Método para actualizar las características de una sociedad en un terreno de la simulación
+    def Update_Society_Characteristic_Value(self,  row, column, name, characteristic, value):
+        return self.map[row][column].Update_Characteristic_Value(name, characteristic, value)
+    
 
     #Método para cambiar las características de una terreno de la simulación
-    def Change_Land_Characteristic(self, row, column, characteristic, value):
-        return self.map[row][column].Change_Characteristic(characteristic, value)
-
+    def Change_Land_Characteristic(self, row, column, characteristic, value, lower = -math.inf, upper = math.inf):
+        return self.map[row][column].Change_Characteristic(characteristic, value, lower, upper)
 
     #Método para cambiar las características de un terreno de la simulación
     def Delete_Land_Characteristic(self, row, column, characteristic):
         return self.map[row][column].Delete_Characteristic(characteristic)
 
-
+    #Método para actualizar las características de un terreno de la simulación
+    def Update_Land_Characteristic_Value(self,  row, column, characteristic, value):
+        return self.map[row][column].Update_Characteristic_Value(characteristic, value)
+    
+    
     #Método para añadir una dependencia de un terreno en la simulación
-    def Add_Land_Dependences(self, row, column, dependence_1, dependence_2, value):
-        return self.map[row][column].Add_Dependences(dependence_1, dependence_2, value)
+    def Add_Land_Dependences(self, row, column, entity_1, dependence_1, entity_2, dependence_2, value):
+        return self.map[row][column].Add_Dependence(entity_1, dependence_1, entity_2, dependence_2, value)
 
 
     #Método para eliminar una dependencia de un terreno en la simulación
-    def Delete_Land_Dependences(self, row, column, dependence_1, dependence_2):
-        return self.map[row][column].Delete_Dependences(dependence_1, dependence_2)
+    def Delete_Land_Dependences(self, row, column, entity_1, dependence_1, entity_2, dependence_2):
+        return self.map[row][column].Delete_Dependences(entity_1, dependence_1, entity_2, dependence_2)
 
 
     #Método para cambiar el valor de una dependencia de un terreno en la simulación
-    def Change_Land_Dependences_Value(self, row, column, dependence_1, dependence_2, value):
-        return self.map[row][column].Change_Dependences_Value(dependence_1, dependence_2, value)
+    def Change_Land_Dependences_Value(self, row, column, entity_1, dependence_1, entity_2, dependence_2, value):
+        return self.map[row][column].Change_Dependences_Value(entity_1, dependence_1, entity_2, dependence_2, value)
+
+
+    #Método para añadir una influencia de un terreno en la simulación
+    def Add_Land_Influences(self, row, column, entity_1, dependence_1, entity_2, dependence_2, value):
+        return self.map[row][column].Add_Influences(entity_1, dependence_1, entity_2, dependence_2, value)
+
+
+    #Método para eliminar una influencia de un terreno en la simulación
+    def Delete_Land_Influences(self, row, column, entity_1, dependence_1, entity_2, dependence_2):
+        return self.map[row][column].Delete_Influences(entity_1, dependence_1, entity_2, dependence_2)
+
+
+    #Método para cambiar el valor de una influencia de un terreno en la simulación
+    def Change_Land_Influences_Value(self, row, column, entity_1, dependence_1, entity_2, dependence_2, value):
+        return self.map[row][column].Change_Influences_Value(entity_1, dependence_1, entity_2, dependence_2, value)
 
 
     def Set_Default_Land_Characteristic(self, row, column):
@@ -154,85 +192,83 @@ class Simulation:
 
 
     #Método para añadir una interdependencia
-    def Add_Inter_Dependence(self, dependence_1, pos_1, dependence_2, pos_2, value):
-        self.inter_dependences.append([dependence_1, pos_1, dependence_2, pos_2, value])
+    def Add_Inter_Dependence(self, pos_1, entity_1, dependence_1, pos_2, entity_2, dependence_2, value):
+        if (not entity_1 in self.map[pos_1[0]][pos_1[1]].entities) or (not entity_2 in self.map[pos_2[0]][pos_2[1]].entities):
+            return
+        self.inter_dependences.append([(pos_1, entity_1, dependence_1),( pos_2, entity_2, dependence_2), value])
         logging.info("interdependence was added")
 
 
     #Método para eliminar una interdependencia teniendo totalmente la dependencia a y b
-    def Change_Inter_Dependence_Value(self, dependence_1, pos_1, dependence_2, pos_2, new_value):
+    def Change_Inter_Dependence_Value(self, pos_1, entity_1, dependence_1, pos_2, entity_2, dependence_2, new_value):
         for dependences, i in enumerate(self.inter_dependences):
-            if dependence_1 in dependences and pos_1 in dependences and dependence_2 in dependences and pos_2 in dependences:
-                self.inter_dependences[i][4] = new_value
+            if (pos_1, entity_1, dependence_1) == dependences[0] and (pos_2, entity_2, dependence_2) == dependences[1]:
+                self.inter_dependences[i][2] = new_value
                 logging.info("Interdependence was changed")
                 return
         logging.warning("Interdependence was not changed: interdependence does not exist")
 
 
     #Método para eliminar una interdependencia teniendo totalmente la dependencia a y b
-    def Delete_Inter_Dependence(self, dependence_1, pos_1, dependence_2, pos_2):
+    def Delete_Inter_Dependence(self, pos_1, entity_1, dependence_1, pos_2, entity_2, dependence_2):
         for dependences, i in enumerate(self.inter_dependences):
-            if dependence_1 in dependences and pos_1 in dependences and dependence_2 in dependences and pos_2 in dependences:
+            if (pos_1, entity_1, dependence_1) == dependences[0] and (pos_2, entity_2, dependence_2) == dependences[1]:
                 del(self.inter_dependences[i])
                 logging.info("Interdependence was deleted")
                 return
         logging.warning("Interdependence was not deleted: interdependence does not exist")
                 
 
-
     #Método para eliminar todas las interdependencias que incluyan a cierto a o b
-    def Delete_All_Specific_Inter_Dependence(self, inter_dependence, pos):
+    def Delete_All_Specific_Inter_Dependence(self, pos, entity, dependence):
         for dependences, i in enumerate(self.inter_dependences):
-            dependence_1 = dependences[0]
-            pos_1 = dependences[1]
-            dependence_2 = dependences[2]
-            pos_2 = dependences[3]
-            if (pos == pos_1 and dependence_1 == inter_dependence) or (pos == pos_2 and dependence_2 == inter_dependence):
+            if (pos, entity, dependence) in dependences:
                 del(self.inter_dependences[i])
                 logging.info("Interdependence was deleted")
                 
-
 
     def Set_Default_Inter_Dependences(self):
         pass
 
 
-    def Move_One_Day_Inter_Dependences(self):        
-        for actual_dependence in self.inter_dependences:
+    #nuestras operaciones para operar con rangos o valores numericos 
+    def sum(self,a, b):
+        if isinstance(a,List):
+            if isinstance(b,List):
+                return [a[0] + b[0], a[1] + b[1]]
+            return [a[0] + b, a[1] + b]
+        return a + self.distributions["default"](b)
 
+    def mul(self,a, b):
+        if isinstance(b,List):
+            return [b[0] * a, b[1] * a]
+        return a * b
+    
+    def comp(self, a, b):
+        if isinstance(a,List) and isinstance(a,List):
+            return a[0] > b[0] and a[1] < b[1] 
+        return a * b
+ 
+
+    def Move_One_Day_Inter_Dependences(self):                
+        actual_status={}
+        for actual_dependence in self.inter_dependences:
             # el inter_dependece es una lista que se guarda en el siguiente orden:
             # dependence_1[pos_1] -> dependence_2[pos_2] * value, lo cual se traduce como:
             # dependence_2[pos_2] += dependence_1[pos_1] * value
 
-            #Extraemos el pos_1 y pos_2 guardados en las inter_dependences
+            #Extraemos el pos_1, entity_1, characteristic_1, pos_2, entity_2, characteristic_2 guardados en las inter_dependences
+            pos_1 = actual_dependence[0][0]
+            entity_1  = actual_dependence[0][1]
+            characteristic_1  = actual_dependence[0][2]
+            pos_2 = actual_dependence[1][0]
+            entity_2  = actual_dependence[1][1]
+            characteristic_2  = actual_dependence[1][2]
 
-            pos_1 = actual_dependence[1]
-            pos_2 = actual_dependence[3]
-
-
-            # Debemos acceder a la especie o terreno de las dependencias,
-            # donde dependence_1 va a pertenecer a first y dependence_2 va a pertenecer a second
-        
-            first = 0
-            second = 0
-
-            # Si pos_1 o pos_2 es una lista (con dos coordenadas), entonces es un land, 
-            # si es un número entonces es una especie
-
-            if(isinstance(pos_1, List)):
-                first = self.map[pos_1[0]][pos_1[0]]
-            else:
-                first = self.actual_species[pos_1]
-
-            if(isinstance(pos_2, List)):
-                second = self.map[pos_2[0]][pos_2[0]]
-            else:
-                second = self.actual_species[pos_2]
-
-
-            a = first.characteristic[actual_dependence[0]]   #Extraemos a
-            b = second.characteristic[actual_dependence[2]]  #Extraemos b
-            c = actual_dependence[4]                         #Extraemos c
+            #Extraemos a, b, c
+            a = self.distributions["default"](self.map[pos_1[0]][pos_1[1]].Get_Entities_Characteristic_value(entity_1, characteristic_1))
+            b = self.map[pos_2[0]][pos_2[1]].Get_Entities_Characteristic_value(entity_2, characteristic_2)
+            c = actual_dependence[2] 
 
             #Aquí se hace una separación por casos:
             #Si a tiene dos coordenadas, entonces el valor de a es directamente un random de ese intervalo
@@ -246,35 +282,27 @@ class Simulation:
             # (b1, b2) = (b1, b2) + (c1*a, c2*a)
             #Si b es una coordenada y c un valor entonces se multiplica ambas a por c
 
-            if(isinstance(a, List)):
-                a = random.randint(round(a[0]), round(a[1]))
-
-            if(isinstance(b, List)):
-                if(isinstance(c, List)):
-                    second.characteristic[actual_dependence[2]] = [b[0] + c[0]*a, b[1] + c[1]*a]
-                else:
-                    second.characteristic[actual_dependence[2]] = [b[0] + c*a, b[1] + c*a]
-            else:
-                if(isinstance(c, List)):
-                    second.characteristic[actual_dependence[2]] = b + a * random.randint(round(c[0]), round(c[1]))
-                else:
-                    second.characteristic[actual_dependence[2]] = b + a * c
+            actual_status[(pos_2[0], pos_2[1], entity_2, characteristic_2)] = self.operators["dependence"](a, b, c)
             logging.info("Simulation has update characteristic with interdependence")
+        
+        #Los cambios finales resultantes de las dependencias e influencias actualizan las caracteristicas modificadas
+        for update in actual_status:
+            self.map[update[0]][update[1]].Update_Entities_Characteristic(update[2], update[3], actual_status[update])        
+        logging.info("Land has move one day")
         logging.info("Simulations interdependences was move one day")
+
+
+
     # Mueve un día de la simulación
     def Move_One_Day_All(self):
-        #Primero avanzaremos un día en cada especie
-        for specie in self.actual_species:
-            specie.Move_One_Day()
-        logging.info("Simulations species was move one day")
-        
-        #Luego avanzan las interdependencias
-        self.Move_One_Day_Inter_Dependences()
-
-        #Al final avanzaremos un día en cada especie
+        #Avanza un día en cada terreno
         for i in range(self.rows):
             for j in range(self.columns):
                 (self.map[i][j]).Move_One_Day()
         logging.info("Simulations map was move one day")
+
+        #Luego avanzan las interdependencias entre terrenos
+        self.Move_One_Day_Inter_Dependences()
+
         #El orden de avance del día visto anteriormente se toma por conveniencia
         logging.info("Simulations was move one day")

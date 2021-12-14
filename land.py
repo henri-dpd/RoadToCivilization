@@ -19,7 +19,7 @@ class Land:
             "dependence": (lambda a, b, c : self.sum(b, self.mul(a, c))),
             "influence": (lambda old_a, act_a, b, c : self.sum(b, self.mul(self.sum(act_a, self.mul(old_a, -1)), c)))
             }
-        self.distribitions = {
+        self.distributions = {
             "default": lambda c: random.randint(round(c[0]), round(c[1])) if isinstance(c, List) else c
         }
         
@@ -52,6 +52,8 @@ class Land:
     #Tomar el valor de la caracteristica de entrada perteneciente a la sociedad de nombre: name
     #Si name = '' entonces se refiere a este terreno 
     def Get_Entities_Characteristic_value(self, name, characteristic):
+        if not name in self.entities:
+            return
         return self.entities[name].Get_Characteristic_Value(characteristic)
         
     #Cambiar el valor de la caracteristica de entrada perteneciente a la sociedad de nombre: name
@@ -197,7 +199,7 @@ class Land:
             if isinstance(b,List):
                 return [a[0] + b[0], a[1] + b[1]]
             return [a[0] + b, a[1] + b]
-        return a + self.distribitions["default"](b)
+        return a + self.distributions["default"](b)
 
     def mul(self,a, b):
         if isinstance(b,List):
@@ -215,7 +217,7 @@ class Land:
         actual_status={}
         for actual_dependence in self.characteristic_dependences:
             #Las dependencias se guardan de la forma a -> b * c, que se traduce como b += a * c
-            a = self.distribitions["default"](self.entities[actual_dependence[0][0]].Get_Characteristic_Value(actual_dependence[0][1]))  #Extraemos a
+            a = self.distributions["default"](self.entities[actual_dependence[0][0]].Get_Characteristic_Value(actual_dependence[0][1]))  #Extraemos a
             b = self.entities[actual_dependence[1][0]].Get_Characteristic_Value(actual_dependence[1][1])           #Extraemos b
             c = actual_dependence[2]  #Extraemos c
 
@@ -237,14 +239,14 @@ class Land:
         final_status= actual_status.copy()
         for actual_influence in self.characteristic_influences:
             #Las dependencias se guardan de la forma a -> b * c, que se traduce como b += a * c
-            a = self.distribitions["default"](self.entities[actual_influence[0][0]].Get_Characteristic_Value(actual_influence[0][1]))  #Extraemos a
+            a = self.distributions["default"](self.entities[actual_influence[0][0]].Get_Characteristic_Value(actual_influence[0][1]))  #Extraemos a
             b = self.entities[actual_influence[1][0]].Get_Characteristic_Value(actual_influence[1][1])           #Extraemos b
             c = actual_influence[2]  #Extraemos c
             act_a = actual_status.get(actual_influence[0])
             if act_a == None:
                 act_a = a
             else:
-                act_a = self.distribitions["default"](act_a)
+                act_a = self.distributions["default"](act_a)
             
             #Opera parecido a las dependencias pero no nos interesa modificar atendiendo al valor sino a los cambios surgidos mientras avanza el día
             

@@ -20,7 +20,7 @@ class Society:
             "influence": (lambda old_a, act_a, b, c : self.sum(b, self.mul(self.sum(act_a, self.mul(old_a, -1)), c))),
             #"limit": (lambda a, b, c : b if b < self.mul(a, c) else self.mul(a, c)),
             }
-        self.distribitions = {
+        self.distributions = {
             "default": lambda c: random.randint(round(c[0]), round(c[1])) if isinstance(c, List) else c
         }
         

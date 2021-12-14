@@ -11,9 +11,9 @@ from simulation import Simulation
 
 @pytest.mark.parametrize('col, row, res1, res2, res3, res4',
                         [
-                           (3,3,3,3,[],[]),  
-                           (2,3,2,3,[],[]),  
-                           (4,3,4,3,[],[])  
+                           (3,3,3,3,{},[]),  
+                           (2,3,2,3,{},[]),  
+                           (4,3,4,3,{},[])  
                         ]
                         )
 
@@ -42,7 +42,7 @@ def test_simulation_redimention_map_values() -> None:
     assert sim.columns == 4
     assert sim.rows == 2
 
-@pytest.mark.skip()
+#@pytest.mark.skip()
 def test_simulation() -> None:
     sim = Simulation(2,3)
     
@@ -51,7 +51,7 @@ def test_simulation() -> None:
     res2 = False
     sim.Add_Species('Humano')    
     sim.Add_Species('Marciano')    
-    for actual in sim.actual_species:
+    for actual in sim.actual_species.values():
         if actual.name == 'Humano':
             res1 = True            
         if actual.name == 'Marciano':
@@ -64,7 +64,7 @@ def test_simulation() -> None:
     for i in range(10000):
         sim.Add_Species('Humano')    
     sim.Add_Species('Yedi')    
-    for actual in sim.actual_species:
+    for actual in sim.actual_species.values():
         if actual.name == 'Humano':
             res1 = True            
         if actual.name == 'Marciano':
@@ -77,18 +77,18 @@ def test_simulation() -> None:
     assert len(sim.actual_species)==3
     
     #Testeando eliminar
-    assert sim.Delete_Species(20) ==0
+    assert sim.Delete_Species(20) == None
     assert len(sim.actual_species)==3
-    assert sim.Delete_Species(-1) ==0
+    assert sim.Delete_Species("juan") == None
     assert len(sim.actual_species)==3
     
-    sim.Delete_Species(1)
+    sim.Delete_Species('Marciano')
     res1 = False
     res2 = False
     res3 = True
     sim.Add_Species('Humano')    
     sim.Add_Species('Yedi')    
-    for actual in sim.actual_species:
+    for actual in sim.actual_species.values():
         if actual.name == 'Humano':
             res1 = True            
         if actual.name == 'Yedi':
@@ -100,9 +100,12 @@ def test_simulation() -> None:
     assert res3
     assert len(sim.actual_species)==2
 
-    for i in range(len(sim.actual_species)):
-        sim.Set_Default_Species_Characteristic(i)
-        assert len(sim.actual_species[i].characteristic) == 13
+    for specie in sim.actual_species:
+        for i in range(sim.rows):
+            for j in range(sim.columns):
+                sim.Add_Society(i,j,specie, specie)                                
+        sim.Set_Default_Species_Characteristic(specie)
+        assert len(sim.actual_species[specie].characteristic) == 13
 
     for i in range(2):
         for j in range(3):
@@ -113,26 +116,29 @@ def test_simulation() -> None:
     # A continuación agregaremos 3 interpedendencias especie especie, terreno terreno, terreno especie 
     # Luego comprobaremos que efectivamente la simulación se mueve un día y se cambia de valor las características
     
-    sim.Add_Inter_Dependence("population",1,"economy",0,5)
+    sim.Add_Inter_Dependence([1,1], "Humano","population", [1,1],"Yedi", "economy",5)
     sim.Move_One_Day_Inter_Dependences()
-    assert sim.actual_species[0].characteristic["economy"] > 1
+    assert (sim.map[1][1]).Get_Entities_Characteristic_value('Yedi', "economy") > 1
     
-    sim.Add_Inter_Dependence("altitude",[1,2],"temperature",[1,1],-1)
+    sim.Add_Inter_Dependence([1,2], "","altitude", [1,1],"", "temperature",-1)
     sim.Move_One_Day_Inter_Dependences()
-    assert not ((sim.map[1][1]).characteristic["temperature"] == [0,1])
+    assert not ((sim.map[1][1]).Get_Entities_Characteristic_value('',"temperature") == [0,1])
     
-    sim.Add_Inter_Dependence("actual_resources",[0,0],"life_expectation",0,2)
+    
+    sim.Add_Inter_Dependence([0,0], "","actual_resources", [0,0],"Humano", "life_expectation",2)
     sim.Move_One_Day_Inter_Dependences()
-    assert sim.actual_species[0].characteristic["life_expectation"] > 1
+    assert (sim.map[0][0]).Get_Entities_Characteristic_value('Humano', "life_expectation") > 1
     
-    #Por ùltimo agregaremos denpendencias entre especies y correremos todo un día verificando los avances
-    sim.Add_Species_Dependences(1,"population","population", 2)
+    #Por último agregaremos dependencias entre especies y correremos todo un día verificando los avances
+    sim.Add_Land_Dependences(0,1,"Humano","population","Humano","population",2)
     sim.Change_Land_Characteristic(0,1,"fertility",[1,2])
-    sim.Add_Land_Dependences(0,1,"fertility","resources_capacity",10)
+    sim.Add_Land_Dependences(0,1,"","fertility","","resources_capacity",10)
     
     sim.Move_One_Day_All()
-    assert sim.actual_species[0].characteristic["economy"] == 31
-    assert (sim.map[1][1]).characteristic["temperature"] == [-3,-2]
-    assert sim.actual_species[0].characteristic["life_expectation"] == 5
-    assert sim.actual_species[1].characteristic["population"] == 3
-    assert (sim.map[0][1]).characteristic["resources_capacity"] == 11 or (sim.map[0][1]).characteristic["resources_capacity"] == 21
+    assert (sim.map[1][1]).Get_Entities_Characteristic_value("Yedi","economy") == 21
+    assert (sim.map[1][1]).Get_Entities_Characteristic_value("","temperature") == [-3,-2]
+    assert (sim.map[0][0]).Get_Entities_Characteristic_value("Humano","life_expectation") == 5
+    assert (sim.map[0][1]).Get_Entities_Characteristic_value("Humano", "population") == 3
+    assert (sim.map[0][1]).Get_Entities_Characteristic_value("","resources_capacity") == 11 or (sim.map[0][1]).Get_Entities_Characteristic_value("","resources_capacity") == 21
+    
+    #No se han probado las influencias y los límites
