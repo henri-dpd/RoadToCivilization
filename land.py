@@ -8,12 +8,17 @@ from society import Society
 
 class Land:
 
+    #Definido un diccionario caracteristicas {"caracteristica":[<valor>,<limInf>,<limSup>]} 
+    #Definido una lista dependencias [<entidad1>,<caracteristicaA>,<entidad2>,<caracteristicaB>,<valor>] 
+    #Definido una lista influencias [<entidad1>,<caracteristicaA>,<entidad2>,<caracteristicaB>,<valor>] 
+    #Definido un diccionario entidades {"entidad": entidad} incluido land asignando '' como su llave 
+    #Definido un diccionario operadores {"operador": funcion} para calcular dependencias, influencias u otro proceso que describa el usuario 
+    #Definido un diccionario distribuciones {"distribucion": funcion} para calcular un valor en un rango de acuerdo a la distribucion establecida
     def __init__(self):
 
         self.characteristic = {}
         self.characteristic_dependences = [] # dependence_1 -> dependence_2 * value
         self.characteristic_influences = [] # influence_1 -> influence_2 * value
-        #self.characteristic_limits = [] # limit_1 -> limit_2 * value
         self.entities = {'': self} # Diccionario de entidades, primer elemento el terrenoasignado al caracter vacío, y luego las sociedades por el nombre de cada una
         self.operators = {
             "dependence": (lambda a, b, c : self.sum(b, self.mul(a, c))),

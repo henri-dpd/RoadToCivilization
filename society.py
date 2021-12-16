@@ -5,25 +5,14 @@ import math
 
 
 class Society:
-
+    #Definido nombre y especie
+    #Definido un diccionario caracteristicas {"caracteristica":[<valor>,<limInf>,<limSup>]} 
     def __init__(self, name,specie):
 
         self.name = name
         self.specie = specie
 
         self.characteristic = {}
-        self.characteristic_dependences = [] # dependence_1 -> dependence_2 * value
-        self.characteristic_influences = [] # influence_1 -> influence_2 * value
-        #self.characteristic_limits = [] # limit_1 -> limit_2 * value
-        self.operators = {
-            "dependence": (lambda a, b, c : self.sum(b, self.mul(a, c))),
-            "influence": (lambda old_a, act_a, b, c : self.sum(b, self.mul(self.sum(act_a, self.mul(old_a, -1)), c))),
-            #"limit": (lambda a, b, c : b if b < self.mul(a, c) else self.mul(a, c)),
-            }
-        self.distributions = {
-            "default": lambda c: random.randint(round(c[0]), round(c[1])) if isinstance(c, List) else c
-        }
-        
         logging.info("Society was created")
 
     #Toma el valor de la caracteristica de entrada

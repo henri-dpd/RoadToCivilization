@@ -5,7 +5,8 @@ import logging
 
 
 class Species:
-
+    
+    #Definido un diccionario caracteristicas {"caracteristica":[<valor>,<limInf>,<limSup>]} 
     def __init__(self, name):
 
         self.name = name

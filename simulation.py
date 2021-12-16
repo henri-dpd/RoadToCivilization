@@ -12,7 +12,11 @@ from species import Species
 from land import Land
 
 class Simulation:
-
+    #Definido filas y columnas, y creado el mapa que no es mas que una lista de listas de terrenos
+    #Definido un diccionario actual especies {"especie": especie} 
+    #Definido una lista inter-dependencias [<entidad1>,<caracteristicaA>,<entidad2>,<caracteristicaB>,<valor>] 
+    #Definido un diccionario operadores {"operador": funcion} para calcular dependencias, influencias u otro proceso que describa el usuario 
+    #Definido un diccionario distribuciones {"distribucion": funcion} para calcular un valor en un rango de acuerdo a la distribucion establecida
     def __init__(self, rows, columns):
 
         self.rows = rows
@@ -31,8 +35,6 @@ class Simulation:
         
         self.operators = {
             "dependence": (lambda a, b, c : self.sum(b, self.mul(a, c))),
-            "influence": (lambda old_a, act_a, b, c : self.sum(b, self.mul(self.sum(act_a, self.mul(old_a, -1)), c))),
-            #"limit": (lambda a, b, c : b if b < self.mul(a, c) else self.mul(a, c)),
             }
         self.distributions = {
             "default": lambda c: random.randint(round(c[0]), round(c[1])) if isinstance(c, List) else c
@@ -71,7 +73,6 @@ class Simulation:
                     del(self.inter_dependences[i])
         logging.info("Map was resized: %s rows, %s columns", new_rows, new_columns)
             
-        
 
     # Método para añadir una especie a la simulación
     def Add_Species(self, name):
@@ -111,6 +112,7 @@ class Simulation:
         return self.actual_species[pos].Delete_Characteristic(characteristic)
 
 
+    #Para la especie del nombre de la entrada busca todas las sociedades y le pone las caraceristicas por defecto
     def Set_Default_Species_Characteristic(self, name):
         self.actual_species[name].Set_Default_Characteristics()
         for i in range(self.rows):
@@ -122,7 +124,7 @@ class Simulation:
                         self.map[i][j].Set_Default_Entities_Characteristic(society)
 
 
-     #Añadir sociedad a la lista de entidades, crea una sociedad con el nombre y especie de entrada 
+    #Añadir sociedad a la lista de entidades, crea una sociedad con el nombre y especie de entrada        
     def Add_Society(self, row, column, name, specie):
         return self.map[row][column].Add_Society(name, specie)
 
@@ -249,7 +251,7 @@ class Simulation:
             return a[0] > b[0] and a[1] < b[1] 
         return a * b
  
-
+    #Ejecuta todas las interdependencias
     def Move_One_Day_Inter_Dependences(self):                
         actual_status={}
         for actual_dependence in self.inter_dependences:
