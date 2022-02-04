@@ -1,0 +1,18 @@
+Number _factorial(Number a)
+{
+    Number s = 1;
+    Number result = 1;
+    if(a < 2)
+    {
+        a = 1;
+    }
+    else
+    {
+        while(s < a)
+        {
+            result = result * a;
+            a = a - 1;
+        }
+        result = result;
+    }
+}

@@ -1,0 +1,7 @@
+if(false or true)
+ {
+     Number a = 0;
+ }
+if(true)
+    {
+    }
