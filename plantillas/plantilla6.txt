@@ -1,0 +1,29 @@
+Species humano = Species("humano");
+Species perro = Species("perro");
+
+Land terreno1 = Land([1,2]);
+_redimention(3,3);
+
+Society cubana = Society("cubana",humano);
+Society husky = Society("husky",perro);
+
+List rank = [0,15];
+
+humano._changeCharacteristic("economia",[10],rank[0],rank[1],0,0);
+
+Number _dist (List r)
+{
+    Number a = _random("normal", r);
+    Number b = _random("normal", r);
+    Number return = 0;
+    return = _random("uniform", [a,b]);
+}
+
+terreno1._changeCharacteristic("temperatura", [20,25], 5, 32,0,_dist([5,8]));
+cubana._changeCharacteristic("natalidad", [20], 0, 5,0,0);
+
+
+_end( 0 < 1);
+
+Boolean mainreturn = true;
+mainreturn = _start();

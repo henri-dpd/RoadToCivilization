@@ -32,10 +32,14 @@ def z_start():
         sim.Move_One_Day_All()
         for cond in dayling:
             if cond():
-                dayling[cond]
+                dayling[cond]()
+        end = False
         for cond in ends:
             if cond():
+                end = True
                 break
+        if end:
+            break 
         
 def execute(code):
     try:
