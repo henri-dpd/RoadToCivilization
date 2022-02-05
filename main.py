@@ -15,6 +15,7 @@ from Compilacion.semantic.type_collector import TypeCollector
 from Compilacion.semantic.type_builder import TypeBuilder
 from Compilacion.semantic.type_checker import TypeChecker
 from execute import Execute
+from runner import execute
 
 
 
@@ -99,9 +100,9 @@ if analize:
                 
                 if not (collector.error or builder.error or checker.error):
                     st.subheader('Programa culmino sin errores:')
-                    execute = Execute(context)
-                    program = execute.visit(ast)
-                    print(program)
+                    ex = Execute(context)
+                    program = ex.visit(ast)
+                    execute(program)
                     st.text(program)
 
                 else:

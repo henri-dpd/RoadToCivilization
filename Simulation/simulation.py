@@ -6,13 +6,15 @@ import random
 import logging
 import math
 
+from numpy import character
+
 path.append(Path(__file__).parent.absolute())
 
-from dependence import Dependence
-from species import Species
-from land import Land
-from evolution import Remove_from_List
-import operators
+from Simulation.dependence import Dependence
+from Simulation.species import Species
+from Simulation.land import Land
+from Simulation.evolution import Remove_from_List
+import Simulation.operators as operators
 
 class Simulation:
     #Definido filas y columnas, y creado el mapa que no es mas que una lista de listas de terrenos
@@ -38,7 +40,6 @@ class Simulation:
                                   
         
         logging.info("Simulation was created")
-
 
     #Método para redimensionar el mapa
     def Re_Dimention_Map(self, new_rows, new_columns):
@@ -77,7 +78,12 @@ class Simulation:
             logging.warning("Species %s alredy exists", name)
             return 0
         self.actual_species[name] = Species(name)
-        logging.info("Species %s has added", name) 
+        logging.info("Species %s has added", name)
+
+    def Add_Species_Copy(self, species):
+        if species.name in self.actual_species:
+            raise Exception("The Species " + species.name + " are already in Simulation. Cannot be added again")
+        self.actual_species[species.name] = species.Copy()
 
 
     #Método para eliminar una especies de la simulación
@@ -123,12 +129,25 @@ class Simulation:
     def Add_Society(self, row, column, name, species_name):
         return self.map[row][column].Add_Society(name, self.actual_species[species_name])
 
+    def Add_Society_Copy(self, society, row, column):
+        land = self.map[row][column]
+        if society.name in land.entities:
+            raise Exception("The society " + society.name + " are already in the Land " + row + "," + column +
+                            ". Cannot be added")
+        if not society.species.name in self.actual_species:
+            raise Exception("The society " + society.name + " has an unknown species: " + society.species.name)
+        else:
+            copy_society = society.copy(self.actual_species[society.species.name])
+            self.map[row][column].entities[copy_society.name] = copy_society
+            
+
+
     #Eliminar sociedad de nombre de la entrada
     def Delete_Society(self, row, column, name):
         remove_list = []
         for i in range(len(self.inter_dependences)):
-            if (self.inter_dependences[i].entity_1 == name or
-                self.inter_dependences[i].entity_2 == name):
+            if ((self.inter_dependences[i].entity_1 == name and [row, column] == self.inter_dependences[i].pos_1) or
+                (self.inter_dependences[i].entity_2 == name and [row, column] == self.inter_dependences[i].pos_2)):
                 remove_list.append(i)
         self.inter_dependences = Remove_from_List(self.inter_dependences, remove_list)
         return self.map[row][column].Delete_Society(name)
@@ -145,7 +164,22 @@ class Simulation:
     #Método para actualizar las características de una sociedad en un terreno de la simulación
     def Update_Society_Characteristic_Value(self,  row, column, name, characteristic, value):
         return self.map[row][column].Update_Characteristic_Value(name, characteristic, value)
-    
+
+    #Método para resetear un Land
+    def Reset_Land(self, row, column):
+        remove_list = []
+        for i in range(len(self.inter_dependences)):
+            if ([row, column] == self.inter_dependences[i].pos_1 or [row, column] == self.inter_dependences[i].pos_2):
+                remove_list.append(i)
+        self.inter_dependences = Remove_from_List(self.inter_dependences, remove_list)
+        for entity in self.map[row][column].entities:
+            self.Delete_Society(row, column, entity)
+            self.map[row][column].characteristic = {}
+
+    #Método para agregar un copia de un Land a la Simulación
+    def Add_Land_Copy(self, land, row, column):
+        self.Reset_Land(row, column)
+        self.map[row][column].Copy(land)
 
     #Método para cambiar las características de una terreno de la simulación
     def Change_Land_Characteristic(self, row, column, characteristic, value, lower = -math.inf, upper = math.inf, mutability = -1, distr_function = None):
@@ -153,6 +187,12 @@ class Simulation:
 
     #Método para cambiar las características de un terreno de la simulación
     def Delete_Land_Characteristic(self, row, column, characteristic):
+        remove_list = []
+        for i in range(len(self.inter_dependences)):
+            if ((self.inter_dependences[i].characteristic_1 == characteristic and [row, column] == self.inter_dependences[i].pos_1) or
+                (self.inter_dependences[i].characteristic_2 == characteristic and [row, column] == self.inter_dependences[i].pos_2)):
+                remove_list.append(i)
+        self.inter_dependences = Remove_from_List(self.inter_dependences, remove_list)
         return self.map[row][column].Delete_Characteristic(characteristic)
 
     #Método para actualizar las características de un terreno de la simulación
@@ -200,13 +240,19 @@ class Simulation:
            (not entity_2 in self.map[pos_2[0]][pos_2[1]].entities) or
            (not dependence_1 in self.map[pos_1[0]][pos_1[1]].entities[entity_1].characteristic) or
            (not dependence_2 in self.map[pos_2[0]][pos_2[1]].entities[entity_2].characteristic)):
-            raise Exception("Se intentó añadir a simulation una dependencia con características o entidades erróneas")
+            raise Exception("Interdependence [" + pos_1 + ", " + entity_1 + ", " + dependence_1 + ", " +  pos_2 + ", " + 
+                                 entity_2 + ", " + dependence_2 + " has at least one parameter that doesn't exists in the Simulation.")
         inter = Dependence(pos_1, entity_1, dependence_1, pos_2, entity_2, dependence_2, value, sum, mul)
         for interdependence in self.inter_dependences:
             if interdependence.IsInstance(inter):
                 logging.warning("interdependence was not added: interdependence alredy exists")
+                raise Exception("Interdependence [" + pos_1 + ", " + entity_1 + ", " + dependence_1 + ", " +  pos_2 + ", " + 
+                                 entity_2 + ", " + dependence_2 + " was added twice.")
                 return
-        self.inter_dependences.append(inter)
+        if pos_1 != pos_2:
+            self.inter_dependences.append(inter)
+        else:
+            self.map[pos_1[0]][pos_2[1]].Add_Dependence(entity_1, dependence_1, entity_2, dependence_2, value, sum, mul)
         logging.info("interdependence was added")
 
 
@@ -223,12 +269,15 @@ class Simulation:
 
     #Método para eliminar una interdependencia teniendo totalmente la dependencia a y b
     def Delete_Inter_Dependence(self, pos_1, entity_1, dependence_1, pos_2, entity_2, dependence_2):
-        inter = Dependence(pos_1, entity_1, dependence_1, pos_2, entity_2, dependence_2, 0)
-        for interdependence, i in enumerate(self.inter_dependences):
-            if interdependence.IsInstance(inter):
-                del(self.inter_dependences[i])
-                logging.info("Interdependence was deleted")
-                return
+        if pos_1 == pos_2:
+            self.map[pos_1[0]][pos_1[1]].Delete_Dependence(entity_1, dependence_1, entity_2, dependence_2)
+        else:
+            inter = Dependence(pos_1, entity_1, dependence_1, pos_2, entity_2, dependence_2, 0)
+            for interdependence, i in enumerate(self.inter_dependences):
+                if interdependence.IsInstance(inter):
+                    del(self.inter_dependences[i])
+                    logging.info("Interdependence was deleted")
+                    return
         logging.warning("Interdependence was not deleted: interdependence does not exist")
                 
 

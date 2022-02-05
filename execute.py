@@ -11,7 +11,7 @@ class Execute:
         self.declared_var =[]
         self.used_var =[]
         self.used_funct =[]
-        self.declared_funct =["_start", "_reset", "_random","_redimention","_end","_write","_record","_day","_distribution","_plus","_multiplication","_addLand","_addSociety","_deleteLand","_deleteSociety","_updateLand","_updateSociety","_addDependence","_addInfluence","_addCharacteristic","_updateCharacteristic","_deleteCharacteristic"]
+        self.declared_funct =["_start", "_random","_redimention","_end","_write","_record","_day","_distribution","_plus","_multiplication","_addLand","_addSociety","_addSpecies","_deleteLand","_deleteSociety", "_deleteSpecies","_addInterDependence","_deleteInterDependence","_addDependence","_addInfluence","_deleteInfluence","_changeCharacteristic","_deleteCharacteristic"]
 
     @visitor.on('node')
     def visit(self, node, scope):
@@ -25,10 +25,10 @@ class Execute:
         self.current_type = self.context.get_type("Simulation")
         self.current_method = self.current_type.get_method("_main")
         
-        main = "def mainProgram(args):"
+        main = ""
 
         for dec in node.declarations:
-            main += "\n" + "\t"*(ident+1) + " " + self.visit(dec, scope, ident+1)
+            main += "\n" + self.visit(dec, scope, ident)
         
         return main
 
@@ -41,7 +41,7 @@ class Execute:
         
         params = ""
         for name, typex in zip(self.current_method.param_names, self.current_method.param_types):
-            params += name + ", "
+            params += "z" + name + ", "
             scope.define_variable(name, self.context.get_type(typex.name))
         
         count_declared_var = len(self.declared_var) - 1
@@ -68,13 +68,13 @@ class Execute:
             if i in duplicate:
                 continue
             duplicate.append(i)
-            params += "z" + i + " = " + "z" + i + ", " if i in self.used_funct[count_used_funct+1:] else ""
+            params += "z" + i + " = " + "z" + i + ", " if i in self.used_funct[count_used_funct+1:] and i != node.name else ""
 
         if self.current_method.param_names != [] and count_declared_var == len(self.declared_var) and count_declared_funct == len(self.declared_funct):
-                funct += ")"
-        funct += params[:-2] + ")"
+                funct += "):"
+        funct += params[:-2] + "):"
 
-        funct += lines + "\n" + "\t"*(ident+1) + " return " + "z" + last_line.var
+        funct += lines + "\n" + "\t"*(ident+1) + " print("+ "z" + last_line.var + ")" + "\n" + "\t"*(ident+1) + " return " + "z" + last_line.var
 
         return funct
 
@@ -146,7 +146,7 @@ class Execute:
                         if i in duplicate:
                             continue
                         duplicate.append(i)
-                        listargs += "z" + i + ", " if i in self.used_funct[count_used_funct+1:] else ""
+                        listargs += "z" + i + ", " if i in self.used_funct[count_used_funct+1:] and i != node.name else ""
                     
                     if listargs != "":
                         listargs = listargs[:-2]

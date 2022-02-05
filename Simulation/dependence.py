@@ -4,7 +4,7 @@ import math
 import logging
 
 #from numpy import true_divide
-import operators
+import Simulation.operators as operators
 
 class Dependence:
     def __init__(self, pos_1, entity_1, characteristic_1,
@@ -44,3 +44,8 @@ class Dependence:
     
     def Is_In(self, ab):
         return ab == self.Get_A or ab == self.Get_B
+
+    def Copy(self):
+        return Dependence(self.pos_1, self.entity_1, self.characteristic_1,
+                          self.pos_2, self.entity_2, self.characteristic_2,
+                          self.c, self.plus_function, self.mult_function)

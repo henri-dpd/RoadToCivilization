@@ -2,7 +2,7 @@
 from typing import List, Tuple
 import math
 import logging
-import operators
+import Simulation.operators as operators
 
 class Characteristic:
     def __init__(self, name, value, limit_inf, limit_sup, mutability = 5, distr_function = None):
@@ -62,5 +62,7 @@ class Characteristic:
         lower = self.limit_inf
         upper = self.limit_sup
         return self.Change_Characteristic(self.name, value, lower, upper)
-        
+
+    def Copy(self):
+        return Characteristic(self.name, self.value, self.limit_inf, self.limit_sup, self.mutability, self.distr_function)
         

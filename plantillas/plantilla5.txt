@@ -9,4 +9,7 @@ Number _factorial(Number a)
     {
         result = result * _factorial((a-1));
     }
+    result = result;
 }
+
+Number a = _factorial(3);

@@ -15,4 +15,7 @@ Number _factorial(Number a)
         }
         result = result;
     }
+    result = result;
 }
+
+Number c = _factorial(3);

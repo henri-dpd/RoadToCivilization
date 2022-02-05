@@ -3,8 +3,8 @@ from logging import raiseExceptions
 from re import A
 
 from numpy import sign
-from dependence import Dependence
-from characteristic import Characteristic
+from Simulation.dependence import Dependence
+from Simulation.characteristic import Characteristic
 from asyncio.windows_events import NULL
 import math
 

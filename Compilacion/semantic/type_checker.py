@@ -10,6 +10,7 @@ INCOMPATIBLE_TYPES = 'Cannot convert "%s" into "%s".'
 VARIABLE_NOT_DEFINED = 'Variable "%s" is not defined in "%s".'
 INVALID_OPERATION = 'Operation "%s" is not defined between "%s" and "%s".'
 INVALID_RETURN = 'Return value is not an asignation".'
+INVALID_PARAMS = 'Invalid params'
 INVALID_NAME = "Inavlid name %s"
 
 
@@ -51,14 +52,15 @@ class TypeChecker:
 
         scope.define_variable('self', self.current_type)
 
-        if (node.name == "_main" or node.name == "_start" or node.name == "_reset" 
+        if (node.name == "_main" or node.name == "_start"  
             or node.name == "_random" or node.name == "_redimention" or node.name == "_end" 
             or node.name == "_write" or node.name == "_record" or node.name == "_day" 
             or node.name == "_distribution" or node.name == "_plus" or node.name == "_multiplication" 
-            or node.name == "_addLand" or node.name == "_addSociety" or node.name == "_deleteLand" 
-            or node.name == "_deleteSociety" or node.name == "_updateLand" or node.name == "_updateSociety" 
-            or node.name == "_addDependence" or node.name == "_addInfluence" or node.name == "_addCharacteristic" 
-            or node.name == "_updateCharacteristic" or node.name == "_deleteCharacteristic" ):
+            or node.name == "_addLand" or node.name == "_addSociety" or node.name == "_addSpecies" 
+            or node.name == "_deleteLand" or node.name == "_deleteSociety" or node.name == "_deleteSpecies" 
+            or node.name == "_addInterDependence" or node.name == "_deleteInterDependence" 
+            or node.name == "_deleteInfluence" or node.name == "_addDependence" or node.name == "_addInfluence" 
+            or node.name == "_changeCharacteristic" or node.name == "_deleteCharacteristic" ):
             self.errors.append(INVALID_NAME % (node.name))
             self.error = True
             return TypeCompatible()
@@ -135,6 +137,40 @@ class TypeChecker:
             self.errors.append(INCOMPATIBLE_TYPES % (var_type.name, var_type2.name))
             self.error = True
             return TypeCompatible()
+
+        if var_type.name == "Land":
+            arg =[]
+            for i in node.arg_list:
+                arg.append(self.visit(i, scope))
+                if(self.error):
+                    return
+            if len(arg) != 1 or arg[0].name != "List":
+                self.errors.append(INVALID_PARAMS)
+                self.error = True
+                return TypeCompatible()
+
+        if var_type.name == "Species":
+            arg =[]
+            for i in node.arg_list:
+                arg.append(self.visit(i, scope))
+                if(self.error):
+                    return
+            if len(arg) != 1 or arg[0].name != "String":
+                self.errors.append(INVALID_PARAMS)
+                self.error = True
+                return TypeCompatible()
+
+        if var_type.name == "Society":
+            arg =[]
+            for i in node.arg_list:
+                arg.append(self.visit(i, scope))
+                if(self.error):
+                    return
+            if not(((len(arg) == 2  or (len(arg) == 3 and arg[2].name == "List")) 
+                     and arg[0].name == "String" and arg[1].name == "Species")):
+                self.errors.append(INVALID_PARAMS)
+                self.error = True
+                return TypeCompatible()
             
 
         scope.define_variable(node.var, var_type)

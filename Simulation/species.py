@@ -1,9 +1,10 @@
 
+from Simulation.characteristic import Characteristic
 import math
 import random
 from typing import List, Tuple
 import logging
-import operators
+import Simulation.operators as operators
 
 class Species:
     
@@ -18,6 +19,11 @@ class Species:
         self.Change_Characteristic("Población", 10, 0)              #Poblacion
 
         logging.info("Specie %s was created", name)
+
+    def Copy(self):
+        species = Species(self.name)
+        for characteristics_name in self.characteristic:
+            species.characteristic[characteristics_name] = self.characteristic[characteristics_name].Copy()
 
     def Get_Characteristic_Summation(self, name):
         return self.characteristic[name]["summation"]
@@ -38,6 +44,8 @@ class Species:
         self.characteristic[name] = dictionary  
         logging.info("%s has added/changed characteristic: %s with value:%s", self.name, name, dictionary)
     
+    def z_changeCharacteristic(self, name, initial = 1, lower = -math.inf, upper = math.inf, mutability = -1, distr_function = None):
+        self.Change_Characteristic(name, initial, lower, upper, mutability, distr_function)
     
     def Change_Characteristic_Value(self, name, value):
         self.characteristic[name]["summation"] = self.Summation(self.characteristic[name]["summation"], value)
@@ -53,6 +61,10 @@ class Species:
             logging.info("%s has deleted characteristic: %s", self.name, name)
             return
         logging.warning("%s has not deleted characteristic: %s", self.name, name)
+        raise Exception("Characteristic " + name + " of Species " + self.name + " doesn't exist. Cannot be deleted")
+
+    def z_deleteCharacteristic(self, name):
+        self.Delete_Characteristic(self, name)
 
     def Set_Default_Characteristics(self):
         self.Change_Characteristic("Mortalidad", 1)         #Mortalidad

@@ -26,29 +26,44 @@ def distribution_default(c):
 
 #continuas
 
-def uniform( a, b):
+def uniform(values):
+    if len(values) != 2:
+        raise Exception("Uniform Distribution needs two values")
+    a = values[0]
+    b = values[1]
     U = r.random()
     return (b-a)*U + a
 
 
 
 def exponential(_lambda):
+    if len(_lambda) != 1:
+        raise Exception("Exponential Distribution needs only one values")
+    _lambda = _lambda[0]
     U = r.random()
     return -(1/_lambda)*math.log(U)
 
 
 
-def gamma(n, _lambda):
+def gamma(values):
+    if len(values) != 2:
+        raise Exception("Gamma Distribution needs two values")
+    n = values[0]
+    _lambda = values[1]
     Un = math.prod([r.random() for _ in range(int(n))])
     return -(1/_lambda)*math.log(Un)
 
 
 
 
-def normal( mu, o_2):
-    exp = exponential(1)
+def normal(values):
+    if len(values) != 2:
+        raise Exception("Normal Distribution needs two values")
+    mu = values[0]
+    o_2 = values[1]
+    exp = exponential([1])
     while True:
-        Y = exp.get()
+        Y = exp
         U = r.random()
         if U <= math.exp((-1/2)*(Y-1)**2):
             break
@@ -62,7 +77,11 @@ def normal( mu, o_2):
 
 # discretas
 
-def binomial(n, p):
+def binomial(values):
+    if len(values) != 2:
+        raise Exception("Binomial Distribution needs two values")
+    n = values[0]
+    p = values[1]
     X = 0
     for _ in range(int(n)):
         U = r.random()
@@ -74,6 +93,9 @@ def binomial(n, p):
 
 
 def geometric(p):
+    if len(p) != 1:
+        raise Exception("Geometric Distribution needs only one values")
+    p = p[0]
     U = r.random()
     return math.ceil(math.log(U) / math.log(1-p))
 

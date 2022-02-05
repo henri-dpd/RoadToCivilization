@@ -8,9 +8,9 @@ from sys import path
 
 path.append(str(Path(__file__).parent.parent.absolute()))
 
-from characteristic import Characteristic
-from evolution import Evolution
-import operators
+from Simulation.characteristic import Characteristic
+from Simulation.evolution import Evolution
+import Simulation.operators as operators
 
 
 class Society:
@@ -30,12 +30,17 @@ class Society:
             self.Change_Characteristic(char, species.characteristic[char]["initial"],species.characteristic[char]["lower"], species.characteristic[char]["upper"], species.characteristic[char]["mutability"], species.characteristic[char]["distr_function"])
         logging.info("Society was created")
 
-
-
     #Permite habilitar la clase Evolución en esta Sociedad
-    def Start_Evolution(self, pos):
+    def Start_Evolution(self, pos = None):
         self.enable_evolution = True
-        self.evolution = Evolution(self.name, pos, self.characteristic)
+        if pos == None:
+            self.evolution = Evolution(self.name, self.pos, self.characteristic)
+        else:
+            self.evolution = Evolution(self.name, pos, self.characteristic)
+
+    #Permite deshabilitar la clase Evolución en esta sociedad
+    def Disable_Evolution(self):
+        self.enable_evolution = False
 
     def Learning_for_Evolution(self, in_inter_dependence, value, change_value):
         if self.enable_evolution:
@@ -76,6 +81,9 @@ class Society:
             self.characteristic[name] = Characteristic(name, value, lower, upper, mutability, distr_function)
             self.species.Change_In_Specie_Characteristic(name, self.characteristic[name].value)
             self.evolution.Add_Characteristic(name)
+
+    def z_changeCharacteristic(self, name, value, lower = -math.inf, upper = math.inf, mutability = -1, distr_function = None):
+        self.Change_Characteristic(name, value, lower, upper, mutability, distr_function)
     
     def Delete(self):
         for charac in self.characteristic:
@@ -90,6 +98,11 @@ class Society:
             logging.info("Society has deleted characteristic: %s", name)
             return
         logging.warning("Society has not deleted characteristic: %s", name)
+        raise Exception("Sociedad " + self.name + " of Land " + str(self.pos) + " doesn't has characteristic " + name +
+                        ". Cannot be removed")
+
+    def z_deleteCharacteristic(self, name):
+        self.Delete_Characteristic(name)
 
     #Actualiza el valor de una caracteristica existente, tomando el mismo lower y upper
     def Update_Characteristic_Value(self, name, value):
@@ -98,6 +111,11 @@ class Society:
 
     def Enable_Evolution(self, value : bool):
         self.enable_evolution = value
+
+    def Copy(self, new_species):
+        copy_society = Society(self.name, self.species, self.pos)
+        if self.society.enable_evolution:
+            copy_society.Enable_Evolution(True)
 
     #Pone caracteristicas por defecto
     def Set_Default_Characteristics(self):        

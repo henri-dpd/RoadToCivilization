@@ -8,11 +8,12 @@ from Compilacion.semantic.type_collector import TypeCollector
 from Compilacion.semantic.type_builder import TypeBuilder
 from Compilacion.semantic.type_checker import TypeChecker
 from execute import Execute
+from runner import execute
 
 code = ''
 path =  os.getcwd() + '/plantillas'
 
-file_name = "plantilla1.txt"
+file_name = "plantilla3.txt"
 
 with open(path + '/' + file_name, "r") as file:
     code = file.read()
@@ -68,9 +69,11 @@ else:
             
             if not (collector.error or builder.error or checker.error):
                 print('Programa culmino sin errores:')
-                execute = Execute(context)
-                program = execute.visit(ast)
+                ex = Execute(context)
+                program = ex.visit(ast)
                 print(program)
+                execute(program)
+                
 
             else:
                 

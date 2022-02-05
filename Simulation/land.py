@@ -3,10 +3,10 @@ from typing import List, Tuple
 import logging
 import math
 
-from characteristic import Characteristic
-from dependence import Dependence
-from society import Society
-import operators
+from Simulation.characteristic import Characteristic
+from Simulation.dependence import Dependence
+from Simulation.society import Society
+import Simulation.operators as operators
 
 class Land:
 
@@ -25,6 +25,17 @@ class Land:
         
         
         logging.info("Land was created")
+
+    def Copy(self):
+        copy_land = Land(self.pos)
+        for characteristics_name in self.characteristic:
+            copy_land.characteristic[characteristics_name] = self.characteristic[characteristics_name].Copy()
+        for dependence in self.characteristic_dependences:
+            copy_land.characteristic_dependences.append(dependence)
+        for influence in self.characteristic_influences:
+            copy_land.characteristic_influences.append(influence)
+        for entity_name in self.entities:
+            copy_land.entities[entity_name] = self.entities[entity_name].Copy()
 
     #Añadir sociedad a la lista de entidades, crea una sociedad con el nombre y especie de entrada 
     def Add_Society(self, name, species):
@@ -90,6 +101,10 @@ class Land:
         else:
             self.characteristic[name] = Characteristic(name, value, lower, upper, mutability, distr_function)
 
+
+    def z_changeCharacteristic(self, name, value, lower = -math.inf, upper = math.inf, mutability = 1, distr_function = None):
+        self.Change_Characteristic(name, value, lower, upper, mutability, distr_function)
+
     # Con este método podemos eliminar el valor de la caracteristica name de este terreno
     def Delete_Characteristic(self, name):
         if name in self.characteristic:
@@ -100,6 +115,10 @@ class Land:
                     del(dependence[i])
             return
         logging.warning("Land has not deleted characteristic: %s", name)
+        raise Exception("Land already has the characteristic: " + name)
+
+    def z_deleteCharacteristic(self, name):
+        self.Delete_Characteristic(self, name)
 
     # Con este método podemos actualizar el valor de la caracteristica name de este terreno
     # lower y upper de la caracteristica a actualizar
