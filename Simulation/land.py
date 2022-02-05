@@ -115,7 +115,7 @@ class Land:
                     del(dependence[i])
             return
         logging.warning("Land has not deleted characteristic: %s", name)
-        raise Exception("Land already has the characteristic: " + name)
+        raise Exception("Land already has not the characteristic: " + name)
 
     def z_deleteCharacteristic(self, name):
         self.Delete_Characteristic(self, name)
@@ -172,10 +172,13 @@ class Land:
                 
     # Con este método podemos cambiar el value en una influencia
     def Add_Influences(self, entity_1, influence_1, entity_2, influence_2, value, sum = None, mul = None):
+        if entity_1 not in self.entities.keys() and entity_2 not in self.entities.keys():
+            logging.warning("Influence was not added: Unrecognized entities")
+            return
         infl = Dependence(self.pos, entity_1, influence_1, self.pos, entity_2, influence_2, value, sum, mul)
         for influences in self.characteristic_influences:      #Revisamos que no exista esta dependencia
             if influences.IsInstance(infl):
-                logging.warning("Land has not added influence: %s -> %s * %s", influence_1, influence_2, value)
+                logging.warning("Land has not added influence")
                 return 0    #Si existe devolvemos 0
         
         self.characteristic_influences.append(infl) #Agregamos la dependencia
@@ -184,13 +187,16 @@ class Land:
 
     # Con este método podemos cambiar el value en una influencia
     def Change_Influences_Value(self, entity_1, influence_1, entity_2, influence_2, new_value):
+        if entity_1 not in self.entities.keys() and entity_2 not in self.entities.keys():
+            logging.warning("Influence was not added: Unrecognized entities")
+            return
         infl = Dependence(self.pos, entity_1, influence_1, self.pos, entity_2, influence_2, new_value)
-        for influences in self.characteristic_influences:
+        for i,influences in enumerate(self.characteristic_influences):
             if influences.IsInstance(infl):
-                influences[2].Change_C(new_value)
-                logging.info("Land has changed influence, new influence: %s -> %s * %s", influence_1, influence_2, new_value)
+                self.characteristic_influences[i].Change_C(new_value)
+                logging.info("Land has changed influence, new influence")
                 return
-        logging.warning("Land has not changed influence: %s -> %s * %s", influence_1, influence_2, new_value)
+        logging.warning("Land has not changed influence")
     
     # Con este método podemos eliinar una influencia
     def Delete_Influences(self, entity_1, influence_1, entity_2, influence_2):
@@ -198,9 +204,9 @@ class Land:
         for i, influences in enumerate(self.characteristic_influences):
             if influences.IsInstance(infl):
                 del(self.characteristic_influences[i])                
-                logging.info("Land has deleted influence: %s -> %s * %s", influence_1, influence_2, influences[2])
+                logging.info("Land has deleted influence")
                 return
-        logging.warning("Land has not deleted influence: %s -> %s", influence_1, influence_2)
+        logging.warning("Land has not deleted influence")
 
     #Método para eliminar todas las influencias que incluyan la caracteristica characteristic de la entidad name
     def Delete_All_Specific_Influence(self, entity, characteristic):
