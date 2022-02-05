@@ -16,15 +16,15 @@ def test_society() -> None:
     humanidad = Species("Humano")
     cuba = Society('Cuba', humanidad)
     assert cuba.name == 'Cuba'
-    assert cuba.Get_Characteristic_Value('Población') == 10
+    assert cuba.Get_Characteristic_Value('Poblacion') == 10
     
     cuba.Set_Default_Characteristics()
     assert len(cuba.characteristic) == 13
     
     #Testeando caracteristicas
-    assert cuba.Get_Characteristic_Value('Población') == 10
-    cuba.Change_Characteristic('Población', 100, 0, 5000)
-    assert cuba.Get_Characteristic_Value('Población') == 100
+    assert cuba.Get_Characteristic_Value('Poblacion') == 10
+    cuba.Change_Characteristic('Poblacion', 100, 0, 5000)
+    assert cuba.Get_Characteristic_Value('Poblacion') == 100
     
     assert len(cuba.characteristic) == 13
     cuba.Delete_Characteristic('Crecimiento Actual')
@@ -39,11 +39,11 @@ def test_society() -> None:
     
     china = Society('China', humanidad)
     assert china.name == 'China'
-    assert china.Get_Characteristic_Value('Población') == 10
+    assert china.Get_Characteristic_Value('Poblacion') == 10
     
     china.Set_Default_Characteristics()
     assert len(china.characteristic) == 13    
     
-    china.Change_Characteristic('Población', 220)
-    assert china.Get_Characteristic_Value('Población') == 220
+    china.Change_Characteristic('Poblacion', 220)
+    assert china.Get_Characteristic_Value('Poblacion') == 220
     

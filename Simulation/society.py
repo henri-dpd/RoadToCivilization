@@ -116,7 +116,7 @@ class Society:
         self.enable_evolution = value
 
     def Copy(self, new_species):
-        copy_society = Society(self.name, self.species, self.pos)
+        copy_society = Society(self.name, new_species, self.pos)
         if self.society.enable_evolution:
             copy_society.Enable_Evolution(True)
 

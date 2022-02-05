@@ -142,12 +142,12 @@ class Execute:
                         if i in duplicate:
                             continue
                         duplicate.append(i)
-                        listargs += "z" + i + ", " if i in self.used_var[count_used_var+1:] else ""
+                        listargs += "z" + i + " = " + "z" + i  + ", " if i in self.used_var[count_used_var+1:] else ""
                     for i in self.declared_funct[:count_declared_funct +1]:    
                         if i in duplicate:
                             continue
                         duplicate.append(i)
-                        listargs += "z" + i + ", " if i in self.used_funct[count_used_funct+1:] and i != node.name else ""
+                        listargs += "z" + i + " = " + "z" + i + ", " if i in self.used_funct[count_used_funct+1:] and i != node.name else ""
                     
                     if listargs != "":
                         listargs = listargs[:-2]

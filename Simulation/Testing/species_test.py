@@ -14,16 +14,16 @@ def test_species() -> None:
     #Creando especies y poniendo caracteristicas por defecto
     humano = Species('Humano')
     assert humano.name == 'Humano'
-    assert humano.characteristic["Población"]["summation"] == 0
-    assert humano.characteristic["Población"]["mean"] == 0
+    assert humano.characteristic["Poblacion"]["summation"] == 0
+    assert humano.characteristic["Poblacion"]["mean"] == 0
     
     humano.Set_Default_Characteristics()
     assert len(humano.characteristic) == 13
     
     #Testeando caracteristicas
-    humano.Change_Characteristic_Value('Población', 50)
-    humano.Change_Characteristic_Value('Población', 40)
-    assert humano.characteristic['Población']["summation"] == 90
+    humano.Change_Characteristic_Value('Poblacion', 50)
+    humano.Change_Characteristic_Value('Poblacion', 40)
+    assert humano.characteristic['Poblacion']["summation"] == 90
     
     assert len(humano.characteristic) == 13
     humano.Delete_Characteristic('Tamaño')
@@ -39,15 +39,15 @@ def test_species() -> None:
     
     alien = Species('Alien')
     assert alien.name == 'Alien'
-    assert alien.characteristic["Población"]["summation"] == 0
+    assert alien.characteristic["Poblacion"]["summation"] == 0
     
     alien.Set_Default_Characteristics()
     assert len(alien.characteristic) == 13    
     
-    alien.Change_Characteristic_Value('Población', 220)
-    alien.Change_Characteristic_Value('Población', 250)
-    alien.Change_Characteristic_Value('Población', 240)
-    assert alien.characteristic['Población']["summation"] == 710
+    alien.Change_Characteristic_Value('Poblacion', 220)
+    alien.Change_Characteristic_Value('Poblacion', 250)
+    alien.Change_Characteristic_Value('Poblacion', 240)
+    assert alien.characteristic['Poblacion']["summation"] == 710
     
     
 def test_species_society() -> None:
@@ -56,8 +56,8 @@ def test_species_society() -> None:
     #Creando especies y poniendo caracteristicas por defecto
     humano = Species('Humano')
     assert humano.name == 'Humano'
-    assert humano.characteristic["Población"]["summation"] == 0
-    assert humano.characteristic["Población"]["mean"] == 0
+    assert humano.characteristic["Poblacion"]["summation"] == 0
+    assert humano.characteristic["Poblacion"]["mean"] == 0
     
     humano.Set_Default_Characteristics()
     assert len(humano.characteristic) == 13
@@ -67,8 +67,8 @@ def test_species_society() -> None:
     yuma = Society("yuma", humano)
     assert humano.Get_Characteristic_Summation("Tamaño") == 2
     assert humano.Get_Characteristic_Mean("Tamaño") == 1
-    assert humano.Get_Characteristic_Summation("Población") == 20 
-    assert humano.Get_Characteristic_Mean("Población") == 10 
+    assert humano.Get_Characteristic_Summation("Poblacion") == 20 
+    assert humano.Get_Characteristic_Mean("Poblacion") == 10 
     assert humano.societies == 2 
     
     cubano.Set_Default_Characteristics()
@@ -76,18 +76,18 @@ def test_species_society() -> None:
     assert humano.Get_Characteristic_Summation("Tamaño") == 2 
     assert humano.Get_Characteristic_Mean("Tamaño") == 1 
     
-    cubano.Change_Characteristic("Población", 10)
-    yuma.Change_Characteristic("Población", 30)
-    cubano.Change_Characteristic("Población", 25)
+    cubano.Change_Characteristic("Poblacion", 10)
+    yuma.Change_Characteristic("Poblacion", 30)
+    cubano.Change_Characteristic("Poblacion", 25)
     
-    assert humano.Get_Characteristic_Summation("Población") == 55
-    assert humano.Get_Characteristic_Mean("Población") == 27.5
+    assert humano.Get_Characteristic_Summation("Poblacion") == 55
+    assert humano.Get_Characteristic_Mean("Poblacion") == 27.5
     
     #Creando especies y poniendo caracteristicas por defecto
     yedi = Species('Yedi')
     assert yedi.name == 'Yedi'
-    assert yedi.characteristic["Población"]["summation"] == 0
-    assert yedi.characteristic["Población"]["mean"] == 0
+    assert yedi.characteristic["Poblacion"]["summation"] == 0
+    assert yedi.characteristic["Poblacion"]["mean"] == 0
     
     yedi.Set_Default_Characteristics()
     yedi.Delete_Characteristic("Tolerancia a Extranjeros")
@@ -97,11 +97,11 @@ def test_species_society() -> None:
     extraterrestre = Society("cubano", yedi)
     assert humano.Get_Characteristic_Summation("Tamaño") == 2
     assert humano.Get_Characteristic_Mean("Tamaño") == 1
-    assert humano.Get_Characteristic_Summation("Población") == 55 
-    assert humano.Get_Characteristic_Mean("Población") == 27.5 
+    assert humano.Get_Characteristic_Summation("Poblacion") == 55 
+    assert humano.Get_Characteristic_Mean("Poblacion") == 27.5 
     assert humano.societies == 2 
     assert yedi.Get_Characteristic_Summation("Tamaño") == 1
     assert yedi.Get_Characteristic_Mean("Tamaño") == 1
-    assert yedi.Get_Characteristic_Summation("Población") == 10 
-    assert yedi.Get_Characteristic_Mean("Población") == 10 
+    assert yedi.Get_Characteristic_Summation("Poblacion") == 10 
+    assert yedi.Get_Characteristic_Mean("Poblacion") == 10 
     assert yedi.societies == 1 

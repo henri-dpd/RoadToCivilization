@@ -191,3 +191,14 @@ def z_deleteInfluence(pos_1, entity_1_name, characteristic_1_name,
     
 def z_getLenght(list):
     return len(list)
+
+def z_getCharacteristic(pos, entity, name):
+    return sim.map[pos[0],pos[1]].entities[entity].z_getCharacteristic(name)
+
+
+def z_getCharacteristicSummation(species, name):
+    return sim.actual_species[species].z_getCharacteristicSummation(name)
+
+def c_getCharacteristicMean(species, name):
+    return sim.actual_species[species].z_getCharacteristicSummation(name)
+

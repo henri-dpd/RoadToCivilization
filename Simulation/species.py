@@ -16,7 +16,7 @@ class Species:
         #En especie las características funcionan diferente de las sociedades y terrenos
         #El valor de las características dependen de los valores de cada sociedad 
         self.characteristic = {}
-        self.Change_Characteristic("Población", 10, 0)              #Poblacion
+        self.Change_Characteristic("Poblacion", 10, 0)              #Poblacion
 
         logging.info("Specie %s was created", name)
 
