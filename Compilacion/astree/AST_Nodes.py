@@ -78,6 +78,9 @@ class ast_nodes:
             self.name = name
             self.arg_list = arg_list
 
+    class FunctionName(FactorNode):
+        pass
+
     class WhileNode (ExpressionNode):
         def __init__(self,cond, body):
             self.cond = cond

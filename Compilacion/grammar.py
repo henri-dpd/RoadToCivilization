@@ -75,6 +75,7 @@ def build_grammar():
     factor %= funct, lambda h,s: s[1]
     factor %= listnt, lambda h,s: s[1]
     factor %= listindexed, lambda h,s: s[1]
+    factor %= funct_name, lambda h,s: ast_nodes.FunctionName(s[1])
 
     listnt %= open_square + arg_list + closed_square, lambda h,s: ast_nodes.ListNode(s[2])
     listindexed %= factor + open_square + factor + closed_square, lambda h,s: ast_nodes.IndexListNode(s[1], s[3])

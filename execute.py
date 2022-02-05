@@ -225,6 +225,13 @@ class Execute:
         self.used_var.append(node.exp)
         return "z" + node.exp
 
+
+    @visitor.when(nodes.FunctionName)
+    def visit(self, node, scope, ident):
+        self.used_var.append(node.exp)
+        return "z" + node.exp
+
+
     
     @visitor.when(nodes.IndexListNode)
     def visit(self, node, scope, ident):

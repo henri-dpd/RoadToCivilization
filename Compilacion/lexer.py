@@ -28,6 +28,7 @@ class Lexer:
         self.regex = self._build_regex(table)
         self.errors = []
         self.eof = eof
+        
  
     def tokenize(self,text):    
         while len(text) > 0:
@@ -42,7 +43,7 @@ class Lexer:
                 match = self.regex.match(text)
 
             if error_token:
-                self.errors.append(f'Syntax error 1, unexpexted token "{error_token}" at line {self.line}')
+                self.errors.append(f'Syntax error, unexpexted token "{error_token}" at line {self.line}')
                 if len(text) <= 0: continue
 
             lexeme = match.group()
@@ -77,12 +78,12 @@ class Lexer:
                         text = text[1:]
                     
                     elif c == '\n':
-                        self.errors.append(f'Syntax error 2 at line {self.line} : Undefined string')
+                        self.errors.append(f'Syntax error at line {self.line} : Undefined string')
                         self.line += 1
                         break
                     
                     elif c == '\0':
-                        self.errors.append(f'Syntax error 3 at line {self.line} : String cannot contain the null character')
+                        self.errors.append(f'Syntax error at line {self.line} : String cannot contain the null character')
                     
                     else:
                         lexeme += c
@@ -90,7 +91,7 @@ class Lexer:
                             break
                 
                 else:
-                    self.errors.append(f'Syntax error 4 at line {self.line} : String cannot contain EOF')
+                    self.errors.append(f'Syntax error at line {self.line} : String cannot contain EOF')
 
 
 
