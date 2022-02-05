@@ -98,7 +98,7 @@ Las comandos para interactuar con Simulation son:
 Igualmente está una biblioteca que implementamos por detrás, la biblioteca ``_random("normal")``, recibe por entrada el string con el nombre de la distribución a ejecutar, estas reciben dos parámetros por entrada estas funciones, que son el límite inferior y superior, o media y variancia, y devuelven el valor del random descrito evaluado en ese intervalo.
 Ejemplo:
 ``` c
-Int a = _random("normal")(3,5)
+Number a = _random("normal",[3,5])
 ```
 
 

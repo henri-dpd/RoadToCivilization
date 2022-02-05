@@ -73,14 +73,11 @@ class Land:
     #Cambiar el valor de la caracteristica de entrada perteneciente a la sociedad de nombre: name
     def Change_Entities_Characteristic(self, name, characteristic, value, lower = -math.inf, upper = math.inf, mutablility = -1, distr_function = None):
         return self.entities[name].Change_Characteristic(characteristic, value, lower, upper, mutablility, distr_function)
-        
-
     
     #Método para actualizar las características de la entidad de nombre name
     def Update_Entities_Characteristic(self, name, characteristic, value):
         return self.entities[name].Update_Characteristic_Value(characteristic, value)
         
-
     #Método para eliminar una característica de la entidad de nombre name
     def Delete_Entities_Characteristic(self, name, characteristic):
         return self.entities[name].Delete_Characteristic(characteristic)
@@ -94,6 +91,9 @@ class Land:
         if name in self.characteristic:
             return self.characteristic[name].value
 
+    def z_getCharacteristic(self, name):
+        return self.Get_Characteristic_Value(name)
+
     # Con este método podemos añadir o modificar el valor de la caracteristica name de este terreno
     def Change_Characteristic(self, name, value, lower = -math.inf, upper = math.inf, mutability = 1, distr_function = None):
         if name in self.characteristic:
@@ -101,8 +101,7 @@ class Land:
         else:
             self.characteristic[name] = Characteristic(name, value, lower, upper, mutability, distr_function)
 
-
-    def z_changeCharacteristic(self, name, value, lower = -math.inf, upper = math.inf, mutability = 1, distr_function = None):
+    def z_changeCharacteristic(self, name, value, lower, upper, mutability, distr_function):
         self.Change_Characteristic(name, value, lower, upper, mutability, distr_function)
 
     # Con este método podemos eliminar el valor de la caracteristica name de este terreno
@@ -131,14 +130,18 @@ class Land:
     def Add_Dependence(self, entity_1, dependence_1, entity_2, dependence_2, value, sum = None, mul = None):
         if entity_1 not in self.entities.keys() or entity_2 not in self.entities.keys():
             logging.warning("Dependence was not added: Unrecognized entities")
-            return
+            return False
         dep = Dependence(self.pos, entity_1, dependence_1, self.pos, entity_2, dependence_2, value, sum, mul)
         for dependence in self.characteristic_dependences:
             if dependence.IsInstance(dep):
                 logging.warning("Dependence was not added: dependence alredy exists")
-                return
+                return False
         self.characteristic_dependences.append(dep)
         logging.info("Dependence was added")
+        return True
+
+    def z_addDependence(self, entity_1, dependence_1, entity_2, dependence_2, value, sum, mul):
+        return self.Add_Dependence(entity_1, dependence_1, entity_2, dependence_2, value, sum, mul)
 
     #Método para cambiar una dependencia teniendo totalmente la dependencia a y b
     def Change_Dependences_Value(self, entity_1, dependence_1, entity_2, dependence_2, new_value):
@@ -160,8 +163,12 @@ class Land:
             if dependence.IsInstance(dep):
                 del(self.characteristic_dependences[i])
                 logging.info("Dependence was deleted")
-                return
+                return True
         logging.warning("Dependence was not deleted: dependence does not exist")
+        return False
+    
+    def z_deleteDependence(self, entity_1, dependence_1, entity_2, dependence_2):
+        return self.Delete_Dependence(entity_1, dependence_1, entity_2, dependence_2)
                 
     #Método para eliminar todas las dependencias que incluyan la caracteristica characteristic de la entidad name
     def Delete_All_Specific_Dependence(self, entity, characteristic):
@@ -174,17 +181,19 @@ class Land:
     def Add_Influences(self, entity_1, influence_1, entity_2, influence_2, value, sum = None, mul = None):
         if entity_1 not in self.entities.keys() and entity_2 not in self.entities.keys():
             logging.warning("Influence was not added: Unrecognized entities")
-            return
+            return False
         infl = Dependence(self.pos, entity_1, influence_1, self.pos, entity_2, influence_2, value, sum, mul)
         for influences in self.characteristic_influences:      #Revisamos que no exista esta dependencia
             if influences.IsInstance(infl):
-                logging.warning("Land has not added influence")
-                return 0    #Si existe devolvemos 0
-        
+                logging.warning("Land has added influence: Influence alredy exists")
+                return False    #Si existe devolvemos 0
         self.characteristic_influences.append(infl) #Agregamos la dependencia
         logging.info("Land has added influence: %s -> %s * %s", influence_1, influence_2, value)
-        
+        return True
 
+    def z_addInfluence(self, entity_1, influence_1, entity_2, influence_2, value, sum, mul):
+        return self.Add_Dependence(entity_1, influence_1, entity_2, influence_2, value, sum, mul)
+        
     # Con este método podemos cambiar el value en una influencia
     def Change_Influences_Value(self, entity_1, influence_1, entity_2, influence_2, new_value):
         if entity_1 not in self.entities.keys() and entity_2 not in self.entities.keys():
@@ -205,9 +214,13 @@ class Land:
             if influences.IsInstance(infl):
                 del(self.characteristic_influences[i])                
                 logging.info("Land has deleted influence")
-                return
+                return True
         logging.warning("Land has not deleted influence")
+        return False
 
+    def z_deleteInfluence(self, entity_1, influence_1, entity_2, influence_2):
+        return self.Delete_Influences(entity_1, influence_1, entity_2, influence_2)
+    
     #Método para eliminar todas las influencias que incluyan la caracteristica characteristic de la entidad name
     def Delete_All_Specific_Influence(self, entity, characteristic):
         for i, influence in enumerate(self.characteristic_influences):
@@ -215,7 +228,6 @@ class Land:
                 del(self.characteristic_influences[i])
                 logging.info("dependence was deleted")
 
-    
     #Avanzar un dia en el terreno, modifica las caracteristicas del terreno y sus sociedades con las dependencias e influencias previamente establecidas
     def Move_One_Day(self):
         #Se guarda un diccionario de modificaciones de las dependencias     
@@ -331,10 +343,8 @@ class Land:
                                    inter_dependence.entity_2, inter_dependence.characteristic_2)
             self.entities[inter_dependence.entity_1].Request_from_Land(value, inter_dependence)
         
-
     def Request_From_Simulation(self, value, inter_dependence, node_value):
         self.entities[inter_dependence.entity_1].Request_from_Land(value, inter_dependence, node_value)
-
 
     def Set_Default_Characteristics(self):
         self.Change_Characteristic("Recursos Actuales", 1, 0)
