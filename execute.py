@@ -11,7 +11,7 @@ class Execute:
         self.declared_var =[]
         self.used_var =[]
         self.used_funct =[]
-        self.declared_funct =["_start", "_random","_redimention","_end","_write","_record","_day","_distribution","_plus","_multiplication","_addLand","_addSociety","_addSpecies","_deleteLand","_deleteSociety", "_deleteSpecies","_addInterDependence","_deleteInterDependence","_addDependence","_addInfluence","_deleteInfluence","_changeCharacteristic","_deleteCharacteristic"]
+        self.declared_funct =["_start", "_random","_redimention","_end","_write","_day","_distribution","_plus","_multiplication","_addLand","_addSociety","_addSpecies","_deleteLand","_deleteSociety", "_deleteSpecies","_addDependence","_deleteDependence","_addInfluence","_deleteInfluence","_changeCharacteristic","_deleteCharacteristic","_getCharacteristic","_getCharacteristicSummation","_getCharacteristicMean","_getLenght"]
 
     @visitor.on('node')
     def visit(self, node, scope):
@@ -213,8 +213,6 @@ class Execute:
             return "False"
 
 
-
-
     @visitor.when(nodes.StringNode)
     def visit(self, node, scope, ident):
         return node.exp
@@ -232,7 +230,6 @@ class Execute:
         return "z" + node.exp
 
 
-    
     @visitor.when(nodes.IndexListNode)
     def visit(self, node, scope, ident):
         ind = self.visit(node.var, scope, ident) + "[" + self.visit(node.index, scope, ident) + "]"

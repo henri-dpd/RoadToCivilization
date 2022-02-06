@@ -52,15 +52,15 @@ class TypeChecker:
 
         scope.define_variable('self', self.current_type)
 
-        if (node.name == "_main" or node.name == "_start"  
-            or node.name == "_random" or node.name == "_redimention" or node.name == "_end" 
-            or node.name == "_write" or node.name == "_record" or node.name == "_day" 
-            or node.name == "_distribution" or node.name == "_plus" or node.name == "_multiplication" 
-            or node.name == "_addLand" or node.name == "_addSociety" or node.name == "_addSpecies" 
-            or node.name == "_deleteLand" or node.name == "_deleteSociety" or node.name == "_deleteSpecies" 
-            or node.name == "_addInterDependence" or node.name == "_deleteInterDependence" 
-            or node.name == "_deleteInfluence" or node.name == "_addDependence" or node.name == "_addInfluence" 
-            or node.name == "_changeCharacteristic" or node.name == "_deleteCharacteristic" ):
+        if (node.name == "_main" or node.name == "_start" or node.name == "_random" 
+            or node.name == "_redimention" or node.name == "_end" or node.name == "_write" 
+            or node.name == "_day" or node.name == "_distribution" or node.name == "_plus" 
+            or node.name == "_multiplication" or node.name == "_addLand" or node.name == "_addSociety" 
+            or node.name == "_addSpecies" or node.name == "_deleteLand" or node.name == "_deleteSociety" 
+            or node.name == "_deleteSpecies" or node.name == "_addDependence" or node.name == "_deleteDependence"
+            or node.name == "_deleteInfluence" or node.name == "_addInfluence" or node.name == "_changeCharacteristic"
+            or node.name == "_deleteCharacteristic" or node.name == "_getCharacteristic" or node.name == "_getCharacteristicSummation"
+            or node.name == "_getCharacteristicMean"or node.name == "_getLenght"):
             self.errors.append(INVALID_NAME % (node.name))
             self.error = True
             return TypeCompatible()
