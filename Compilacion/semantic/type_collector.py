@@ -51,16 +51,20 @@ class TypeCollector(object):
         simulation.define_method('_numberToString', ['name'], [number_type], string_type)
         simulation.define_method('_booleanToString', ['name'], [boolean_type], string_type)
         simulation.define_method('_listToString', ['name'], [list_type], string_type)
+        simulation.define_method('_actualDay', [], [], number_type)
+        simulation.define_method('_enableEvolution', ['entity', 'i', 'j'], [string_type, number_type, number_type], boolean_type)
         
+        
+        land_type.define_method('_addSociety', ['name'], [society_type], boolean_type)
         land_type.define_method('_addDependence', ['entity_1_name', 'characteristic_1_name', 'entity_2_name', 'characteristic_2_name', 'c', 'plus', 'mult'], [ string_type, string_type, string_type, string_type, list_type, list_type, list_type], boolean_type)
         land_type.define_method('_deleteDependence', ['entity_1_name', 'characteristic_1_name', 'entity_2_name', 'characteristic_2_name'], [ string_type, string_type, string_type, string_type], boolean_type)
         land_type.define_method('_addInfluence', ['entity_1_name', 'characteristic_1_name', 'entity_2_name', 'characteristic_2_name', 'c', 'plus', 'mult'], [ string_type, string_type, string_type, string_type, list_type, list_type, list_type], boolean_type)
         land_type.define_method('_deleteInfluence', ['entity_1_name', 'characteristic_1_name', 'entity_2_name', 'characteristic_2_name'], [ string_type, string_type, string_type, string_type], boolean_type)
         land_type.define_method('_changeCharacteristic', ['name', 'value', 'liminf', 'limsup', 'mutab', 'dist'], [string_type, list_type, number_type, number_type, number_type, number_type], boolean_type)
-        society_type.define_method('_changeCharacteristic', ['name', 'value', 'liminf', 'limsup', 'mutab', 'dist'], [string_type, list_type, number_type, number_type, number_type, number_type], boolean_type)
-        species_type.define_method('_changeCharacteristic', ['name', 'value', 'liminf', 'limsup', 'mutab', 'dist'], [string_type, list_type, number_type, number_type, number_type, number_type], boolean_type)
         land_type.define_method('_deleteCharacteristic', ['name'], [string_type], boolean_type)
+        society_type.define_method('_changeCharacteristic', ['name', 'value', 'liminf', 'limsup', 'mutab', 'dist'], [string_type, list_type, number_type, number_type, number_type, number_type], boolean_type)
         society_type.define_method('_deleteCharacteristic', ['name'], [string_type], boolean_type)
+        species_type.define_method('_changeCharacteristic', ['name', 'value', 'liminf', 'limsup', 'mutab', 'dist'], [string_type, list_type, number_type, number_type, number_type, number_type], boolean_type)
         species_type.define_method('_deleteCharacteristic', ['name'], [string_type], boolean_type)
 
         

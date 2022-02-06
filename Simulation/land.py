@@ -1,4 +1,5 @@
 import random
+from socket import socketpair
 from typing import List, Tuple
 import logging
 import math
@@ -16,7 +17,7 @@ class Land:
     #Definido un diccionario entidades {"entidad": entidad} incluido land asignando '' como su llave 
     #Definido un diccionario operadores {"operador": funcion} para calcular dependencias, influencias u otro proceso que describa el usuario 
     #Definido un diccionario distribuciones {"distribucion": funcion} para calcular un valor en un rango de acuerdo a la distribucion establecida
-    def __init__(self, pos):
+    def __init__(self, pos = None):
         self.pos = pos
         self.characteristic = {}
         self.characteristic_dependences = [] # dependence_1 -> dependence_2 * value
@@ -50,6 +51,10 @@ class Land:
                 return False
         self.entities[name] = Society(name, species, self.pos)
         logging.info("Society %s was added", name)
+        
+    def z_addSociety(self, society):
+        if not(society.name in self.entities):
+            self.entities[society.name] = society.Copy()
 
     #Eliminar sociedad de nombre de la entrada
     def Delete_Society(self, name):
@@ -315,7 +320,7 @@ class Land:
     def Start_Evolution(self, society_name):
         for society in self.entities:
             if society_name == society:
-                society.Start_Evolution()
+                self.entities[society].Start_Evolution()
 
     def Learning_for_Evolution(self, in_inter_dependence, value, change_value):
         entity = in_inter_dependence.entity_2

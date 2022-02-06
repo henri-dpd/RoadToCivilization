@@ -146,8 +146,8 @@ class MyLexer(Lexer):
         '/'         : r'/'                          , 
         '<'         : r'<'                          , 
         '>'         : r'>'                          , 
-        '='         : r'='                          ,
-        '=='        : r'=='                         }
+        '=='         : r'=='                          ,
+        '='        : r'='                         }
                
                    
         self.keywords = ['while','false', 'else', 'not','if','and','or', 'true']

@@ -2,6 +2,7 @@
 import os
 import pathlib
 from shutil import ExecError
+from typing import List
 from Simulation.simulation import Simulation
 from Simulation.species import Species
 from Simulation.land import Land
@@ -41,11 +42,6 @@ def z_start():
         if end:
             break 
         
-def execute(code):
-    try:
-        exec(code)
-    except Exception as error:
-        print(repr(error))
 
 def z_write(document_name, text):
     path =  os.getcwd() + '/output'
@@ -91,28 +87,32 @@ def z_distribution(values):
         raise Exception("Invalid Argument :" + str(values))
 
 def z_plus(left, right):
+    ret= 0
     if len(left) == 1 and len(right)==1:
-        return default_sum(left[0], right[0])
+        ret = default_sum(left[0], right[0])
     elif len(left) == 2 and len(right)==2:
-        return default_sum(left, right)
+        ret = default_sum(left, right)
     elif len(left) == 1 and len(right)==2:
-        return default_sum(left[0], right)
+        ret = default_sum(left[0], right)
     elif len(left) == 2 and len(right)==1:
-        return default_sum(left, right[0])
+        ret = default_sum(left, right[0])
     else:
         raise Exception("Invalid Argument :" + str(left) + ' ' + str(right)) 
-
+    return [ret] if not isinstance(ret, List) else ret
+    
 def z_multiplication(left, right):
+    ret = 0
     if len(left) == 1 and len(right)==1:
-        return default_mul(left[0], right[0])
+        ret = default_mul(left[0], right[0])
     elif len(left) == 2 and len(right)==2:
-        return default_mul(left, right)
+        ret = default_mul(left, right)
     elif len(left) == 1 and len(right)==2:
-        return default_mul(left[0], right)
+        ret = default_mul(left[0], right)
     elif len(left) == 2 and len(right)==1:
-        return default_mul(left, right[0])
+        ret = default_mul(left, right[0])
     else:
         raise Exception("Invalid Argument :" + str(left) + ' ' + str(right)) 
+    return [ret] if not isinstance(ret,List) else ret
 
 def z_addLand(land, row, column):
     check = Check_Valid_Positions(row, column)
@@ -207,13 +207,38 @@ def z_booleanToString(boolean):
     return str(boolean)
 
 def z_getCharacteristic(pos, entity, name):
-    if Check_Valid_Positions(pos[0], pos[1]) == None:
+    check = Check_Valid_Positions(pos[0], pos[1])
+    if check != None:
+        raise Exception(check + ". Dependence cannot be added")
+    if entity in sim.map[pos[0]][pos[1]].entities:
         return sim.map[pos[0]][pos[1]].entities[entity].z_getCharacteristic(name)
-
+    else:
+        raise Exception("No se puede acceder a la característica. " + 
+                        "La entidad " + entity + " no se encuentra en el land [" +
+                        str(pos[0]) + "," + str(pos[1]) + "]")
 
 def z_getCharacteristicSummation(species, name):
-    return sim.actual_species[species].z_getCharacteristicSummation(name)
+    if species in sim.actual_species[species]:
+        return sim.actual_species[species].z_getCharacteristicSummation(name)
+    else:
+        raise Exception("No se puede acceder a la característica. " + 
+                        "La especie " + species + " no se encuentra en la Simulación")
+    
+    
 
 def z_getCharacteristicMean(species, name):
-    return sim.actual_species[species].z_getCharacteristicSummation(name)
+    if species in sim.actual_species[species]:
+        return sim.actual_species[species].z_getCharacteristicMean(name)
+    else:
+        raise Exception("No se puede acceder a la característica. " + 
+                        "La especie " + species + " no se encuentra en la Simulación")
+    
 
+def z_actualDay():
+    return sim.actual_day
+
+def z_enableEvolution(entity, row, column):
+    check = Check_Valid_Positions(row, column)
+    if check != None:
+        raise Exception(check + ". Dependence cannot be added")
+    sim.Start_Evolution([row, column], entity)

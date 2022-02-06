@@ -37,7 +37,7 @@ class Evolution:
         self.request = None               # Esta es la dependencia que lanzamos como request para evolucionar
         self.request_pos = None           # Esta es la posición de la característica a la que hace referencia el request
 
-        for i in in_characteristics:
+        for i in range(len(in_characteristics)):
             self.characteristics.append([in_characteristics[i], 0])
             self.inter_dependences.append([])
             self.values.append(0)
@@ -87,7 +87,7 @@ class Evolution:
         #Primero obtenemos el pos de la característica que fue afectada
         pos = self.Search_Characteristic_Pos(in_inter_dependence.characteristic_2)
         if pos == -1:
-            raise Exception("La característica a mejorar: " + in_inter_dependence.characterististic_2 +
+            raise Exception("La característica a mejorar: " + in_inter_dependence.characteristic_2 +
                             ", no se encuentra en el Evolution de " + self.society_name)
 
         self.values[pos] = self.values[pos] + change_value

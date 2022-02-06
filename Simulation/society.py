@@ -24,7 +24,7 @@ class Society:
         self.pos = pos
 
         self.characteristic = {}
-        self.enable_evolution = True
+        self.enable_evolution = False
         self.evolution = Evolution(self.name, self.pos)
         for char in species.characteristic:
             self.Change_Characteristic(char, species.characteristic[char]["initial"],species.characteristic[char]["lower"], species.characteristic[char]["upper"], species.characteristic[char]["mutability"], species.characteristic[char]["distr_function"])
@@ -34,9 +34,9 @@ class Society:
     def Start_Evolution(self, pos = None):
         self.enable_evolution = True
         if pos == None:
-            self.evolution = Evolution(self.name, self.pos, self.characteristic)
+            self.evolution = Evolution(self.name, self.pos, list(self.characteristic.keys()))
         else:
-            self.evolution = Evolution(self.name, pos, self.characteristic)
+            self.evolution = Evolution(self.name, pos, list(self.characteristic.keys()))
 
     #Permite deshabilitar la clase Evolución en esta sociedad
     def Disable_Evolution(self):
@@ -118,7 +118,9 @@ class Society:
     def Enable_Evolution(self, value : bool):
         self.enable_evolution = value
 
-    def Copy(self, new_species):
+    def Copy(self, new_species = None):
+        if new_species == None:
+            new_species = self.species
         copy_society = Society(self.name, new_species, self.pos)
         if self.enable_evolution:
             copy_society.Enable_Evolution(True)

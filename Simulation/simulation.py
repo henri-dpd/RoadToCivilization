@@ -27,6 +27,8 @@ class Simulation:
         self.rows = rows
         self.columns = columns
 
+        self.actual_day = 0
+
         self.map = []
 
         for i in range(rows):    #En cada posición de la matriz habrá un land vacío
@@ -139,6 +141,7 @@ class Simulation:
         else:
             copy_society = society.Copy(self.actual_species[society.species.name])
             self.map[row][column].entities[copy_society.name] = copy_society
+            self.map[row][column].entities[copy_society.name].pos = [row, column]
             
 
 
@@ -192,7 +195,8 @@ class Simulation:
 
     #Método para agregar un copia de un Land a la Simulación
     def Add_Land_Copy(self, land, row, column):
-        self.Copy_Land(row, column, land)
+        #self.Copy_Land(row, column, land)
+        self.Reset_Land(row, column)
         self.map[row][column] = land.Copy()
         self.map[row][column].pos = [row, column]
 
@@ -255,7 +259,7 @@ class Simulation:
            (not entity_2 in self.map[pos_2[0]][pos_2[1]].entities) or
            (not dependence_1 in self.map[pos_1[0]][pos_1[1]].entities[entity_1].characteristic) or
            (not dependence_2 in self.map[pos_2[0]][pos_2[1]].entities[entity_2].characteristic)):
-            raise Exception("Interdependence [" + pos_1 + ", " + entity_1 + ", " + dependence_1 + ", " +  pos_2 + ", " + 
+            raise Exception("Interdependence " + str(pos_1) + ", " + entity_1 + ", " + dependence_1 + ", " +  str(pos_2) + ", " + 
                                  entity_2 + ", " + dependence_2 + " has at least one parameter that doesn't exists in the Simulation.")
         inter = Dependence(pos_1, entity_1, dependence_1, pos_2, entity_2, dependence_2, value, sum, mul)
         for interdependence in self.inter_dependences:
@@ -363,6 +367,7 @@ class Simulation:
     # Mueve un día de la simulación
     def Move_One_Day_All(self):
         #Avanza un día en cada terreno
+        self.actual_day = self.actual_day + 1
         for i in range(self.rows):
             for j in range(self.columns):
                 (self.map[i][j]).Move_One_Day()

@@ -63,7 +63,9 @@ class TypeChecker:
             or node.name == "_deleteInfluence" or node.name == "_addInfluence" or node.name == "_changeCharacteristic"
             or node.name == "_deleteCharacteristic" or node.name == "_getCharacteristic" or node.name == "_getCharacteristicSummation"
             or node.name == "_getCharacteristicMean" or node.name == "_getLenght" or node.name == "_numberToString" 
-            or node.name == "_booleanToString" or node.name == "_listToString"):
+            or node.name == "_booleanToString" or node.name == "_listToString"
+            or node.name == "_addSociety" or node.name == "_actualDay"
+            or node.name == "_enableEvolution"):
             self.errors.append(INVALID_NAME % (node.name))
             self.error = True
             return TypeCompatible()
@@ -147,7 +149,7 @@ class TypeChecker:
                 arg.append(self.visit(i, scope))
                 if(self.error):
                     return
-            if len(arg) != 1 or arg[0].name != "List":
+            if len(arg) != 0:
                 self.errors.append(INVALID_PARAMS)
                 self.error = True
                 return TypeCompatible()

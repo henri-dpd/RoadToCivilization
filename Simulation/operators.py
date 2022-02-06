@@ -3,6 +3,10 @@ import math
 from typing import List
 
 def default_sum(a,b):
+    if isinstance(a, List) and len(a) == 1:
+        a = a[0]
+    if isinstance(b, List) and len(b) == 1:
+        b = b[0]
     if isinstance(a,List):
             if isinstance(b,List):
                 return [a[0] + b[0], a[1] + b[1]]
@@ -10,19 +14,61 @@ def default_sum(a,b):
     return a + distribution_default(b)
 
 def default_mul(a,b):
+    if isinstance(a, List) and len(a) == 1:
+        a = a[0]
+    if isinstance(b, List) and len(b) == 1:
+        b = b[0]
     if isinstance(b,List):
             return [b[0] * a, b[1] * a]
     return a * b
 
 def dependence(plus = default_sum, mul =default_mul):
-    return lambda a, b, c : plus(b, mul(a, c))
+    
+    def func(a, b, c):
+        if isinstance(a, List) and len(a) == 1:
+            a = a[0]
+        if isinstance(b, List) and len(b) == 1:
+            b = b[0]
+        if isinstance(c, List) and len(c) == 1:
+            c = c[0]
+            
+        mul_result = mul(a,c)
+        if isinstance(mul_result, List) and len(mul_result) == 1:
+            mul_result = mul_result[0]
+            
+        plus_result = plus(b,mul_result)
+        if isinstance(plus_result, List) and len(plus_result) == 1:
+            plus_result = plus_result[0]
+            
+        return plus_result
+        
+    return func   
+    
 
 def influence(plus = default_sum, mul =default_mul):
-    return lambda old_a, act_a, b, c : plus(b, mul(plus(act_a, mul(old_a, -1)), c))
+    def func(old_a, act_a, b, c):
+        if isinstance(old_a, List) and len(old_a) == 1:
+            old_a = old_a[0]
+        if isinstance(act_a, List) and len(act_a) == 1:
+            act_a = act_a[0]
+        if isinstance(b, List) and len(b) == 1:
+            b = b[0]
+        if isinstance(c, List) and len(c) == 1:
+            c = c[0]
+        negative = mul(old_a, -1) 
+        negative = negative[0] if isinstance(negative, List) and len(negative) == 1 else negative
+        diff = plus(act_a, negative) 
+        diff = diff[0] if isinstance(diff, List) and len(diff) == 1 else diff
+        mult = mul(diff, c)
+        mult = mult[0] if isinstance(mult, List) and len(mult) == 1 else mult
+        summ = plus(b, mult)
+        return summ[0] if isinstance(summ, List) and len(summ) == 1 else summ        
+    return func
+    
 
 
 def distribution_default(c):
-    return r.randint(round(c[0]), round(c[1])) if isinstance(c, List) else c
+    return r.randint(round(c[0]), round(c[1])) if isinstance(c, List)and len(c) ==2 else c
 
 #continuas
 

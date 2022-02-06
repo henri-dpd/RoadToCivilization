@@ -1,0 +1,3 @@
+
+altura en [0,2]: 4
+altura en [0,2]: 4

@@ -1,0 +1,48 @@
+
+_redimention(4,4);
+
+Species humano = Species("humano");
+Species perro = Species("perro");
+
+Land frio = Land();
+Land calor = Land();
+
+List rank = [0,15];
+
+humano._changeCharacteristic("economia",[10],rank[0],rank[1],0,0);
+
+perro._changeCharacteristic("alegria",[10],rank[0],rank[1],0,0);
+
+Society cubano = Society("cubano", humano);
+Society husky = Society("husky", perro);
+
+frio._addSociety(cubano);
+frio._addSociety(husky);
+
+_addLand(frio, 0, 0);
+_addLand(frio, 0, 1);
+_addLand(calor, 1, 0);
+_addLand(calor, 1, 1);
+
+_enableEvolution("cubano", 0, 0);
+
+List _myMult (Number a, Number b)
+{
+    List return = [(a*b)];
+    return = return;
+}
+
+List _mySum (Number a, Number b)
+{
+    List return = [(a+b)];
+    return = return;
+}
+
+_addDependence([0,1], "cubano", "Poblacion", [0,0], "cubano", "Poblacion", [0.5], _mySum, _myMult);
+
+_end( _actualDay() == 100);
+
+_start();
+
+_write("lalala", _listToString(_getCharacteristic([0,0], "husky","Poblacion")));
+_write("lalala", _listToString(_getCharacteristic([0,0], "cubano","Poblacion")));

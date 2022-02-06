@@ -11,7 +11,17 @@ class Execute:
         self.declared_var =[]
         self.used_var =[]
         self.used_funct =[]
-        self.declared_funct =["_start", "_random","_redimention","_end","_write","_day","_distribution","_plus","_multiplication","_addLand","_addSociety","_addSpecies","_deleteLand","_deleteSociety", "_deleteSpecies","_addDependence","_deleteDependence","_addInfluence","_deleteInfluence","_changeCharacteristic","_deleteCharacteristic","_getCharacteristic","_getCharacteristicSummation","_getCharacteristicMean","_getLenght","_numberToString","_booleanToString","_listToString"]
+        self.declared_funct =["_start", "_random","_redimention",
+                              "_end","_write","_day","_distribution",
+                              "_plus","_multiplication","_addLand",
+                              "_addSociety","_addSpecies","_deleteLand",
+                              "_deleteSociety", "_deleteSpecies","_addDependence",
+                              "_deleteDependence","_addInfluence","_deleteInfluence",
+                              "_changeCharacteristic","_deleteCharacteristic",
+                              "_getCharacteristic","_getCharacteristicSummation",
+                              "_getCharacteristicMean","_getLenght","_numberToString",
+                              "_booleanToString","_listToString", "_addSociety",
+                              "_actualDay", "_enableEvolution"]
 
     @visitor.on('node')
     def visit(self, node, scope):
