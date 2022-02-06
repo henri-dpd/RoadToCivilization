@@ -117,8 +117,9 @@ class Society:
 
     def Copy(self, new_species):
         copy_society = Society(self.name, new_species, self.pos)
-        if self.society.enable_evolution:
+        if self.enable_evolution:
             copy_society.Enable_Evolution(True)
+        return copy_society
 
     #Pone caracteristicas por defecto
     def Set_Default_Characteristics(self):        

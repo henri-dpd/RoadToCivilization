@@ -137,7 +137,7 @@ class Simulation:
         if not society.species.name in self.actual_species:
             raise Exception("The society " + society.name + " has an unknown species: " + society.species.name)
         else:
-            copy_society = society.copy(self.actual_species[society.species.name])
+            copy_society = society.Copy(self.actual_species[society.species.name])
             self.map[row][column].entities[copy_society.name] = copy_society
             
 

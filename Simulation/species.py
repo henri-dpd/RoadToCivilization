@@ -23,7 +23,8 @@ class Species:
     def Copy(self):
         species = Species(self.name)
         for characteristics_name in self.characteristic:
-            species.characteristic[characteristics_name] = self.characteristic[characteristics_name].Copy()
+            species.characteristic[characteristics_name] = self.characteristic[characteristics_name].copy()
+        return species
 
     def Get_Characteristic_Summation(self, name):
         return self.characteristic[name]["summation"]

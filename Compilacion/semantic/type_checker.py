@@ -416,14 +416,14 @@ class TypeChecker:
         if(self.error):
             return
 
-        if not type_left.conforms_to(self.context.get_type('Number')) or not type_right.conforms_to(self.context.get_type('Number')):
+        if not type_left == type_right:
             self.errors.append(INVALID_OPERATION % ('+', type_left.name, type_right.name))
             self.error = True
             return TypeCompatible()
             
 
         else:
-            return self.context.get_type('Number')
+            return type_right
     
 
     @visitor.when(nodes.MinusNode)

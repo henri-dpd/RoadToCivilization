@@ -132,7 +132,7 @@ class Execute:
                     count_declared_var = len(self.declared_var) - 1
                     count_declared_funct = len(self.declared_funct) -1 
                     count_used_var = len(self.used_var) - 1
-                    count_used_funct = len(self.used_funct) -1
+                    count_used_funct = len(self.used_funct) - 1
                     
                     cond = self.visit(arg, scope, ident+1) + ", "
                     
@@ -143,6 +143,7 @@ class Execute:
                             continue
                         duplicate.append(i)
                         listargs += "z" + i + " = " + "z" + i  + ", " if i in self.used_var[count_used_var+1:] else ""
+                    duplicate =[]
                     for i in self.declared_funct[:count_declared_funct +1]:    
                         if i in duplicate:
                             continue
@@ -213,7 +214,10 @@ class Execute:
             return "False"
 
 
-
+    @visitor.when(nodes.FunctionName)
+    def visit(self, node, scope, ident):
+        self.used_var.append(node.exp)
+        return "z" + node.exp
 
     @visitor.when(nodes.StringNode)
     def visit(self, node, scope, ident):
@@ -224,13 +228,6 @@ class Execute:
     def visit(self, node, scope, ident):
         self.used_var.append(node.exp)
         return "z" + node.exp
-
-
-    @visitor.when(nodes.FunctionName)
-    def visit(self, node, scope, ident):
-        self.used_var.append(node.exp)
-        return "z" + node.exp
-
 
     
     @visitor.when(nodes.IndexListNode)

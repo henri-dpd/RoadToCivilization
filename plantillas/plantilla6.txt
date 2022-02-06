@@ -1,5 +1,7 @@
 Species humano = Species("humano");
+_addSpecies(humano);
 Species perro = Species("perro");
+_addSpecies(perro);
 
 Land terreno1 = Land([0,0]);
 Land terreno2 = Land([0,1]);
@@ -15,6 +17,11 @@ Society rusa = Society("rusa",humano);
 Society china = Society("china",humano);
 Society husky = Society("husky",perro);
 Society chorkie = Society("chorkie",perro);
+_addSociety(cubana, 0,0);
+_addSociety(rusa, 0,1);
+_addSociety(china, 0,2);
+_addSociety(husky, 0,0);
+_addSociety(chorkie, 0,0);
 
 List rank = [0,15];
 
@@ -32,6 +39,8 @@ terreno1._changeCharacteristic("temperatura", [20,25], 5, 32,0,_dist([5,8]));
 cubana._changeCharacteristic("natalidad", [20], 0, 5,0,0);
 
 _end( _getCharacteristicSummation("humano","Poblacion")>100);
+
+_write( "txt",( "Poblacion de la humanidad: " + _numberToString(_getCharacteristicSummation("humano","Poblacion"))));
 
 Boolean mainreturn = true;
 
