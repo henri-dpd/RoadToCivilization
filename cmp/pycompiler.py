@@ -280,11 +280,12 @@ class Grammar():
         self.nonTerminals = []
         self.terminals = []
         self.startSymbol = None
+        # production type
         self.pType = None
         self.Epsilon = Epsilon(self)
         self.EOF = EOF(self)
 
-        self.symbDict = { 'eof': self.EOF }
+        self.symbDict = { '$': self.EOF }
 
     def NonTerminal(self, name, startSymbol = False):
 
