@@ -35,7 +35,9 @@ class Land:
         for influence in self.characteristic_influences:
             copy_land.characteristic_influences.append(influence)
         for entity_name in self.entities:
-            copy_land.entities[entity_name] = self.entities[entity_name].Copy()
+            if entity_name != '':
+                copy_land.entities[entity_name] = self.entities[entity_name].Copy()
+        return copy_land
 
     #Añadir sociedad a la lista de entidades, crea una sociedad con el nombre y especie de entrada 
     def Add_Society(self, name, species):

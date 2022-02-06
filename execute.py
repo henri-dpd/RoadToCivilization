@@ -11,7 +11,7 @@ class Execute:
         self.declared_var =[]
         self.used_var =[]
         self.used_funct =[]
-        self.declared_funct =["_start", "_random","_redimention","_end","_write","_day","_distribution","_plus","_multiplication","_addLand","_addSociety","_addSpecies","_deleteLand","_deleteSociety", "_deleteSpecies","_addDependence","_deleteDependence","_addInfluence","_deleteInfluence","_changeCharacteristic","_deleteCharacteristic","_getCharacteristic","_getCharacteristicSummation","_getCharacteristicMean","_getLenght"]
+        self.declared_funct =["_start", "_random","_redimention","_end","_write","_day","_distribution","_plus","_multiplication","_addLand","_addSociety","_addSpecies","_deleteLand","_deleteSociety", "_deleteSpecies","_addDependence","_deleteDependence","_addInfluence","_deleteInfluence","_changeCharacteristic","_deleteCharacteristic","_getCharacteristic","_getCharacteristicSummation","_getCharacteristicMean","_getLenght","_numberToString","_booleanToString","_listToString"]
 
     @visitor.on('node')
     def visit(self, node, scope):
@@ -132,7 +132,7 @@ class Execute:
                     count_declared_var = len(self.declared_var) - 1
                     count_declared_funct = len(self.declared_funct) -1 
                     count_used_var = len(self.used_var) - 1
-                    count_used_funct = len(self.used_funct) -1
+                    count_used_funct = len(self.used_funct) - 1
                     
                     cond = self.visit(arg, scope, ident+1) + ", "
                     
@@ -142,12 +142,13 @@ class Execute:
                         if i in duplicate:
                             continue
                         duplicate.append(i)
-                        listargs += "z" + i + ", " if i in self.used_var[count_used_var+1:] else ""
+                        listargs += "z" + i + " = " + "z" + i  + ", " if i in self.used_var[count_used_var+1:] else ""
+                    duplicate =[]
                     for i in self.declared_funct[:count_declared_funct +1]:    
                         if i in duplicate:
                             continue
                         duplicate.append(i)
-                        listargs += "z" + i + ", " if i in self.used_funct[count_used_funct+1:] and i != node.name else ""
+                        listargs += "z" + i + " = " + "z" + i + ", " if i in self.used_funct[count_used_funct+1:] and i != node.name else ""
                     
                     if listargs != "":
                         listargs = listargs[:-2]
@@ -213,18 +214,17 @@ class Execute:
             return "False"
 
 
+    @visitor.when(nodes.FunctionName)
+    def visit(self, node, scope, ident):
+        self.used_var.append(node.exp)
+        return "z" + node.exp
+
     @visitor.when(nodes.StringNode)
     def visit(self, node, scope, ident):
         return node.exp
 
 
     @visitor.when(nodes.VariableNode)
-    def visit(self, node, scope, ident):
-        self.used_var.append(node.exp)
-        return "z" + node.exp
-
-
-    @visitor.when(nodes.FunctionName)
     def visit(self, node, scope, ident):
         self.used_var.append(node.exp)
         return "z" + node.exp

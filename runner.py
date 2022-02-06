@@ -32,10 +32,14 @@ def z_start():
         sim.Move_One_Day_All()
         for cond in dayling:
             if cond():
-                dayling[cond]
+                dayling[cond]()
+        end = False
         for cond in ends:
             if cond():
+                end = True
                 break
+        if end:
+            break 
         
 def execute(code):
     try:
@@ -44,9 +48,12 @@ def execute(code):
         print(repr(error))
 
 def z_write(document_name, text):
-    file_path = pathlib.Path(__file__).parents.absolute() + "/output/" + document_name + ".txt"
-    file = open(file_path, 'a')
-    file.write(text)
+    path =  os.getcwd() + '/output'
+
+    file_name = document_name + ".txt"
+
+    with open(path + '/' + file_name, "w") as file:
+        file.write(text)
 
 def z_redimention(rows, columns):
     if rows < 0 or columns < 0:
@@ -187,3 +194,24 @@ def z_deleteInfluence(pos_1, entity_1_name, characteristic_1_name,
     
 def z_getLenght(list):
     return len(list)
+
+def z_numberToString(number):
+    return str(number)
+
+def z_listToString(listt):
+    return str(listt)
+
+def z_booleanToString(boolean):
+    return str(boolean)
+
+def z_getCharacteristic(pos, entity, name):
+    if Check_Valid_Positions(pos[0], pos[1]):
+        return sim.map[pos[0],pos[1]].entities[entity].z_getCharacteristic(name)
+
+
+def z_getCharacteristicSummation(species, name):
+    return sim.actual_species[species].z_getCharacteristicSummation(name)
+
+def c_getCharacteristicMean(species, name):
+    return sim.actual_species[species].z_getCharacteristicSummation(name)
+

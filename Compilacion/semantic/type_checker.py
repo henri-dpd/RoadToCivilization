@@ -60,7 +60,8 @@ class TypeChecker:
             or node.name == "_deleteSpecies" or node.name == "_addDependence" or node.name == "_deleteDependence"
             or node.name == "_deleteInfluence" or node.name == "_addInfluence" or node.name == "_changeCharacteristic"
             or node.name == "_deleteCharacteristic" or node.name == "_getCharacteristic" or node.name == "_getCharacteristicSummation"
-            or node.name == "_getCharacteristicMean"or node.name == "_getLenght"):
+            or node.name == "_getCharacteristicMean" or node.name == "_getLenght" or node.name == "_numberToString" 
+            or node.name == "_booleanToString" or node.name == "_listToString"):
             self.errors.append(INVALID_NAME % (node.name))
             self.error = True
             return TypeCompatible()
@@ -416,14 +417,14 @@ class TypeChecker:
         if(self.error):
             return
 
-        if not type_left.conforms_to(self.context.get_type('Number')) or not type_right.conforms_to(self.context.get_type('Number')):
+        if not type_left == type_right:
             self.errors.append(INVALID_OPERATION % ('+', type_left.name, type_right.name))
             self.error = True
             return TypeCompatible()
             
 
         else:
-            return self.context.get_type('Number')
+            return type_right
     
 
     @visitor.when(nodes.MinusNode)

@@ -137,7 +137,7 @@ class Simulation:
         if not society.species.name in self.actual_species:
             raise Exception("The society " + society.name + " has an unknown species: " + society.species.name)
         else:
-            copy_society = society.copy(self.actual_species[society.species.name])
+            copy_society = society.Copy(self.actual_species[society.species.name])
             self.map[row][column].entities[copy_society.name] = copy_society
             
 
@@ -179,7 +179,8 @@ class Simulation:
     #Método para agregar un copia de un Land a la Simulación
     def Add_Land_Copy(self, land, row, column):
         self.Reset_Land(row, column)
-        self.map[row][column].Copy(land)
+        self.map[row][column] = land.Copy()
+        self.map[row][column].pos = [row, column]
 
     #Método para cambiar las características de una terreno de la simulación
     def Change_Land_Characteristic(self, row, column, characteristic, value, lower = -math.inf, upper = math.inf, mutability = -1, distr_function = None):
@@ -364,7 +365,7 @@ class Simulation:
         for i in range(self.rows):
             for j in range(self.columns):
                 for entity in self.map[i][j].entities:
-                    if entity != '' and self.map[i][j].entities[entity].characteristic["Población"].value <=0:
+                    if entity != '' and self.map[i][j].entities[entity].characteristic["Poblacion"].value <=0:
                         to_delete.append([i,j,entity])
         for i,j,entity in to_delete:
             self.Delete_Society(i,j,entity)

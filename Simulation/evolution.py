@@ -262,7 +262,7 @@ class Evolution:
         positions_to_remove = []
         for i in range(len(dependences_list)):
             #Si encontramos a alguien que afecte directamente a población, guardamos los valores
-            if dependences_list[i][1] == "Población":
+            if dependences_list[i][1] == "Poblacion":
                 positions_to_remove.append(i)
                 pos = self.Search_Characteristic_Pos(dependences_list[i][0])
                 self.characteristics[pos][1] = dependences_list[i][2]

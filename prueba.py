@@ -13,7 +13,7 @@ from runner import execute
 code = ''
 path =  os.getcwd() + '/plantillas'
 
-file_name = "plantilla1.txt"
+file_name = "plantilla6.txt"
 
 with open(path + '/' + file_name, "r") as file:
     code = file.read()
@@ -79,4 +79,8 @@ else:
                 
                 print('Semantic Errors:')
                 print(code)
+                for error in checker.errors:
+                    print(error)
+                for error in builder.errors:
+                    print(error)
                     

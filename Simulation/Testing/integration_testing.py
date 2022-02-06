@@ -21,14 +21,14 @@ def evolution_test():
     sim.Add_Society(1, 1,"Americano", "Humano")
     sim.map[0][0].entities["Español"].enable_evolution = False
     sim.map[1][1].entities["Americano"].enable_evolution = False
-    sim.Change_Society_Characteristic(0,0, "Español", "Población", 3)
-    sim.Change_Society_Characteristic(0,0, "Cubano", "Población", 10)
+    sim.Change_Society_Characteristic(0,0, "Español", "Poblacion", 3)
+    sim.Change_Society_Characteristic(0,0, "Cubano", "Poblacion", 10)
     sim.Change_Society_Characteristic(0, 0, "Cubano", "Economía", 10)
     sim.Change_Society_Characteristic(0, 0, "Cubano", "Coronavirus", -5)
-    sim.Add_Land_Dependences(0, 0 , "Cubano", "Coronavirus", "Cubano", "Población", 1)
-    sim.Add_Land_Dependences(0, 0 , "Cubano", "Economía", "Cubano", "Población", 1)
-    sim.Add_Land_Dependences(0, 0 , "Español", "Población", "Cubano", "Economía", 1)
-    sim.Add_Inter_Dependence([1,1], "Americano", "Población", [0,0], "Cubano", "Población", -1)
+    sim.Add_Land_Dependences(0, 0 , "Cubano", "Coronavirus", "Cubano", "Poblacion", 1)
+    sim.Add_Land_Dependences(0, 0 , "Cubano", "Economía", "Cubano", "Poblacion", 1)
+    sim.Add_Land_Dependences(0, 0 , "Español", "Poblacion", "Cubano", "Economía", 1)
+    sim.Add_Inter_Dependence([1,1], "Americano", "Poblacion", [0,0], "Cubano", "Poblacion", -1)
 
     day = 1
 
@@ -46,9 +46,9 @@ def evolution_test():
     print(sim.map[0][0].entities["Cubano"].evolution.request)
     print(sim.map[0][0].entities["Cubano"].evolution.request_pos)
     print("Español: ")
-    print(sim.map[0][0].entities["Español"].characteristic["Población"].value)
+    print(sim.map[0][0].entities["Español"].characteristic["Poblacion"].value)
     print("Americano")
-    print(sim.map[1][1].entities["Americano"].characteristic["Población"].value)
+    print(sim.map[1][1].entities["Americano"].characteristic["Poblacion"].value)
 
     print("Día " + str(day) + ": \n")
     sim.Move_One_Day_All()
@@ -64,9 +64,9 @@ def evolution_test():
     print(sim.map[0][0].entities["Cubano"].evolution.request)
     print(sim.map[0][0].entities["Cubano"].evolution.request_pos)
     print("Español: ")
-    print(sim.map[0][0].entities["Español"].characteristic["Población"].value)
+    print(sim.map[0][0].entities["Español"].characteristic["Poblacion"].value)
     print("Americano")
-    print(sim.map[1][1].entities["Americano"].characteristic["Población"].value)
+    print(sim.map[1][1].entities["Americano"].characteristic["Poblacion"].value)
 
     print("Día " + str(day) + ": \n")
     sim.Move_One_Day_All()
@@ -82,9 +82,9 @@ def evolution_test():
     print(sim.map[0][0].entities["Cubano"].evolution.request)
     print(sim.map[0][0].entities["Cubano"].evolution.request_pos)
     print("Español: ")
-    print(sim.map[0][0].entities["Español"].characteristic["Población"].value)
+    print(sim.map[0][0].entities["Español"].characteristic["Poblacion"].value)
     print("Americano")
-    print(sim.map[1][1].entities["Americano"].characteristic["Población"].value)
+    print(sim.map[1][1].entities["Americano"].characteristic["Poblacion"].value)
 
     print("Día " + str(day) + ": \n")
     sim.Move_One_Day_All()
@@ -100,9 +100,9 @@ def evolution_test():
     print(sim.map[0][0].entities["Cubano"].evolution.request)
     print(sim.map[0][0].entities["Cubano"].evolution.request_pos)
     print("Español: ")
-    print(sim.map[0][0].entities["Español"].characteristic["Población"].value)
+    print(sim.map[0][0].entities["Español"].characteristic["Poblacion"].value)
     print("Americano")
-    print(sim.map[1][1].entities["Americano"].characteristic["Población"].value)
+    print(sim.map[1][1].entities["Americano"].characteristic["Poblacion"].value)
 
 
     for i in range(10):
@@ -122,10 +122,10 @@ def evolution_test():
     print(sim.map[0][0].entities["Cubano"].evolution.request_pos)
 
     print("Español: ")
-    print(sim.map[0][0].entities["Español"].characteristic["Población"].value)
+    print(sim.map[0][0].entities["Español"].characteristic["Poblacion"].value)
     print("Americano")
     if("Americano" in sim.map[1][1].entities):
-        print(sim.map[1][1].entities["Americano"].characteristic["Población"].value)
+        print(sim.map[1][1].entities["Americano"].characteristic["Poblacion"].value)
     else:
         print("Se murieron los americanos :) wiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
 
@@ -133,15 +133,15 @@ def society_test():
     humanidad = Species("Humano")
     cuba = Society('Cuba', humanidad)
     print( cuba.name == 'Cuba')
-    print( cuba.Get_Characteristic_Value('Población') == 10)
+    print( cuba.Get_Characteristic_Value('Poblacion') == 10)
     
     cuba.Set_Default_Characteristics()
     print( len(cuba.characteristic) == 13)
     
     #Testeando caracteristicas
-    print( cuba.Get_Characteristic_Value('Población') == 10)
-    cuba.Change_Characteristic('Población', 100, 0, 5000)
-    print( cuba.Get_Characteristic_Value('Población') == 100)
+    print( cuba.Get_Characteristic_Value('Poblacion') == 10)
+    cuba.Change_Characteristic('Poblacion', 100, 0, 5000)
+    print( cuba.Get_Characteristic_Value('Poblacion') == 100)
     
     print( len(cuba.characteristic) == 13)
     cuba.Delete_Characteristic('Crecimiento Actual')
@@ -156,13 +156,13 @@ def society_test():
     
     china = Society('China', humanidad)
     print( china.name == 'China')
-    print( china.Get_Characteristic_Value('Población') == 10)
+    print( china.Get_Characteristic_Value('Poblacion') == 10)
     
     china.Set_Default_Characteristics()
     print( len(china.characteristic) == 13    )
     
-    china.Change_Characteristic('Población', 220)
-    print( china.Get_Characteristic_Value('Población') == 220)
+    china.Change_Characteristic('Poblacion', 220)
+    print( china.Get_Characteristic_Value('Poblacion') == 220)
 
 
 
@@ -239,7 +239,7 @@ def simulation_test() -> None:
     # A continuación agregaremos 3 interpedendencias especie especie, terreno terreno, terreno especie 
     # Luego comprobaremos que efectivamente la simulación se mueve un día y se cambia de valor las características
     
-    sim.Add_Inter_Dependence([1,1], "Humano","Población", [1,1],"Yedi", "Economía",5)
+    sim.Add_Inter_Dependence([1,1], "Humano","Poblacion", [1,1],"Yedi", "Economía",5)
     sim.Move_One_Day_Inter_Dependences()
     print( (sim.map[1][1]).Get_Entities_Characteristic_value('Yedi', "Economía") > 1)
     
@@ -253,7 +253,7 @@ def simulation_test() -> None:
     print( (sim.map[0][0]).Get_Entities_Characteristic_value('Humano', "Esperanza de Vida") > 1)
     
     #Por último agregaremos dependencias entre especies y correremos todo un día verificando los avances
-    sim.Add_Land_Dependences(0,1,"Humano","Población","Humano","Población",2)
+    sim.Add_Land_Dependences(0,1,"Humano","Poblacion","Humano","Poblacion",2)
     sim.Change_Land_Characteristic(0,1,"Fertilidad",[1,2])
     sim.Add_Land_Dependences(0,1,"","Fertilidad","","Capacidad de Recursos",10)
     
@@ -261,7 +261,7 @@ def simulation_test() -> None:
     print( (sim.map[1][1]).Get_Entities_Characteristic_value("Yedi","Economía") == 201)
     print( (sim.map[1][1]).Get_Entities_Characteristic_value("","Temperatura") == [-3,-2])
     print( (sim.map[0][0]).Get_Entities_Characteristic_value("Humano","Esperanza de Vida") == 5)
-    print( (sim.map[0][1]).Get_Entities_Characteristic_value("Humano", "Población") == 30)
+    print( (sim.map[0][1]).Get_Entities_Characteristic_value("Humano", "Poblacion") == 30)
     print( (sim.map[0][1]).Get_Entities_Characteristic_value("","Capacidad de Recursos") == 11 or (sim.map[0][1]).Get_Entities_Characteristic_value("","resources_capacity") == 21)
     
 def land_test() -> None:
@@ -336,15 +336,15 @@ def land_test() -> None:
     terreno.Add_Society("Cuba", Species("Homo-sapiens"))
     
     terreno.Set_Default_Entities_Characteristic("Cuba")
-    terreno.Add_Dependence("Cuba", "Población", "Cuba", "Población", 100)
+    terreno.Add_Dependence("Cuba", "Poblacion", "Cuba", "Poblacion", 100)
     
-    terreno.Add_Dependence("Cuba", "Población", "", "Altitud", 2)
+    terreno.Add_Dependence("Cuba", "Poblacion", "", "Altitud", 2)
     print( terreno.Get_Characteristic_Value('Altitud') == 1)
     print( terreno.Move_One_Day() == None)
-    print( terreno.Get_Entities_Characteristic_value("Cuba","Población") == 1010)
+    print( terreno.Get_Entities_Characteristic_value("Cuba","Poblacion") == 1010)
     print( terreno.Get_Characteristic_Value('Altitud') == 21)
     print( terreno.Move_One_Day() == None)
-    print( terreno.Get_Entities_Characteristic_value("Cuba","Población") == 102010)
+    print( terreno.Get_Entities_Characteristic_value("Cuba","Poblacion") == 102010)
     print( terreno.Get_Characteristic_Value('Altitud') == 2041)
 
 evolution_test()

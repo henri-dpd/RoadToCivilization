@@ -116,7 +116,7 @@ def test_simulation() -> None:
     # A continuación agregaremos 3 interpedendencias especie especie, terreno terreno, terreno especie 
     # Luego comprobaremos que efectivamente la simulación se mueve un día y se cambia de valor las características
     
-    sim.Add_Inter_Dependence([1,1], "Humano","Población", [1,1],"Yedi", "Economía",5)
+    sim.Add_Inter_Dependence([1,1], "Humano","Poblacion", [1,1],"Yedi", "Economía",5)
     sim.Move_One_Day_Inter_Dependences()
     assert  (sim.map[1][1]).Get_Entities_Characteristic_value('Yedi', "Economía") > 1
     
@@ -130,7 +130,7 @@ def test_simulation() -> None:
     assert  (sim.map[0][0]).Get_Entities_Characteristic_value('Humano', "Esperanza de Vida") > 1
     
     #Por último agregaremos dependencias entre especies y correremos todo un día verificando los avances
-    sim.Add_Land_Dependences(0,1,"Humano","Población","Humano","Población",2)
+    sim.Add_Land_Dependences(0,1,"Humano","Poblacion","Humano","Poblacion",2)
     sim.Change_Land_Characteristic(0,1,"Fertilidad",[1,2])
     sim.Add_Land_Dependences(0,1,"","Fertilidad","","Capacidad de Recursos",10)
     
@@ -138,11 +138,11 @@ def test_simulation() -> None:
     assert  (sim.map[1][1]).Get_Entities_Characteristic_value("Yedi","Economía") == 201
     assert  (sim.map[1][1]).Get_Entities_Characteristic_value("","Temperatura") == [-3,-2]
     assert  (sim.map[0][0]).Get_Entities_Characteristic_value("Humano","Esperanza de Vida") == 5
-    assert  (sim.map[0][1]).Get_Entities_Characteristic_value("Humano", "Población") == 30
+    assert  (sim.map[0][1]).Get_Entities_Characteristic_value("Humano", "Poblacion") == 30
 
     assert sim.actual_species["Humano"].societies == 6
     assert sim.actual_species["Humano"].characteristic['Natalidad']["summation"] == 6
-    sim.Change_Society_Characteristic(0,0,"Humano", "Población", -1)
+    sim.Change_Society_Characteristic(0,0,"Humano", "Poblacion", -1)
     sim.Move_One_Day_All()
     assert sim.actual_species["Humano"].characteristic['Natalidad']["summation"] == 5
     assert sim.actual_species["Humano"].societies == 5

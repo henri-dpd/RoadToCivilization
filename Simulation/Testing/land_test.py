@@ -79,13 +79,13 @@ def test_land() -> None:
     terreno.Add_Society("Cuba", Species("Homo-sapiens"))
     
     terreno.Set_Default_Entities_Characteristic("Cuba")
-    terreno.Add_Dependence("Cuba", "Población", "Cuba", "Población", 100)
+    terreno.Add_Dependence("Cuba", "Poblacion", "Cuba", "Poblacion", 100)
     
-    terreno.Add_Dependence("Cuba", "Población", "", "Altitud", 2)
+    terreno.Add_Dependence("Cuba", "Poblacion", "", "Altitud", 2)
     assert terreno.Get_Characteristic_Value('Altitud') == 1
     assert terreno.Move_One_Day() == None
-    assert terreno.Get_Entities_Characteristic_value("Cuba","Población") == 1010
+    assert terreno.Get_Entities_Characteristic_value("Cuba","Poblacion") == 1010
     assert terreno.Get_Characteristic_Value('Altitud') == 21
     assert terreno.Move_One_Day() == None
-    assert terreno.Get_Entities_Characteristic_value("Cuba","Población") == 102010
+    assert terreno.Get_Entities_Characteristic_value("Cuba","Poblacion") == 102010
     assert terreno.Get_Characteristic_Value('Altitud') == 2041
