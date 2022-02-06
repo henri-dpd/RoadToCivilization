@@ -38,9 +38,9 @@ Number _dist (List r)
 terreno1._changeCharacteristic("temperatura", [20,25], 5, 32,0,_dist([5,8]));
 cubana._changeCharacteristic("natalidad", [20], 0, 5,0,0);
 
-_end( _getCharacteristicSummation("humano","Poblacion")>100);
+_end( _getCharacteristicSummation("humano","Poblacion")>10);
 
-_write( "txt",( "Poblacion de la humanidad: " + _numberToString(_getCharacteristicSummation("humano","Poblacion"))));
+_write( "txt",( "Poblacion de los perros: " + _numberToString(_getCharacteristicSummation("perro","Poblacion"))));
 
 Boolean mainreturn = true;
 
