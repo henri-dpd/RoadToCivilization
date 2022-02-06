@@ -7,7 +7,7 @@ Number _factorial(Number a)
     }
     else
     {
-        result = result * _factorial((a-1));
+        result = a * _factorial((a-1));
     }
     result = result;
 }

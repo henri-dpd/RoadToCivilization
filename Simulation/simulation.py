@@ -172,13 +172,27 @@ class Simulation:
             if ([row, column] == self.inter_dependences[i].pos_1 or [row, column] == self.inter_dependences[i].pos_2):
                 remove_list.append(i)
         self.inter_dependences = Remove_from_List(self.inter_dependences, remove_list)
-        for entity in self.map[row][column].entities:
+        entities = [key for key in self.map[row][column].entities.keys()] 
+        for entity in entities:
+            if entity == "":
+                continue
             self.Delete_Society(row, column, entity)
-            self.map[row][column].characteristic = {}
+        self.map[row][column].characteristic = {}
+
+    def Copy_Land(self, row,column, copy_land):
+        for characteristics_name in self.map[row][column].characteristic:
+            copy_land.characteristic[characteristics_name] = self.map[row][column].characteristic[characteristics_name].Copy()
+        for dependence in self.map[row][column].characteristic_dependences:
+            copy_land.characteristic_dependences.append(dependence.Copy())
+        for influence in self.map[row][column].characteristic_influences:
+            copy_land.characteristic_influences.append(influence.Copy())
+        for entity_name in self.map[row][column].entities:
+            if entity_name != '':
+                copy_land.entities[entity_name] = self.map[row][column].entities[entity_name].Copy(self.map[row][column].entities[entity_name].species)
 
     #Método para agregar un copia de un Land a la Simulación
     def Add_Land_Copy(self, land, row, column):
-        self.Reset_Land(row, column)
+        self.Copy_Land(row, column, land)
         self.map[row][column] = land.Copy()
         self.map[row][column].pos = [row, column]
 

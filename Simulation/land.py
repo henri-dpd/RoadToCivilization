@@ -31,12 +31,12 @@ class Land:
         for characteristics_name in self.characteristic:
             copy_land.characteristic[characteristics_name] = self.characteristic[characteristics_name].Copy()
         for dependence in self.characteristic_dependences:
-            copy_land.characteristic_dependences.append(dependence)
+            copy_land.characteristic_dependences.append(dependence.Copy())
         for influence in self.characteristic_influences:
-            copy_land.characteristic_influences.append(influence)
+            copy_land.characteristic_influences.append(influence.Copy())
         for entity_name in self.entities:
             if entity_name != '':
-                copy_land.entities[entity_name] = self.entities[entity_name].Copy()
+                copy_land.entities[entity_name] = self.entities[entity_name].Copy(self.entities[entity_name].species)
         return copy_land
 
     #Añadir sociedad a la lista de entidades, crea una sociedad con el nombre y especie de entrada 
@@ -54,7 +54,7 @@ class Land:
     #Eliminar sociedad de nombre de la entrada
     def Delete_Society(self, name):
         if name not in self.entities.keys() or name == '':
-            logging.warning("Society was not delete: Society do not exists")
+            logging.warning("Society" + name + "was not delete: Society do not exists")
             return 0
         #Ahora debemos eliminar toda interdependencia que incluya a esta especie
         for characteristic in self.entities[name].characteristic:
@@ -104,7 +104,10 @@ class Land:
             self.characteristic[name] = Characteristic(name, value, lower, upper, mutability, distr_function)
 
     def z_changeCharacteristic(self, name, value, lower, upper, mutability, distr_function):
-        self.Change_Characteristic(name, value, lower, upper, mutability, distr_function)
+        if len(value) ==1:
+            self.Change_Characteristic(name, value[0], lower, upper, mutability, distr_function)
+        elif len(value) == 2:
+            self.Change_Characteristic(name, value, lower, upper, mutability, distr_function)
 
     # Con este método podemos eliminar el valor de la caracteristica name de este terreno
     def Delete_Characteristic(self, name):
@@ -143,7 +146,12 @@ class Land:
         return True
 
     def z_addDependence(self, entity_1, dependence_1, entity_2, dependence_2, value, sum, mul):
-        return self.Add_Dependence(entity_1, dependence_1, entity_2, dependence_2, value, sum, mul)
+        if len(value) == 1:
+            return self.Add_Dependence(entity_1, dependence_1, entity_2, dependence_2, value[0], sum, mul)
+        elif len(value) == 2:
+            return self.Add_Dependence(entity_1, dependence_1, entity_2, dependence_2, value, sum, mul)
+        else: 
+            return False
 
     #Método para cambiar una dependencia teniendo totalmente la dependencia a y b
     def Change_Dependences_Value(self, entity_1, dependence_1, entity_2, dependence_2, new_value):
@@ -194,7 +202,12 @@ class Land:
         return True
 
     def z_addInfluence(self, entity_1, influence_1, entity_2, influence_2, value, sum, mul):
-        return self.Add_Dependence(entity_1, influence_1, entity_2, influence_2, value, sum, mul)
+        if len(value) == 1:
+            return self.Add_Dependence(entity_1, influence_1, entity_2, influence_2, value[0], sum, mul)
+        elif len(value) == 2:
+            return self.Add_Dependence(entity_1, influence_1, entity_2, influence_2, value, sum, mul)
+        else:
+            return False
         
     # Con este método podemos cambiar el value en una influencia
     def Change_Influences_Value(self, entity_1, influence_1, entity_2, influence_2, new_value):
@@ -243,6 +256,7 @@ class Land:
             
             plus  = actual_dependence.plus_function
             mult  = actual_dependence.mult_function
+            
 
             #se hace una separación por casos:
             #Si a tiene dos coordenadas, entonces el valor de a es directamente un random de ese intervalo

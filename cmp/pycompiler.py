@@ -285,7 +285,7 @@ class Grammar():
         self.Epsilon = Epsilon(self)
         self.EOF = EOF(self)
 
-        self.symbDict = { '$': self.EOF }
+        self.symbDict = { 'eof': self.EOF }
 
     def NonTerminal(self, name, startSymbol = False):
 

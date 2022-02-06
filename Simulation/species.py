@@ -52,7 +52,10 @@ class Species:
         logging.info("%s has added/changed characteristic: %s with value:%s", self.name, name, dictionary)
     
     def z_changeCharacteristic(self, name, initial, lower, upper, mutability, distr_function):
-        self.Change_Characteristic(name, initial, lower, upper, mutability, distr_function)
+        if len(initial) ==1:
+            self.Change_Characteristic(name, initial[0], lower, upper, mutability, distr_function)
+        elif len(initial) == 2:
+            self.Change_Characteristic(name, initial, lower, upper, mutability, distr_function)
     
     def Change_Characteristic_Value(self, name, value):
         self.characteristic[name]["summation"] = self.Summation(self.characteristic[name]["summation"], value)

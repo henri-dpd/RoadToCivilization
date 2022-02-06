@@ -1,3 +1,4 @@
+from re import S
 import cmp.visitor as visitor
 from Compilacion.astree.AST_Nodes import ast_nodes as nodes
 from cmp.semantic import SemanticError, Scope, TypeCompatible
@@ -51,6 +52,7 @@ class TypeChecker:
         self.current_method = self.current_type.get_method(node.name)
 
         scope.define_variable('self', self.current_type)
+        scope = scope.create_child()
 
         if (node.name == "_main" or node.name == "_start" or node.name == "_random" 
             or node.name == "_redimention" or node.name == "_end" or node.name == "_write" 

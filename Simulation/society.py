@@ -86,7 +86,10 @@ class Society:
             self.evolution.Add_Characteristic(name)
 
     def z_changeCharacteristic(self, name, value, lower, upper, mutability, distr_function):
-        self.Change_Characteristic(name, value, lower, upper, mutability, distr_function)
+        if len(value) ==1:
+            self.Change_Characteristic(name, value[0], lower, upper, mutability, distr_function)
+        elif len(value) == 2:
+            self.Change_Characteristic(name, value, lower, upper, mutability, distr_function)
     
     def Delete(self):
         for charac in self.characteristic:

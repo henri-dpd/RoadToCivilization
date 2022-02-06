@@ -52,8 +52,8 @@ def z_write(document_name, text):
 
     file_name = document_name + ".txt"
 
-    with open(path + '/' + file_name, "w") as file:
-        file.write(text)
+    with open(path + '/' + file_name, "a") as file:
+        file.write("\n"+text)
 
 def z_redimention(rows, columns):
     if rows < 0 or columns < 0:
@@ -152,7 +152,8 @@ def z_addDependence(pos_1, entity_1_name, characteristic_1_name,
     check = Check_Valid_Positions(pos_2[0], pos_2[1])
     if check != None:
         raise Exception(check + ". Dependence cannot be added")
-
+    if len(c) == 1:
+        c = c[0]
     sim.Add_Inter_Dependence(pos_1, entity_1_name, characteristic_1_name,
                              pos_2, entity_2_name, characteristic_2_name, c, plus, mult)
 
@@ -176,7 +177,8 @@ def z_addInfluence(pos_1, entity_1_name, characteristic_1_name,
     check = Check_Valid_Positions(pos_2[0], pos_2[1])
     if check != None:
         raise Exception(check + ". Influence cannot be added")
-
+    if len(c) == 1:
+        c = c[0]
     sim.Add_Land_Influences(pos_1, entity_1_name, characteristic_1_name,
                             pos_2, entity_2_name, characteristic_2_name, c, plus, mult)
 
@@ -205,13 +207,13 @@ def z_booleanToString(boolean):
     return str(boolean)
 
 def z_getCharacteristic(pos, entity, name):
-    if Check_Valid_Positions(pos[0], pos[1]):
-        return sim.map[pos[0],pos[1]].entities[entity].z_getCharacteristic(name)
+    if Check_Valid_Positions(pos[0], pos[1]) == None:
+        return sim.map[pos[0]][pos[1]].entities[entity].z_getCharacteristic(name)
 
 
 def z_getCharacteristicSummation(species, name):
     return sim.actual_species[species].z_getCharacteristicSummation(name)
 
-def c_getCharacteristicMean(species, name):
+def z_getCharacteristicMean(species, name):
     return sim.actual_species[species].z_getCharacteristicSummation(name)
 

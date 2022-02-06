@@ -69,7 +69,8 @@ class Execute:
                 continue
             duplicate.append(i)
             params += "z" + i + " = " + "z" + i + ", " if i in self.used_funct[count_used_funct+1:] and i != node.name else ""
-
+        self.declared_var = self.declared_var[:count_declared_var + 1]
+        self.declared_funct = self.declared_var[:count_declared_funct + 1]
         if self.current_method.param_names != [] and count_declared_var == len(self.declared_var) and count_declared_funct == len(self.declared_funct):
                 funct += "):"
         funct += params[:-2] + "):"
@@ -77,7 +78,7 @@ class Execute:
         funct += lines + "\n" + "\t"*(ident+1) + " return " + "z" + last_line.var
         #funct += lines + "\n" + "\t"*(ident+1) + " print("+ "z" + last_line.var + ")" + "\n" + "\t"*(ident+1) + " return " + "z" + last_line.var
 
-        return funct
+        return funct + "\n"
 
 
     @visitor.when(nodes.DeclarationVar)
@@ -127,7 +128,7 @@ class Execute:
         if(node.obj == None): 
             inst = "z" + node.name + "( " 
             for arg in node.arg_list:
-                if isinstance(arg, nodes.Not) or isinstance(arg, nodes.And) or isinstance(arg, nodes.Or) or isinstance(arg, nodes.LessThan) or isinstance(arg, nodes.MoreThan) or isinstance(arg, nodes.EqualEqual):
+                if isinstance(arg, nodes.Not) or isinstance(arg, nodes.And) or isinstance(arg, nodes.Or) or isinstance(arg, nodes.LessThan) or isinstance(arg, nodes.MoreThan) or isinstance(arg, nodes.EqualEqual) or isinstance(arg, nodes.BooleanNode):
                     
                     count_declared_var = len(self.declared_var) - 1
                     count_declared_funct = len(self.declared_funct) -1 
@@ -149,7 +150,8 @@ class Execute:
                             continue
                         duplicate.append(i)
                         listargs += "z" + i + " = " + "z" + i + ", " if i in self.used_funct[count_used_funct+1:] and i != node.name else ""
-                    
+                    self.declared_var = self.declared_var[:count_declared_var + 1]
+                    self.declared_funct = self.declared_var[:count_declared_funct + 1]
                     if listargs != "":
                         listargs = listargs[:-2]
                     
