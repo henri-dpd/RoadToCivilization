@@ -324,6 +324,21 @@ class TypeChecker:
             return
         return self.context.get_type('String')
 
+    @visitor.when(nodes.FunctionName)
+    def visit(self, node, scope):
+        if(self.error):
+            return
+
+        obj_type = self.current_type
+        try:
+            meth = obj_type.get_method(node.exp)
+        except SemanticError as se:
+            self.errors.append(se.text)
+            self.error = True
+            return TypeCompatible()
+
+        return meth.return_type
+
 
     @visitor.when(nodes.VariableNode)
     def visit(self, node, scope):

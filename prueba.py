@@ -13,7 +13,7 @@ from runner import execute
 code = ''
 path =  os.getcwd() + '/plantillas'
 
-file_name = "plantilla3.txt"
+file_name = "plantilla1.txt"
 
 with open(path + '/' + file_name, "r") as file:
     code = file.read()
