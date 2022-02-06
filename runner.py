@@ -218,7 +218,7 @@ def z_getCharacteristic(pos, entity, name):
                         str(pos[0]) + "," + str(pos[1]) + "]")
 
 def z_getCharacteristicSummation(species, name):
-    if species in sim.actual_species[species]:
+    if species in sim.actual_species:
         return sim.actual_species[species].z_getCharacteristicSummation(name)
     else:
         raise Exception("No se puede acceder a la característica. " + 
@@ -227,7 +227,7 @@ def z_getCharacteristicSummation(species, name):
     
 
 def z_getCharacteristicMean(species, name):
-    if species in sim.actual_species[species]:
+    if species in sim.actual_species:
         return sim.actual_species[species].z_getCharacteristicMean(name)
     else:
         raise Exception("No se puede acceder a la característica. " + 

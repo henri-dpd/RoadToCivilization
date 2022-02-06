@@ -101,7 +101,10 @@ class Evolution:
 
         new_value = 0
         #En caso de que sea una dependencia de esta sociedad, podemos acceder a su value
-        if(in_inter_dependence.entity_1 == self.society_name and in_inter_dependence.entity_2 == self.society_name):
+        if(in_inter_dependence.entity_1 == self.society_name and
+           in_inter_dependence.entity_2 == self.society_name and
+           in_inter_dependence.pos_1 == in_inter_dependence.pos_2 and
+           in_inter_dependence.pos_2 == self.pos):
             if value < 0:
                 new_value = -1
             if value > 0:
@@ -153,7 +156,8 @@ class Evolution:
                     #se escoge una característica antes de detenernos y escoger otra, en este
                     #caso escogimos como métrica la cantidad de características
                     if (self.attemp_success[i][j] != 0 or self.attemps[i][j] > len(self.characteristics) or
-                        self.inter_dependences[i][j][0] == self.society_name):
+                        (self.inter_dependences[i][j][0] == self.society_name and 
+                         self.inter_dependences[i][j][2] == self.pos)):
                         continue
                     else:
                         entity_2 = self.inter_dependences[i][j][0]
@@ -251,7 +255,8 @@ class Evolution:
         dependences_list = []
         for i in range(len(self.inter_dependences)):
             for j in range(len(self.inter_dependences[i])):
-                if(self.inter_dependences[i][j][0] == self.society_name):
+                if(self.inter_dependences[i][j][0] == self.society_name and
+                   self.inter_dependences[i][j][2] == self.pos):
                     dependences_list.append((self.inter_dependences[i][j][1],
                                              self.characteristics[i][0], self.inter_dependences[i][j][2]))
         #Ahora comenzamos a recorrer este "grafo", para saber quién afecta negativa o positivamente a

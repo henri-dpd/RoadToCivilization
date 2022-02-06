@@ -140,8 +140,8 @@ class Simulation:
             raise Exception("The society " + society.name + " has an unknown species: " + society.species.name)
         else:
             copy_society = society.Copy(self.actual_species[society.species.name])
+            copy_society.pos = [row, column]
             self.map[row][column].entities[copy_society.name] = copy_society
-            self.map[row][column].entities[copy_society.name].pos = [row, column]
             
 
 
@@ -195,9 +195,8 @@ class Simulation:
 
     #Método para agregar un copia de un Land a la Simulación
     def Add_Land_Copy(self, land, row, column):
-        #self.Copy_Land(row, column, land)
         self.Reset_Land(row, column)
-        self.map[row][column] = land.Copy()
+        self.map[row][column] = land.Copy([row, column])
         self.map[row][column].pos = [row, column]
 
     #Método para cambiar las características de una terreno de la simulación
@@ -394,7 +393,7 @@ class Simulation:
 
     #Permite habilitar la clase Evolución para alguna de las sociedades
     def Start_Evolution(self, pos, society_name):
-        self.map[pos[0]][pos[1]].Start_Evolution(society_name)
+        self.map[pos[0]][pos[1]].Start_Evolution(society_name, pos)
 
     def Learning_for_Evolution(self, in_inter_dependence, value, change_value):
         pos = in_inter_dependence.pos_2

@@ -27,8 +27,10 @@ class Land:
         
         logging.info("Land was created")
 
-    def Copy(self):
-        copy_land = Land(self.pos)
+    def Copy(self, pos = None):
+        if pos == None:
+            pos = self.pos
+        copy_land = Land(pos)
         for characteristics_name in self.characteristic:
             copy_land.characteristic[characteristics_name] = self.characteristic[characteristics_name].Copy()
         for dependence in self.characteristic_dependences:
@@ -208,9 +210,9 @@ class Land:
 
     def z_addInfluence(self, entity_1, influence_1, entity_2, influence_2, value, sum, mul):
         if len(value) == 1:
-            return self.Add_Dependence(entity_1, influence_1, entity_2, influence_2, value[0], sum, mul)
+            return self.Add_Influences(entity_1, influence_1, entity_2, influence_2, value[0], sum, mul)
         elif len(value) == 2:
-            return self.Add_Dependence(entity_1, influence_1, entity_2, influence_2, value, sum, mul)
+            return self.Add_Influences(entity_1, influence_1, entity_2, influence_2, value, sum, mul)
         else:
             return False
         
@@ -317,10 +319,10 @@ class Land:
         logging.info("Land has move one day")
 
     #Permite habilitar la clase Evolución para alguna de las sociedades Sociedad
-    def Start_Evolution(self, society_name):
+    def Start_Evolution(self, society_name, pos = None):
         for society in self.entities:
             if society_name == society:
-                self.entities[society].Start_Evolution()
+                self.entities[society].Start_Evolution(pos)
 
     def Learning_for_Evolution(self, in_inter_dependence, value, change_value):
         entity = in_inter_dependence.entity_2

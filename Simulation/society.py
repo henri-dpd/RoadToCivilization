@@ -26,6 +26,7 @@ class Society:
         self.characteristic = {}
         self.enable_evolution = False
         self.evolution = Evolution(self.name, self.pos)
+
         for char in species.characteristic:
             self.Change_Characteristic(char, species.characteristic[char]["initial"],species.characteristic[char]["lower"], species.characteristic[char]["upper"], species.characteristic[char]["mutability"], species.characteristic[char]["distr_function"])
         logging.info("Society was created")

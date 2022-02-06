@@ -91,3 +91,10 @@ _write( "txt2",( "altura en [0,2]: " + _listToString(_getCharacteristic([0,2], "
 
 
 mainreturn = _start();
+
+
+
+
+
+
+

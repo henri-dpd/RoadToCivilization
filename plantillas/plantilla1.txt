@@ -1,7 +1,7 @@
 Species humano = Species("humano");
 Species perro = Species("perro");
 
-Land terreno1 = Land([1,2]);
+Land terreno1 = Land();
 _redimention(3,3);
 
 Society cubana = Society("cubana",humano);
