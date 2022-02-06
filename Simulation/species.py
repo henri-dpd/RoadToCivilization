@@ -28,9 +28,15 @@ class Species:
     def Get_Characteristic_Summation(self, name):
         return self.characteristic[name]["summation"]
     
+    def z_getCharacteristicSummation(self, name):
+        return self.Get_Characteristic_Summation(name)
+    
     def Get_Characteristic_Mean(self, name):
         return self.characteristic[name]["mean"]
 
+    def z_getCharacteristicMean(self, name):
+        return self.Get_Characteristic_Mean(name)
+    
     def Summation(self,a,b):
         return operators.default_sum(a, b)
 
@@ -44,7 +50,7 @@ class Species:
         self.characteristic[name] = dictionary  
         logging.info("%s has added/changed characteristic: %s with value:%s", self.name, name, dictionary)
     
-    def z_changeCharacteristic(self, name, initial = 1, lower = -math.inf, upper = math.inf, mutability = -1, distr_function = None):
+    def z_changeCharacteristic(self, name, initial, lower, upper, mutability, distr_function):
         self.Change_Characteristic(name, initial, lower, upper, mutability, distr_function)
     
     def Change_Characteristic_Value(self, name, value):
@@ -53,7 +59,6 @@ class Species:
             self.characteristic[name]["mean"] = operators.default_mul(1/self.societies, self.characteristic[name]["summation"])
         logging.info("%s has added/changed characteristic: %s with value:%s", self.name, name, value)
         
-
     # Con este método podemos eliminar una característica y su valor
     def Delete_Characteristic(self, name):
         if name in self.characteristic:

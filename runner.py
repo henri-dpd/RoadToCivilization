@@ -43,10 +43,9 @@ def execute(code):
     except Exception as error:
         print(repr(error))
 
-def z_write(document_name, characteristic, characteristic_value):
+def z_write(document_name, text):
     file_path = pathlib.Path(__file__).parents.absolute() + "/output/" + document_name + ".txt"
     file = open(file_path, 'a')
-    text = characteristic + " " + characteristic_value
     file.write(text)
 
 def z_redimention(rows, columns):
@@ -75,16 +74,38 @@ def z_random(distribution, input):
     
     else:
         return 0
-    
 
 def z_distribution(values):
-    return distribution_default(values)
+    if len(values) == 1:
+        return distribution_default(values[0])
+    elif len(values) == 2:
+        return distribution_default(values)
+    else:
+        raise Exception("Invalid Argument :" + str(values))
 
-def z_plus(values):
-    return default_sum(values[0], values[1])
+def z_plus(left, right):
+    if len(left) == 1 and len(right)==1:
+        return default_sum(left[0], right[0])
+    elif len(left) == 2 and len(right)==2:
+        return default_sum(left, right)
+    elif len(left) == 1 and len(right)==2:
+        return default_sum(left[0], right)
+    elif len(left) == 2 and len(right)==1:
+        return default_sum(left, right[0])
+    else:
+        raise Exception("Invalid Argument :" + str(left) + ' ' + str(right)) 
 
-def z_multiplication(values):
-    return default_mul(values[0], values[1])
+def z_multiplication(left, right):
+    if len(left) == 1 and len(right)==1:
+        return default_mul(left[0], right[0])
+    elif len(left) == 2 and len(right)==2:
+        return default_mul(left, right)
+    elif len(left) == 1 and len(right)==2:
+        return default_mul(left[0], right)
+    elif len(left) == 2 and len(right)==1:
+        return default_mul(left, right[0])
+    else:
+        raise Exception("Invalid Argument :" + str(left) + ' ' + str(right)) 
 
 def z_addLand(land, row, column):
     check = Check_Valid_Positions(row, column)
@@ -118,23 +139,22 @@ def z_deleteSpecies(species):
 
 def z_addDependence(pos_1, entity_1_name, characteristic_1_name,
                     pos_2, entity_2_name, characteristic_2_name, c, plus, mult):
-    check = Check_Valid_Positions(pos_1[0], pos_1[2])
+    check = Check_Valid_Positions(pos_1[0], pos_1[1])
     if check != None:
         raise Exception(check + ". Dependence cannot be added")
-    check = Check_Valid_Positions(pos_2[0], pos_2[2])
+    check = Check_Valid_Positions(pos_2[0], pos_2[1])
     if check != None:
         raise Exception(check + ". Dependence cannot be added")
 
     sim.Add_Inter_Dependence(pos_1, entity_1_name, characteristic_1_name,
                              pos_2, entity_2_name, characteristic_2_name, c, plus, mult)
 
-
 def z_deleteDependence(pos_1, entity_1_name, characteristic_1_name,
                        pos_2, entity_2_name, characteristic_2_name):
-    check = Check_Valid_Positions(pos_1[0], pos_1[2])
+    check = Check_Valid_Positions(pos_1[0], pos_1[1])
     if check != None:
         raise Exception(check + ". Dependence cannot be deleted")
-    check = Check_Valid_Positions(pos_2[0], pos_2[2])
+    check = Check_Valid_Positions(pos_2[0], pos_2[1])
     if check != None:
         raise Exception(check + ". Dependence cannot be deleted")
 
@@ -143,10 +163,10 @@ def z_deleteDependence(pos_1, entity_1_name, characteristic_1_name,
 
 def z_addInfluence(pos_1, entity_1_name, characteristic_1_name,
                    pos_2, entity_2_name, characteristic_2_name, c, plus, mult):
-    check = Check_Valid_Positions(pos_1[0], pos_1[2])
+    check = Check_Valid_Positions(pos_1[0], pos_1[1])
     if check != None:
         raise Exception(check + ". Influence cannot be added")
-    check = Check_Valid_Positions(pos_2[0], pos_2[2])
+    check = Check_Valid_Positions(pos_2[0], pos_2[1])
     if check != None:
         raise Exception(check + ". Influence cannot be added")
 
@@ -155,12 +175,15 @@ def z_addInfluence(pos_1, entity_1_name, characteristic_1_name,
 
 def z_deleteInfluence(pos_1, entity_1_name, characteristic_1_name,
                       pos_2, entity_2_name, characteristic_2_name):
-    check = Check_Valid_Positions(pos_1[0], pos_1[2])
+    check = Check_Valid_Positions(pos_1[0], pos_1[1])
     if check != None:
         raise Exception(check + ". Influence cannot be deleted")
-    check = Check_Valid_Positions(pos_2[0], pos_2[2])
+    check = Check_Valid_Positions(pos_2[0], pos_2[1])
     if check != None:
         raise Exception(check + ". Influence cannot be deleted")
 
     sim.Delete_Land_Influences(pos_1, entity_1_name, characteristic_1_name,
                                pos_2, entity_2_name, characteristic_2_name)
+    
+def z_getLenght(list):
+    return len(list)

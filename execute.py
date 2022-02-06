@@ -74,7 +74,8 @@ class Execute:
                 funct += "):"
         funct += params[:-2] + "):"
 
-        funct += lines + "\n" + "\t"*(ident+1) + " print("+ "z" + last_line.var + ")" + "\n" + "\t"*(ident+1) + " return " + "z" + last_line.var
+        funct += lines + "\n" + "\t"*(ident+1) + " return " + "z" + last_line.var
+        #funct += lines + "\n" + "\t"*(ident+1) + " print("+ "z" + last_line.var + ")" + "\n" + "\t"*(ident+1) + " return " + "z" + last_line.var
 
         return funct
 

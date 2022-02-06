@@ -65,6 +65,9 @@ class Society:
             raise Exception("La característica " + characteristic_name + 
                             " no se encuentra en la sociedad " + self.name)
 
+    def z_getCharacteristic(self,name):
+        return self.Get_Characteristic_Value(name)
+
     # Con este método podemos añadir o modificar el valor de una característica
     # lower limite inferior, upper  limite superior
     def Change_Characteristic(self, name, value, lower = -math.inf, upper = math.inf, mutability = -1, distr_function = None):
@@ -82,7 +85,7 @@ class Society:
             self.species.Change_In_Specie_Characteristic(name, self.characteristic[name].value)
             self.evolution.Add_Characteristic(name)
 
-    def z_changeCharacteristic(self, name, value, lower = -math.inf, upper = math.inf, mutability = -1, distr_function = None):
+    def z_changeCharacteristic(self, name, value, lower, upper, mutability, distr_function):
         self.Change_Characteristic(name, value, lower, upper, mutability, distr_function)
     
     def Delete(self):
