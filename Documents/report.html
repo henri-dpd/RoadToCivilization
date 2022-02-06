@@ -1,0 +1,421 @@
+<!DOCTYPE html><html><head>
+      <title>report</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:///c:\Users\Laptop\.vscode\extensions\shd101wyy.markdown-preview-enhanced-0.6.1\node_modules\@shd101wyy\mume\dependencies\katex\katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <style>
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}
+
+/* highlight */
+pre[data-line] {
+  position: relative;
+  padding: 1em 0 1em 3em;
+}
+pre[data-line] .line-highlight-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+}
+
+pre[data-line] .line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: inherit 0;
+  margin-top: 1em;
+  background: hsla(24, 20%, 50%,.08);
+  background: linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));
+  pointer-events: none;
+  line-height: inherit;
+  white-space: pre;
+}
+
+pre[data-line] .line-highlight:before, 
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-start);
+  position: absolute;
+  top: .4em;
+  left: .6em;
+  min-width: 1em;
+  padding: 0 .5em;
+  background-color: hsla(24, 20%, 50%,.4);
+  color: hsl(24, 20%, 95%);
+  font: bold 65%/1.5 sans-serif;
+  text-align: center;
+  vertical-align: .3em;
+  border-radius: 999px;
+  text-shadow: none;
+  box-shadow: 0 1px white;
+}
+
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-end);
+  top: auto;
+  bottom: .4em;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview  ">
+      <h1 class="mume-header" id="road-to-civilization">Road To Civilization</h1>
+
+<p>Proyecto asignaturas de <strong>Simulaci&#xF3;n</strong>, <strong>Inteligencia Artificial</strong> y <strong>Compilaci&#xF3;n</strong> del 3er a&#xF1;o de Ciencias de la Computaci&#xF3;n de la Universidad de la Habana.</p>
+<p>Desarrolladores:</p>
+<ul>
+<li>Alejandro Escobar Giraudy (C312)</li>
+<li>Airelys Collazo P&#xE9;rez (C312)</li>
+<li>Henri Daniel Pe&#xF1;a Dequero (C311)</li>
+</ul>
+<h2 class="mume-header" id="1-introducci%C3%B3n-al-problema-y-b%C3%BAsqueda-de-una-posible-soluci%C3%B3n">1. Introducci&#xF3;n al problema y b&#xFA;squeda de una posible soluci&#xF3;n</h2>
+
+<p>Como bien el t&#xED;tulo ya da a entender, nuestra propuesta es un Simulador de Civilizaciones, a partir del uso de herramientas de las tres asignaturas. Nuestra idea inicial es hacerlo por capas de trabajo, donde desarrollaremos una serie de caracter&#xED;sticas y funcionalidades al programa una vez la base del proyecto est&#xE9; completa.</p>
+<p>La idea base del proyecto es la siguiente:</p>
+<ol>
+<li>Crear un simulador que nos permita analizar el comportamiento de una civilizaci&#xF3;n, dadas las condiciones de un terreno, y su evoluci&#xF3;n con el paso del tiempo.</li>
+<li>La civilizaci&#xF3;n estar&#xE1; dotada de una serie de variables que explican su funcionamiento y avance, d&#xED;gase el &#xED;ndice de mortalidad, natalidad, gestaci&#xF3;n, promedio de vida, avance tecnol&#xF3;gico, potencial adaptativo (dependiendo del medio ambiente definido), etc, y estar&#xE1; dotada de un comportamiento, d&#xED;gase tendencia de movimiento, agresividad, actividades laborales principales, etc.</li>
+<li>Igualmente ser&#xE1; posible establecer especies de menor o mayor alcance con respecto a una civilizaci&#xF3;n, o sea, ser&#xE1; posible establecer a especies atrasadas (ejemplo: moluscos, artr&#xF3;podos, etc), especies intermedias (ejemplo: perros, gatos) yuna especie avanzada(ejemplo: humanos).</li>
+</ol>
+<p>La idea no es que se establezcan en el nivel seg&#xFA;n los ejemplos anteriores, sino que, a partir de un lenguaje definido por nosotros y un compilador para el mismo, puedan ser creadas especies con gran cantidad de caracter&#xED;sticas, incluso que el usuario defina el comportamiento de la mayor parte de las variables.</p>
+<p>Propondremos realizar la evoluci&#xF3;n de la civilizaci&#xF3;n en el tiempo utilizando herramientas de inteligencia artificial, as&#xED; como el uso de estas herramientas en otras partes del trabajo a medida que avancemos.Una vez que cumplamos con la base de nuestro simulador, nos tomaremos como meta lograr las siguientes ideas por capas:</p>
+<ul>
+<li>Implementar un sistema de desastres naturales, d&#xED;gase huracanes, terremotos, etc.</li>
+<li>Implementar un sistema de enfermedades naturales, ya hereditarias, infecciosas.</li>
+<li>Implementar un sistema de ambientaci&#xF3;n. Esto incluir&#xE1; terrenos con caracter&#xED;sticas clim&#xE1;ticas, estaciones, etc.-Implementar la posibilidad de permitir diferentes intervalos de tiempos de avance en la simulaci&#xF3;n (ejemplo: d&#xED;as, semanas, meses, a&#xF1;os, d&#xE9;cadas, etc).</li>
+<li>Lograr la existencia de m&#xE1;s de una civilizaci&#xF3;n, lo cual da paso a establecer un sistema de interacci&#xF3;n entre dos civilizaciones distintas (d&#xED;gase problemas menores, guerras, alianzas, uniones, etc)</li>
+<li>Posibilitar la transici&#xF3;n entre el estado de evoluci&#xF3;n de una especie, d&#xED;gase de atrasado a intermedio, o de intermedio a civilizado.</li>
+<li>Habilitar la existencia de subgrupos dentro de una misma especie. Sectores dedicados a cierta parte de la civilizaci&#xF3;n (ejemplo: obreros, fil&#xF3;sofos, artesanos, etc), grupos problem&#xE1;ticos, grupos desertores, etc.</li>
+<li>Habilitar la evoluci&#xF3;n de las enfermedades, adaptaci&#xF3;n, surgimiento, cambio (tanto de enfermedades hereditarias como infecciosas).</li>
+<li>Habilitar el cambio clim&#xE1;tico y evoluci&#xF3;n de <a href="http://este.Si">este.Si</a> bien el anterior orden de las capas de trabajo no es definitivo, en un primer momento esperar&#xED;amos fluyera de esa forma.</li>
+</ul>
+<p>Queremos ser capaces de lograr que todas las capas de trabajo mencionadas puedan ser generadas a partir del lenguaje por el usuario (crear especies, subgrupos, desastres, enfermedades, etc) con las variables y evoluci&#xF3;n de las mismas que se estime conveniente.</p>
+<p>El lenguaje, a&#xFA;n no definido claro est&#xE1;, lograremos que no se limite a la creaci&#xF3;n de la simulaci&#xF3;n, sinoquetambi&#xE9;n pueda ser capaz de modificar din&#xE1;micamente el comportamiento y evoluci&#xF3;n de todo lo que es posible implementar en esta simulaci&#xF3;n.</p>
+<p>Concretamente queremos crear un software que a nivel de problaciones de especies en un ambiente definido pueda simular el desarrollo de las mismas de tal manera que podamos obtener,a trav&#xE9;s de t&#xE9;cnicas de visualizaci&#xF3;n, las estad&#xED;sticas de lospar&#xE1;metros de inter&#xE9;s en eltiempo y espacio que querramos conociendo todas las interacciones entre la dis&#xED;miles especiesy/o poblacionesy el medio en que encuentran, adem&#xE1;s un entorno controlable en cualquier momento a partir del lenguaje creado espec&#xED;ficamente para nuestro problema.</p>
+<p>Espereamos la idea sea de su agrado, muchas gracias.</p>
+<h2 class="mume-header" id="2-primeros-pasos">2. Primeros pasos</h2>
+
+<p>Se ha implementado un prototipo inicial del proyecto en el que esta definida tres clases principales: Specie, Land y Simulation. Estas componen las escencia de lo que se espera como producto final.<br>
+Specie define cada especie por separado, esta consta con un nombre, una lista de caracter&#xED;sticas(las que tienen por valor un n&#xFA;mero o un rango), y otra de dependencias entre las mismas donde podemos definir las relaciones entre las caracter&#xED;sticas de la siguiente forma:<br>
+a -&gt; b * c<br>
+Al pasar un d&#xED;a en la simulaci&#xF3;n esta dependencia es expresada de la siguienteforma:<br>
+b += a * c</p>
+<p>Land define una parte del terreno, esta consta de una lista de caracter&#xED;sticas, y otra de dependencias siguiendo la misma l&#xF3;gica vista anteriormente</p>
+<p>Simulation se encarga de contener el terreno, crear las especies, adem&#xE1;s esta debe contener las reglas de nuestro sistema y de acuerdo a a las mismas correr las simulaci&#xF3;n.</p>
+<h3 class="mume-header" id="21-problem%C3%A1ticas-principales">2.1 Problem&#xE1;ticas principales</h3>
+
+<p>Definir las reglas sobre como va a estar distribuido las especies en el terreno y las consecuencias de tal forma que si crece la poblaci&#xF3;n como se ditribuye en el terreno, o si lo hacemos regi&#xF3;n a regi&#xF3;n</p>
+<p>Otra problem&#xE1;tica principal es como definir las interrelaciones terreno - terreno, especie - especie, terreno - specie, specie - terreno. Puesto que solo definimos las dependencias entre la misma especie o terreno, pero como definimos entre instancias diferentes o entre terrenos y especies. este problema necesita m&#xE1;s debate entre los desarrolladores y se espera llegar a un consenso en el pr&#xF3;ximo paso</p>
+<p>Definir las reglas de nuestra simulaci&#xF3;n que no son modificables por el usuario, vitales para un correco funcionamiento del sistema.</p>
+<h3 class="mume-header" id="22-proximos-pasos">2.2 Proximos pasos</h3>
+
+<p>Lograr un consenso para definir la resoluci&#xF3;n de las problem&#xE1;ticas y llevarlo al proyecto.</p>
+<p>Tener una primera gram&#xE1;tica y lograr un avance significativo en la defici&#xF3;n del lenguaje a usar por el usuario, as&#xED; como el tokenizador, parser, etc</p>
+<p>Implementar las funciones de distribuci&#xF3;n a usar dado que actualmente solo se hace un random por defecto y por supuesto eso se debe mejorar.</p>
+<p>Perfeccionar la simulaci&#xF3;n dado que esta corre aplicando als dependencias una a una, pero no como un conjunto que sucede todo al mismo tiempo, creemos que ir introduciendo ecuaciones diferenciales nos puede ayudar a lograrlo</p>
+<p>Crear estructuras y algoritmos para una optimizaci&#xF3;n de lo ya implementado</p>
+<h2 class="mume-header" id="3-restructurando-mundo-implementando-reglas-y-adaptando-estructura-por-capas">3. Restructurando mundo, implementando reglas y adaptando estructura por capas.</h2>
+
+<p>En esta iteracion se ha avanzado en resolver las problematicas encontradas en el anterior modelado del problema conllevnado consigui una restrucutracion parcial del proceto, un cambio de filosofia en la implememtacion.</p>
+<h3 class="mume-header" id="31-primeros-cambios">3.1. Primeros cambios</h3>
+
+<h4 class="mume-header" id="nuevo">Nuevo:</h4>
+
+<ul>
+<li>Concepto de sociedad como unidad atomica, agente en esta simulacion que busca supervivencia, esta pertenece a una unica especie y se ubica en un unico terreno.</li>
+<li>Concepto de influencia, dado que las dependencias son hechos que ocurren en un inervalo de tiempo, es necesario tener un hecho que represente una correspondencia entre dos caracteristicas de tal manera que cuando una cambie la otra cambie proporcional al cambio de la primera. Ejemplo: A mayor economia, menor hambre. Como dependencia este no se podria representar dado que solo logramos que en cada iteracion aumente proporcional a toda la economia, ahora con influencias logramos una correcta modelacion de la problematica dado que hambre aumenta o disminuye propoircional al cambio que tenga la economia esa iteracion.</li>
+<li>Limites en las caracteristicas, importante para lograr una facil y correcta modelacion de algunas caracteristicas por ejemplo la cantidad de los recursos o el agua dado que no puede ser menor que 0.</li>
+<li>Lista de entidades por terreno, en la que guardamos todas las entidades que interactuan en el mismo.</li>
+<li>Lista de operaciones y distribuciones en la que guardamos las operaciones que se hacen entre caracteristicas(dependencias, influencias), y las distribuciones que se calculan al trabajar en los rangos.</li>
+</ul>
+<h4 class="mume-header" id="cambios">Cambios:</h4>
+
+<ul>
+<li>Specie reconvertido a un simple contenedor por ahora, el objetivo es que persista como concepto global, que se pueda apoyar en ello para obtener las salidas a estudiar pero que como tal no tenga como generar ninguna accion en la simulacion.</li>
+<li>Redefinicion de los conceptos de dependencias e interdependencias, dependencias son todas las dependencias e influecias que ocurren a nivel de terreno, ya sea en el mismos terrenos, en una sociedad o entre sociedades o sociedad - terreno, interdependenias son todo cambio que ocurre a nivel de simulacion, de terreno a terreno(entre los mismos terrenos o sus sociedades)</li>
+<li>Calculo de dependencias usando la lista de operaciones y distribuciones.</li>
+<li>Resuelto problemas de importancia de orden de las dependecias al calcular el move_one_day.</li>
+</ul>
+<h3 class="mume-header" id="32-mejorias-de-los-cambios">3.2 Mejorias de los cambios</h3>
+
+<p>Tras esta nueva iteracion se vienen varias mejoras, empezando con la inclusi&#xF3;n del concepto sociedad y reestructuracion del proyecto dado que primeramente resuleve el problema de que las especies actuaban en general, no habia diferencias de cuantos pudieran estar en un terreno y las consecuencias que esto implica con respecto a las inter-dependencias, esto representaba una inconsistencia que con la inclusi&#xF3;n de las sociedades queda resuelto, ademas tenemos una estructura mas s&#xF3;lida, y las socedades se convierten asi en la unidad atomica del proyecto sobre las que queremos construir el concepto de agentes en busca de superviviencia.</p>
+<p>Adem&#xE1;s se agrega dos conceptos de suma importancia para darle la libertad al usuario de escribir un modelo mas acorde a lo que se espera teniendo dos reglas a su disposicion como son las influencias y los limites explicados anteriormente.</p>
+<p>Tambi&#xE9;n se resuelve un problema que es la importancia del orden de las dependencias a la hora de ejecutar el metodo move_one_day, esto hace que sea una simulacion mas justa dado que en este modelo todo no puede pasar al mismo tiempo al menos nos olvidamos de que orden se van calculando las dependencias y que este influyene en la simulacion o no, solo bastaba con gurdar los cambios en una lista aparte y luego actualizarlo.</p>
+<p>Otro importante cambio fue en la construccion de lista de operaciones para calcular las dependencias e influencias lo que nos permite una mayor abstraccion dando paso que el usuario pueda definir su propia operacion o distribucion y a&#xF1;adirla a la la lista para luego usarla.</p>
+<p>Especies ahora es un objeto abstracto, que es completamente dependiente de las sociedades de la misma que exista en ese momento. Esto nos ofrece la posibilidad de poder actuar y revisar las especies de forma mas general independiente del lugar en que pueda encontrar sociedades.</p>
+<h3 class="mume-header" id="33-proximos-pasos">3.3 Proximos pasos</h3>
+
+<ul>
+<li>Terminar el compilador</li>
+<li>Implementar Mutacion y Migracion</li>
+</ul>
+<h2 class="mume-header" id="4-algoritmo-de-inteligencia-artificial-evoluci%C3%B3n-de-las-sociedades">4. Algoritmo de Inteligencia Artificial: Evoluci&#xF3;n de las sociedades</h2>
+
+<p>En esta nueva actualizaci&#xF3;n logramos completar el primer algoritmo de Inteligencia Artificial en el Proyecto, enfocado en lograr el concepto de &quot;Evoluci&#xF3;n&quot; de las especies.</p>
+<p>La idea es simular un desconocimiento por parte de las sociedades, quienes solo tendr&#xE1;n acceso a sus datos (caracter&#xED;sticas y dependencias) y comenzar&#xE1;n a intentar descubrir c&#xF3;mo funcionan las dependencias que influyen en ellos y que sin embargo pertenecen a factores externos (ya sea de un Land u otras sociedades).</p>
+<p>Society comenzar&#xE1; a guardar informaci&#xF3;n de aquellas caracter&#xED;sticas ajenas que afecten a sus propias caracter&#xED;sticas, esta informaci&#xF3;n que guarda ser&#xE1; limitada, por lo que tendr&#xE1; que comenzar a deducir el funcionamiento. Supongamos que tenemos una sociedad &quot;Humanos&quot;, que se encuentran en un Land que afecta a su caracter&#xED;stica &quot;Poblaci&#xF3;n&quot; de manera positiva con &quot;Ox&#xED;geno&quot; y de manera negativa con &quot;Fr&#xED;o&quot;, nuestra sociedad sabr&#xE1; que le afectan dos caracter&#xED;sticas, sabe a qui&#xE9;n pertenece (en este caso es el Land en el que se encuentra), pero no sabe cu&#xE1;nto le afecta cada una. Solo tiene conocimiento de una cosa, en general cu&#xE1;nto ha bajado o subido su caracter&#xED;stica &quot;Poblaci&#xF3;n&quot; con respecto al d&#xED;a anterior. Si tom&#xE1;ramos como ejemplo m&#xE1;s exacto que &quot;Fr&#xED;o&quot; disminuye la Poblaci&#xF3;n en 10 y que Ox&#xED;geno la aumenta en 3, &quot;Humanos&quot; saben que hubo un aumento de 7 en &quot;Poblaci&#xF3;n&quot; con respecto al ad&#xED;a anterior, pero como ya dijimos, no est&#xE1; seguro de cu&#xE1;l de las dos aumenta y cu&#xE1;l de las dos disminuye.</p>
+<p>La idea ser&#xE1; que comenzar&#xE1; a pedir Request a Simulation sobre crear nuevos nodos que afecten a estas caracter&#xED;sticas. &#xBF;C&#xF3;mo sabe si las tiene que afectar positiva o negativamente?, pues tendr&#xE1; que descubrirlo a prueba y error haciendo Request distintos y observando si las caracter&#xED;sticas que quer&#xED;a mejorar realmente mejoran, o si cometieron un error.</p>
+<p>Claro, las sociedades no son dioses, no pueden pedir Request y esperar que ser&#xE1;n f&#xE1;cilmente atendidos, tendr&#xE1;n que luchar por ello.</p>
+<p>Aqu&#xED; entra el juego el concepto de &quot;Mutaci&#xF3;n&quot;, que es una nueva variable que tendr&#xE1;n las Caracter&#xED;sticas a partir de ahora, y representa la probabilidad de que un Request enviado por una sociedad para afectar una caracter&#xED;stica sea aceptado. Por ejemplo, el nivel de Mutaci&#xF3;n de &quot;Fr&#xED;o&quot; de un Land con ambiente poco hostial, pudiera ser bajo en comparaci&#xF3;n con el de &quot;Tama&#xF1;o&quot; de una monta&#xF1;a, puesto que es m&#xE1;s sencillo abrigarse del fr&#xED;o que modificar la forma de la monta&#xF1;a en s&#xED;.</p>
+<p>Ahora, las sociedades no conocen el valor de la mutaci&#xF3;n de una caracter&#xED;stica externa a las suyas, por tanto, deber&#xE1; realizar distintos intentos para modificar una caracter&#xED;stica antes de darse cuenta de que quiz&#xE1;s es muy poco probable de que lo logren (ya que son inteligentes, y no obstinados, y no van a intentar infinitamente modificar una caracter&#xED;stica que quiz&#xE1;s, pudiera tener incluso 0% de probabilidades de ser modificada).</p>
+<p>En caso de lograrlo, la sociedad analizar&#xE1; si la decisi&#xF3;n tomada fue buena y ha mejorado las caracter&#xED;sticas suyas, o si fue una desici&#xF3;n err&#xF3;nea, en este caso tiene la capacidad de cambiar su Request para probar afectar a la caracter&#xED;stica de forma inversa, y nuevamente analizar si su an&#xE1;lisis fue correcto, y en caso de que por ninguna de las dos v&#xED;as pueda llegar a una conclusi&#xF3;n v&#xE1;lida, retirar el Request y concentrarse en modificar otras caracter&#xED;sticas.</p>
+<p>Falta solo una cosa por decidir, &#xBF;qu&#xE9; caracter&#xED;stica de las que me conforman mejoro primero?, pues este algoritmo est&#xE1; dise&#xF1;ado para priorizar la &#xFA;nica caracter&#xED;stica obligatoria y adem&#xE1;s, indispoensable para la supervivencia de la sociedad, la &quot;Poblaci&#xF3;n&quot;, y a partir de ah&#xED;, viajando por sus propias caracter&#xED;sticas e interdependencias puede ir se&#xF1;alando cu&#xE1;les de sus propias caracter&#xED;sticas son negativas y cu&#xE1;les positivas con respectoa a su Poblaci&#xF3;n.</p>
+<p>Desde el punto de vista matem&#xE1;tico esto puede ser concebido como un problema de optimizaci&#xF3;n, teniendo en cuenta mejorar aquellas caracter&#xED;sticas que sean positivas con respecto a Poblaci&#xF3;n y disminuir aquellas que le afecten de manera negativa.</p>
+<h2 class="mume-header" id="5-caracter%C3%ADsticas-de-la-simulaci%C3%B3n">5. Caracter&#xED;sticas de la Simulaci&#xF3;n.</h2>
+
+<p>Hay que analizar ahora con qu&#xE9; cosas cumple nuestra Simulaci&#xF3;n sobre la base de los contenidos obtenidos en la asignatura. Las caracter&#xED;sticas principales que podemos observar son:</p>
+<ul>
+<li>
+<p>Con la adici&#xF3;n del sistema de Evoluci&#xF3;n de las Sociedades, estas comienzan a interactuar con el medio ambiente (el simulador y los land), y son capaces de comenzar a tomar decisiones con respecto a qu&#xE9; nodos afectar en la simulaci&#xF3;n, ya no quedan solo como contenedores inm&#xF3;viles esperando a que otra caracter&#xED;stica les afecte, pudiendo entonces se&#xF1;alarse formalmente que las sociedades pasan a ser los agentes de la simulaci&#xF3;n, y adem&#xE1;s, agentes inteligentes y aut&#xF3;nomos, puesto que toman sus decisiones buscando la mejor soluci&#xF3;n posible, y adem&#xE1;s no dependen del ser humano para tomar estas deciciones una vez comenzada la Simulaci&#xF3;n.</p>
+</li>
+<li>
+<p>Los agentes no tienen dominio sobre el medio ambiente, e incluso pueden fallar constantemente en sus decisiones, por tanto, estamos en presencia de un ambiente no determinista. Podemos verlo tambi&#xE9;n como que, dada una acci&#xF3;n del agente, no tenemos total seguridad de qu&#xE9; puede ocurrir en la simulaci&#xF3;n.</p>
+</li>
+<li>
+<p>El ambiente es innacesible, puesto que el agente no obtiene libremente informaci&#xF3;n sobre los datos del mismo, solo de una parte, que son las caracter&#xED;sticas que les afectan, y no de todos los datos de estas caracter&#xED;sticas.</p>
+</li>
+<li>
+<p>El ambiente es din&#xE1;mico, puesto que, ajeno a las acciones del agente, pueden ocurrir cambios en la simulaci&#xF3;n, ya sea que por caracter&#xED;sticas naturales (dependencias del land a las sociedades) sean elimindas algunas sociedades, o en menor medida sean afectadas sus caracter&#xED;sticas, ajeno a sus Request</p>
+</li>
+<li>
+<p>El ambiente es discreto, puesto que es conocido el n&#xFA;mero de dependencias e influencias que ser&#xE1;n resueltas en un d&#xED;a que pase en la simulaci&#xF3;n, y se sbae que cada sociedad pedir&#xE1; a lo sumo un Request</p>
+</li>
+<li>
+<p>Los agentes son reactivos, ellos aprenden del ambiente y actualizan los datos ante cualquier cambio que ocurra con respecto a ellos, son proactivos, puesto que intentan optimizar en todo momento sus caracter&#xED;sticas independientemente del estado del ambiente, y son sociables, puesto que pueden interactuar con otros agentes a trav&#xE9;s de las dependencias, ya sea ayud&#xE1;ndolos a partir de un beneficio mutuo, o atac&#xE1;ndolos en vista de una amenaza, formalizando el hecho de que son agentes propiamente inteligentes.</p>
+</li>
+</ul>
+<h3 class="mume-header" id="51">5.1</h3>
+
+<p>Adicionalmente Species fue modificado como una clase general que engloba todos los valores de las caracter&#xED;sticas de las distintas sociedades a la que pertenecen. As&#xED; es posible obtener la informaci&#xF3;n general de todas las sociedades que pertenezcan a una misma especie, por ejemplo, la sumatoria de todas las poblaciones de todas las sociedades de &quot;Humano&quot; se guardar&#xED;an en la especie de igual nombre, y as&#xED; con todas las caracter&#xED;sticas que compartan.</p>
+<p>Por otro lado, Caracter&#xED;sticas y Dependencias fueron modificados para pasar a ser clases propiamente en sus .py espec&#xED;ficos, as&#xED; permiten el uso de referencias y un f&#xE1;cil acceso a sus datos.</p>
+<h2 class="mume-header" id="6-compilador">6 Compilador</h2>
+
+<p>Para hacer el compilador inicialmente se procede a hacer el lenguaje el cu&#xE1;l se tiene definido qu&#xE9; estructura b&#xE1;sica tiene.<br>
+El mismo definido ya en el documento &quot;propuesta de lenguaje&quot; posee todos los recursos para crear e interactuar con la simulaci&#xF3;n adem&#xE1;s de permitir libertad al usuario de hacer funciones, usar variables y estructuras de control como com&#xFA;nmente se usa en otros lenguajes de programaci&#xF3;n.</p>
+<p>Antes de continuar, primero es conveniente hacer el lexer del que depende los otros pasos, se hizo un lexer sin uso de librer&#xED;as, para ello se construyen  las expresiones regulares con un int&#xE9;rprete de expresiones regulares hecho por los desarrolladores. Adicionalmente se hizo otro lexer haciendo uso de la librer&#xED;a re, por una cuesti&#xF3;n de legibilidad y rapidez dado que esta librer&#xED;a ya fue optimizada. Ambos lexers tienen una tabla con las expresiones regulares que definen cada parte de nuestro lenguaje, y se matchea la entrada devolviendo tuplas con el lexema, tipo y l&#xED;nea, ejemplo: (var, variable, 1), (&quot;hola&quot;, string, 23), (_factorial, function_name, 3).</p>
+<p>Luego de tener una idea de que lenguaje se quiere se procede a crear una gram&#xE1;tica, la que cost&#xF3; mucho trabajo y fue modificada varias veces en el desarrollo del proyecto. Para la misma se us&#xF3; la clase Grammar, con la que primeramente se define el s&#xED;mbolo distinguido para indicicar el inicio; luego los &quot;termianles&quot;, aquellos que no producen otras producciones, ejemplo de estos son: true, string, var, if...; seguido se definen los &quot;no terminales&quot; que producen partes de las cadenas permitidas en el lenguaje, por ejmeplo: arithmetic_expresion, argument_list...; por &#xFA;ltimo se declara todas las producciones por cada &quot;no terminal&quot;. Es de tener en cuenta que esta debe cumplir con que se elimine recursi&#xF3;n izquierda, asocie adecuadamente y dem&#xE1;s caracter&#xED;sticas vistas en conferencias.</p>
+<p>Una vez finalizada la gram&#xE1;tica se procede a hacer el parser, el que nos crea las tablas <em>goto</em> y <em>action</em>, el mismo algortimo define si la gram&#xE1;tica construida cumple con ese parser y en donde no lo cumple, que a partir de los token que genera el lexer, se hace uso de las anteriormente mencionadas para verificar que la entrada cumple con la sintaxis del lenguaje definido por la gram&#xE1;tica, el parser hecho es el LR(1)</p>
+<p>El ast es una jerarqu&#xED;a de clases construida a partir de la gram&#xE1;tica, tiene nodos por acciones que permite el lenguaje. Este es usado luego para realizar el checkeo sem&#xE1;ntico y para la transpilaci&#xF3;n pues el ast guarda la escencia o estructura de lo que se va a ejecutar.</p>
+<p>El checkeo sem&#xE1;ntico es el pr&#xF3;ximo paso a ejecutar, este se hace con el objetico de verificar que tenga sentido el programa a ejecutar, haciendo varios recorriedos sobre el ast verificando los tipos, variables existentes en cada nivel del c&#xF3;digo, o incluso para la inferencia de tipos aunque no es necesario en este caso. El primer recorrido hecho es el type_collector, d&#xF3;nde se guarda en el contexto los tipos definidos de nuestro lenguaje y las funciones predefinidas, el usuario no crea tipos nuevos por lo que no es necesario guardarlos. El segundo es el type_builder, que se encarga de recoger las definiciones de variables, funciones y argumentos de las mismas. Por &#xFA;ltimo se hace el type_checker que se encarga de verificar que los tipos coincidan en asignaciones y declaraciones, tambi&#xE9;n verifica que las variables asignadas se encuentren en el scope locar o en los superiores asegurando que una variable declarada en una funci&#xF3;n no se use afuera de la misma, que los retornos de funciones coincidan con el tipo de la misma, que los argumentos coincidan con la cantidad de que se predefini&#xF3; en el type_builder o en el type_checker, entre otros errores sem&#xE1;nticos, capturando el primero encontrado y saliendo as&#xED; del recorrido en caso de que exista alguno.</p>
+<p>Luego de verificar todo lo anterior mencionado se procede a transpilar el programa, para ello se hace otro recorrido en el ast, guardando por cada nodo un string del c&#xF3;digo que este ejecuta en python.</p>
+<p>Al finalizar el recorrido se tiene un string con c&#xF3;digo en python listo para ser ejecutado con la funci&#xF3;n build in de python <strong>exec</strong>.</p>
+<p>Luego este se ejecuta en el runner, archivo que reune las condiciones para que el programa tenga sentido, conteniendo las importaciones necesarias, as&#xED; como los m&#xE9;todos del lenguajes ya implementados.</p>
+<h3 class="mume-header" id="7-conclusiones">7 Conclusiones</h3>
+
+<p>Si bien el proyecto fue complejo en su mayor&#xED;a, logramos cumplir con la mayor&#xED;a de nuestros objetivos, esperamos que este proyecto pueda ser de ayuda y m&#xE1;s adelante le sean implementados aquellas funcionalidades que pueden ayudar a darle mayor utilidad para ramas como la Biolog&#xED;a por ejemplo. Esperamos haya sido de su agrado.</p>
+
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    </body></html>

@@ -264,7 +264,7 @@ pre[data-line] .line-highlight[data-end]:after {
       <h1 class="mume-header" id="propuesta-a-lenguaje-de-road-to-civilization">Propuesta a Lenguaje de Road to Civilization</h1>
 
 <p>La idea central es que sea un lenguaje parecido a C#, donde puedas hacer en primera instancia las cosas b&#xE1;sicas de este lenguaje.</p>
-<p>Los tipos del lenguaje son: Number, String, Boolean, List, Species, Society, Land. Adem&#xE1;s se tiene un tipo padre Simulation invisible al usuario en donde se tienen todas las funciones build_in. Los tipos empiezan siempre con una letra may&#xFA;sculas</p>
+<p>Los tipos del lenguaje son: <em>Number, String, Boolean, List, Species, Society, Land</em>. Adem&#xE1;s se tiene un tipo padre Simulation invisible al usuario en donde se tienen todas las funciones build_in. Los tipos empiezan siempre con una letra may&#xFA;sculas</p>
 <pre data-role="codeBlock" data-info="c" class="language-c">Type name <span class="token operator">=</span> value<span class="token punctuation">;</span>
 </pre><p>Ser&#xE1; la sintaxis para declarar una variable, las que siempre se deben empezar con una letra min&#xFA;scula</p>
 <p>Las entidades(Species, Land, Society) se declaran:</p>
@@ -306,7 +306,9 @@ Para crear una nueva especie se necesita lo siguiente:</p>
 <ul>
 <li><code>_changeCharacteristic</code>: A&#xF1;ade o cambia una caracteristica, recibe por entrada nombre de la misma, valor, l&#xED;mites(inferior y superior), mutabilidad y funci&#xF3;n de distribuci&#xF3;n.</li>
 <li><code>_deleteCharacteristic</code>: Elimina una caracteristica, recibe por entrada nombre de la misma</li>
-<li><code>_getCharacteristic</code>: Toma el valor de una caracteristica, recibe por entrada nombre de la misma</li>
+<li><code>_getCharacteristic</code>: Toma el valor de una caracteristica de una entidad, recibe por entrada nombre de la misma</li>
+<li><code>_getCharacteristicSummation</code>: Toma el valor de la sumatoria de un caracteristica de las sociedades que pertenecen a una especie, recibe por entrada nombre de la misma</li>
+<li><code>_getCharacteristicMean</code>: Toma el valor de la media de un caracteristica de las sociedades que pertenecen a una especie, recibe por entrada nombre de la misma</li>
 <li><code>_addDependence</code>: A&#xF1;ade una dependencia(solo los land), recibe por entrada el nombre de la entidad y caraccteristica de a, el nombre de la entidad y caracteristica b, c y las funciones plus y mult</li>
 <li><code>_addInfluence</code>: A&#xF1;ade una influencia(solo los land), recibe por entrada el nombre de la entidad y caraccteristica de a, el nombre de la entidad y caracteristica b, c y las funciones plus y mult</li>
 <li><code>_deleteDependence</code>: Elimina una dependencia(solo los land), recibe por entrada el nombre de la entidad y caraccteristica de a, el nombre de la entidad y caracteristica b</li>
@@ -323,7 +325,8 @@ Siempre va a existir una simulaci&#xF3;n llamada directamente Simulation, que es
 <p>Igualmente est&#xE1; una biblioteca que implementamos por detr&#xE1;s, la biblioteca <code>_random(&quot;normal&quot;)</code>, recibe por entrada el string con el nombre de la distribuci&#xF3;n a ejecutar, estas reciben dos par&#xE1;metros por entrada estas funciones, que son el l&#xED;mite inferior y superior, o media y variancia, y devuelven el valor del random descrito evaluado en ese intervalo.<br>
 Ejemplo:</p>
 <pre data-role="codeBlock" data-info="c" class="language-c">Number a <span class="token operator">=</span> <span class="token function">_random</span><span class="token punctuation">(</span><span class="token string">&quot;normal&quot;</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-</pre><p>Quedando esto dicho, vamos ahora a ver qu&#xE9; podemos hacer mientras corre una simulaci&#xF3;n.</p>
+</pre><p>Las distribuciones que se pueden pedir son: &quot;uniform&quot;, &quot;exponential&quot;, &quot;gamma&quot;, &quot;normal&quot;, &quot;binomial&quot;, &quot;geometric&quot;.</p>
+<p>Quedando esto dicho, vamos ahora a ver qu&#xE9; podemos hacer mientras corre una simulaci&#xF3;n.</p>
 <p>Es posible declarar c&#xF3;digo que trabajar&#xE1; mientras corre la simulaci&#xF3;n, esto se hacer con la funci&#xF3;n <code>_day</code> de la siguiente manera:</p>
 <pre data-role="codeBlock" data-info="c" class="language-c"><span class="token function">_day</span><span class="token punctuation">(</span>cond<span class="token punctuation">,</span> _function<span class="token punctuation">)</span>
 <span class="token function">_day</span><span class="token punctuation">(</span>_cond<span class="token punctuation">,</span> _function<span class="token punctuation">)</span>
@@ -337,7 +340,7 @@ Ejemplo:</p>
 <pre data-role="codeBlock" data-info="c" class="language-c"><span class="token function">_end</span><span class="token punctuation">(</span>human<span class="token punctuation">.</span><span class="token function">_getCharacteristic</span><span class="token punctuation">(</span><span class="token string">&quot;Population&quot;</span><span class="token punctuation">)</span><span class="token operator">&gt;</span><span class="token number">100</span> and cows<span class="token punctuation">.</span><span class="token function">_getCharaccteristic</span><span class="token punctuation">(</span><span class="token string">&quot;Population&quot;</span><span class="token punctuation">)</span><span class="token operator">&gt;</span><span class="token number">50</span><span class="token punctuation">)</span>
 <span class="token function">_end</span><span class="token punctuation">(</span>_cond_function<span class="token punctuation">)</span>
 </pre><p>Donde la Simulaci&#xF3;n termina en este momento.</p>
-<p>Para a&#xF1;adir/eliminar entidades y dependencias a la simulaci&#xF3;n se tienen las funciones</p>
+<p>Para a&#xF1;adir/eliminar entidades y dependencias a la simulaci&#xF3;n se tienen las funciones:</p>
 <ul>
 <li><code>_addSociety</code></li>
 <li><code>_addSpecies</code></li>
@@ -350,13 +353,22 @@ Ejemplo:</p>
 <li><code>_addInfluences</code></li>
 <li><code>_deleteInfluences</code></li>
 </ul>
-<p>y para las funciones de distribuci&#xF3;n y suma y multiplicaci&#xF3;n se tienen las funciones ya implementadas</p>
+<p>Para modificar si una sociedad tiene la capacidad de evolucionar se usa la funci&#xF3;n <code>enableEvolution</code>.</p>
+<p>y para las funciones de distribuci&#xF3;n y suma y multiplicaci&#xF3;n se tienen las funciones ya implementadas.</p>
 <ul>
 <li><code>_distribution</code></li>
 <li><code>_plus</code></li>
 <li><code>_multiplication</code></li>
 </ul>
 <p>Aunque el usuario pude implementar sus propias funciones para usarlas en su lugar.</p>
+<p>Para obtener la cantidad de d&#xED;as que han pasado se usa la funci&#xF3;n <code>actualDay</code> que no recibe entrada.</p>
+<p>Se puede obtener un string de objetos de tipo <em>Number, Boolean, List</em> usando las funciones:</p>
+<ul>
+<li><em>_numberToString</em></li>
+<li><em>_booleanToString</em></li>
+<li><em>_listToString</em></li>
+</ul>
+<p>se puede obtener el tama&#xF1;o de una lista con el m&#xE9;todo: <code>getLenght</code></p>
 
       </div>
       

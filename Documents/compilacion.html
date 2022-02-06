@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>species_doc</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>compilacion</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 
 
@@ -14573,12 +14573,38 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Documentaci%C3%B3n-de-la-clase-Species">Documentaci&#243;n de la clase Species<a class="anchor-link" href="#Documentaci%C3%B3n-de-la-clase-Species">&#182;</a></h2><p>Con esta clase definimos nuestra "sociedad", esta consta de un <strong>nombre</strong> y <strong>características</strong>.</p>
+<h1 id="Compilaci%C3%B3n">Compilaci&#243;n<a class="anchor-link" href="#Compilaci%C3%B3n">&#182;</a></h1>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>En este reporte se estarán analizando y desarrollando las diferentes partes del transpilador del lenguaje RoadToCivilization al lenguaje python, entre ellas están, el lexer, la gramática, el parser, el análisis semántico y el transpilado a python.</p>
 
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Lexer">Lexer<a class="anchor-link" href="#Lexer">&#182;</a></h2><p>Nuestro lenguaje está formado por conjunto de expresiones regulares cada una asociada a un tipo de token, la unión de estas expresiones regulares sería el conjunto de tokens que conforman nuestro lenguaje. El lexer se encarga de verificar que todos los tokens que nos entren pertenezcan al lenguaje.</p>
+<p>Para la realización del lexer se crearon todas las expresiones regulares que conforman el lenguaje, seguido a esto se verifica,haciendo match, que cada token pertenezca al conjunto de expresiones regulares ya definidos. Cada expresión regular tiene un nombre para identificar que tipo de token es, luego se devuelven el token y su tipo si no hubo ningún problema al hacer match.</p>
+<p>Aquí también se verificó que los strings sean correctos, por ejemplo, si empiezan a escribir un string y hacen un salto de línea sería incorrecto y el lexer devuelve error de sintaxis.</p>
+<p>Nosotros implementamos dos lexer, uno usando la librería re y otro sin usar la misma, ambos funcionan correctamente, pero el que utilizamos es el que usa la librería re, puesto que es un poquito más rápido y el código es más legible.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14586,52 +14612,83 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<div class=" highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">path</span>
 <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">pardir</span><span class="p">)))</span>
-<span class="kn">from</span> <span class="nn">Simulation.species</span> <span class="kn">import</span> <span class="n">Species</span>
-<span class="kn">from</span> <span class="nn">Simulation.society</span> <span class="kn">import</span> <span class="n">Society</span>
 
-<span class="n">humano</span> <span class="o">=</span> <span class="n">Species</span><span class="p">(</span><span class="s1">&#39;Humano&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">tokenize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">text</span><span class="p">):</span>    
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 
-<span class="p">(</span><span class="n">humano</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">humano</span><span class="o">.</span><span class="n">characteristic</span><span class="p">)</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">error_token</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+ 
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+            <span class="n">error_token</span> <span class="o">+=</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span> <span class="k">break</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">error_token</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Syntax error, unexpexted token &quot;</span><span class="si">{</span><span class="n">error_token</span><span class="si">}</span><span class="s1">&quot; at line </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span> <span class="k">continue</span>
+
+        <span class="n">lexeme</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">lexeme</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">line</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># STRINGS</span>
+        <span class="k">elif</span> <span class="n">lexeme</span> <span class="o">==</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+                <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span>
+                        <span class="n">lexeme</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">b&#39;</span>
+
+                    <span class="k">elif</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;t&#39;</span><span class="p">:</span>
+                        <span class="n">lexeme</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">t&#39;</span>
+
+                    <span class="k">elif</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;n&#39;</span><span class="p">:</span>
+                        <span class="n">lexeme</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">n&#39;</span>
+
+                    <span class="k">elif</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;f&#39;</span><span class="p">:</span>
+                        <span class="n">lexeme</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">f&#39;</span>
+                        
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">lexeme</span> <span class="o">+=</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                    
+                <span class="k">elif</span> <span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Syntax error at line </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="si">}</span><span class="s1"> : Undefined string&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">line</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">break</span>
+                    
+                <span class="k">elif</span> <span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\0</span><span class="s1">&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Syntax error at line </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="si">}</span><span class="s1"> : String cannot contain the null character&#39;</span><span class="p">)</span>
+                    
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">lexeme</span> <span class="o">+=</span> <span class="n">c</span>
+                    <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">:</span>
+                        <span class="k">break</span>    
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Syntax error at line </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="si">}</span><span class="s1"> : String cannot contain EOF&#39;</span><span class="p">)</span>
+
+        <span class="n">token_type</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">lastgroup</span> <span class="k">if</span> <span class="n">lexeme</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keywords</span> <span class="ow">and</span> <span class="n">match</span><span class="o">.</span><span class="n">lastgroup</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+ 
+        <span class="k">yield</span> <span class="n">lexeme</span><span class="p">,</span> <span class="n">token_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">line</span>
+ 
+        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">():]</span> <span class="k">if</span> <span class="n">lexeme</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&quot;&#39;</span> <span class="k">else</span> <span class="n">text</span>
+
+    <span class="k">yield</span> <span class="s1">&#39;$&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eof</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">line</span>
 </pre></div>
 
      </div>
 </div>
 </div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>(&#39;Humano&#39;,
- {&#39;Poblacion&#39;: {&#39;summation&#39;: 0,
-   &#39;mean&#39;: 0,
-   &#39;initial&#39;: 10,
-   &#39;lower&#39;: 0,
-   &#39;upper&#39;: inf,
-   &#39;mutability&#39;: -1,
-   &#39;distr_function&#39;: None}})</pre>
-</div>
-
-</div>
-
-</div>
-
 </div>
 
 </div>
@@ -14641,20 +14698,49 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Caracter%C3%ADsticas">Caracter&#237;sticas<a class="anchor-link" href="#Caracter%C3%ADsticas">&#182;</a></h3><p>Las caracterísiticas en especies no son instancias de la clase Characterisitic, pues no es mas que los valores que se necesitan par isntanciar una a la vez que se cree una sociedad de esta especie.</p>
-<p>Para trabajas con las características se tienen los métodos:</p>
+<h2 id="AST">AST<a class="anchor-link" href="#AST">&#182;</a></h2><p>Para la construcción del AST se hizo una jerarquía de clases que se compone de la siguiente forma.</p>
+<p>Primeramente, tenemos los nodos DeclarationNode y ExpressionNode.</p>
+<p>De DeclarationNode heredan:</p>
 <ul>
-<li><strong>Change_Characterisitic</strong>: Toma todos los valores iniciales para crear una característica y los guarda en un diccionario.</li>
-<li><strong>Change_Characterisitic_Value</strong>: Cambia el valor inicial de la característica.</li>
-<li><strong>Delete_Characcteristic</strong>: Elimina la característica de la lista.</li>
-<li><strong>Get_Characteristic_Summation</strong>: Obtiene la sumatioria de los valores de la característica en las sociedades que pertenecen a la especie.</li>
-<li><strong>Get_Characteristic_Mean</strong>: Obtiene la media de los valores de la característica en las sociedades que pertenecen a la especie.</li>
+<li>DeclarationEntity</li>
+<li>DeclarationVar</li>
+<li>FuncDeclaration</li>
+</ul>
+<p>De ExpressionNode heredan:</p>
+<ul>
+<li>AsignationVar</li>
+<li>FactorNode<ul>
+<li>BooleanNode </li>
+<li>StringNode</li>
+<li>NumberNode</li>
+<li>VariableNode</li>
+<li>FunctionName</li>
+</ul>
+</li>
+<li>ListNode</li>
+<li>IndexListNode</li>
+<li>IfElse</li>
+<li>Not</li>
+<li>InstanceFunction</li>
+<li>WhileNode</li>
+<li>BinaryNode<ul>
+<li>And</li>
+<li>Or</li>
+<li>LessThan</li>
+<li>MoreThan</li>
+<li>EqualEqual</li>
+<li>PlusNode</li>
+<li>MinusNode</li>
+<li>StarNode</li>
+<li>DivNode</li>
+</ul>
+</li>
 </ul>
 
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -14662,43 +14748,26 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">humano</span><span class="o">.</span><span class="n">Change_Characteristic</span><span class="p">(</span><span class="s2">&quot;Tamaño&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<div class=" highlight hl-python"><pre><span></span><span class="k">class</span> <span class="nc">ast_nodes</span><span class="p">:</span>
 
-<span class="n">cubano</span> <span class="o">=</span> <span class="n">Society</span><span class="p">(</span><span class="s2">&quot;cubano&quot;</span><span class="p">,</span> <span class="n">humano</span><span class="p">)</span>
-<span class="n">taino</span> <span class="o">=</span> <span class="n">Society</span><span class="p">(</span><span class="s2">&quot;taino&quot;</span><span class="p">,</span> <span class="n">humano</span><span class="p">)</span>
-<span class="n">humano</span><span class="o">.</span><span class="n">Get_Characteristic_Summation</span><span class="p">(</span><span class="s2">&quot;Tamaño&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
-<span class="n">humano</span><span class="o">.</span><span class="n">Get_Characteristic_Mean</span><span class="p">(</span><span class="s2">&quot;Tamaño&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-<span class="p">(</span><span class="n">humano</span><span class="o">.</span><span class="n">Get_Characteristic_Summation</span><span class="p">(</span><span class="s2">&quot;Poblacion&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">20</span><span class="p">,</span> <span class="n">humano</span><span class="o">.</span><span class="n">Get_Characteristic_Mean</span><span class="p">(</span><span class="s2">&quot;Poblacion&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span> <span class="p">)</span>
+    <span class="k">class</span> <span class="nc">Node</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+
+    <span class="k">class</span> <span class="nc">ProgramNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">declarations</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">declarations</span> <span class="o">=</span> <span class="n">declarations</span>
+
+
+    <span class="k">class</span> <span class="nc">DeclarationNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+        <span class="k">pass</span>
+    <span class="k">class</span> <span class="nc">ExpressionNode</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+        <span class="k">pass</span>
 </pre></div>
 
      </div>
 </div>
 </div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[&nbsp;]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>(True, True)</pre>
-</div>
-
-</div>
-
-</div>
-
 </div>
 
 </div>
@@ -14708,11 +14777,820 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Además tiene un método Copy que devuelve una copia de la instancia</p>
+<h2 id="Gram%C3%A1tica">Gram&#225;tica<a class="anchor-link" href="#Gram%C3%A1tica">&#182;</a></h2><p>El diseño de la gramática fue algo bastante trabajoso, fue una de las partes más difíciles, para modelarla se usó la clase Grammar que se encuentra en en la carpeta cmp.</p>
 
 </div>
 </div>
 </div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Primeramente definimos los terminales y no terminales, a través de los métodos Terminal y Terminals, y NonTerminal y NonTerminals respectivamente. Con startSymbol accedemos al símbolo distinguido e indicamos cuál es. Luego definimos las producciones haciendo uso del operador %=, con G.Epsilon accederemos a epsilon como su nombre lo indica. El símbolo de fin de cadena se modelará con la clase EOF, que no debe ser instanciada directamente con el constructor, una instancia G de Grammar lo construirá automáticamente.</p>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>También, en la gramática, junto con las producciones se construirán los nodos del AST que denota a cada operación, haciendo uso de funciones lambdas que devuleven un nodo o una lista de nodos.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">cmp.pycompiler</span> <span class="kn">import</span> <span class="n">Grammar</span>
+<span class="kn">from</span> <span class="nn">Compilacion.astree.AST_Nodes</span> <span class="kn">import</span> <span class="n">ast_nodes</span>
+
+<span class="k">def</span> <span class="nf">build_grammar</span><span class="p">():</span>
+    <span class="n">Gram</span> <span class="o">=</span> <span class="n">Grammar</span><span class="p">()</span>
+
+    <span class="c1">#No Terminales</span>
+    <span class="n">program</span> <span class="o">=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">NonTerminal</span><span class="p">(</span><span class="s1">&#39;&lt;program&gt;&#39;</span><span class="p">,</span> <span class="n">startSymbol</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">simulation</span> <span class="o">=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">NonTerminal</span><span class="p">(</span><span class="s1">&#39;&lt;simulation&gt;&#39;</span><span class="p">)</span>
+    <span class="n">declarationnt</span><span class="p">,</span> <span class="n">arith_expr</span><span class="p">,</span> <span class="n">funct</span><span class="p">,</span> <span class="n">term</span> <span class="o">=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">NonTerminals</span><span class="p">(</span><span class="s1">&#39;&lt;declarationnt&gt; &lt;arith_expr&gt; &lt;funct&gt; &lt;term&gt;&#39;</span><span class="p">)</span>
+    <span class="n">crudcharnt</span><span class="p">,</span> <span class="n">ifnt</span><span class="p">,</span> <span class="n">cond</span><span class="p">,</span> <span class="n">whilent</span> <span class="o">=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">NonTerminals</span><span class="p">(</span><span class="s1">&#39;&lt;crudcharnt&gt; &lt;ifnt&gt; &lt;cond&gt; &lt;whilent&gt;&#39;</span><span class="p">)</span>
+    <span class="n">asignationnt</span><span class="p">,</span> <span class="n">arg_list</span><span class="p">,</span> <span class="n">type_var</span> <span class="o">=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">NonTerminals</span><span class="p">(</span><span class="s1">&#39;&lt;asignationnt&gt; &lt;arg_list&gt; &lt;type_var&gt;&#39;</span><span class="p">)</span>
+    <span class="n">arg_types_list</span><span class="p">,</span> <span class="n">functnt</span><span class="p">,</span> <span class="n">factor</span> <span class="o">=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">NonTerminals</span><span class="p">(</span><span class="s1">&#39;&lt;arg_types_list&gt; &lt;functnt&gt; &lt;factor&gt;&#39;</span><span class="p">)</span>
+    <span class="n">elseblock</span><span class="p">,</span> <span class="n">listnt</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">listindexed</span> <span class="o">=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">NonTerminals</span><span class="p">(</span><span class="s1">&#39;&lt;elseblock&gt; &lt;listnt&gt; &lt;block&gt; &lt;listindexed&gt;&#39;</span><span class="p">)</span>
+
+    <span class="c1">#Terminales</span>
+    <span class="n">open_parenthesis</span><span class="p">,</span> <span class="n">closed_parenthesis</span><span class="p">,</span> <span class="n">equal</span><span class="p">,</span> <span class="n">colon</span><span class="p">,</span> <span class="n">plus</span><span class="p">,</span> <span class="n">minus</span><span class="p">,</span> <span class="n">star</span><span class="p">,</span> <span class="n">div</span> <span class="o">=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">Terminals</span><span class="p">(</span><span class="s1">&#39;( ) = , + - * /&#39;</span><span class="p">)</span>
+    <span class="n">semicolon</span><span class="p">,</span> <span class="n">point</span><span class="p">,</span> <span class="n">open_bracket</span><span class="p">,</span> <span class="n">closed_bracket</span><span class="p">,</span> <span class="n">open_square</span><span class="p">,</span> <span class="n">closed_square</span> <span class="o">=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">Terminals</span><span class="p">(</span><span class="s1">&#39;; . { } [ ]&#39;</span><span class="p">)</span>
+    <span class="n">ift</span><span class="p">,</span> <span class="n">elset</span><span class="p">,</span> <span class="n">whilet</span><span class="p">,</span> <span class="n">true</span><span class="p">,</span> <span class="n">false</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">number</span> <span class="o">=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">Terminals</span><span class="p">(</span><span class="s1">&#39;if else while true false string number&#39;</span><span class="p">)</span> 
+    <span class="n">entity</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">funct_name</span><span class="p">,</span> <span class="n">typet</span> <span class="o">=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">Terminals</span><span class="p">(</span><span class="s1">&#39;entity var funct_name type&#39;</span><span class="p">)</span>
+    <span class="n">arg</span><span class="p">,</span> <span class="n">lessthan</span><span class="p">,</span> <span class="n">morethan</span><span class="p">,</span> <span class="n">equalequal</span><span class="p">,</span> <span class="n">andt</span><span class="p">,</span> <span class="n">ort</span><span class="p">,</span> <span class="n">nott</span> <span class="o">=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">Terminals</span><span class="p">(</span><span class="s1">&#39;arg &lt; &gt; == and or not&#39;</span><span class="p">)</span>
+    
+    
+
+    <span class="c1">#Producciones</span>
+    <span class="n">program</span> <span class="o">%=</span>  <span class="n">simulation</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">ProgramNode</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">simulation</span> <span class="o">%=</span> <span class="n">declarationnt</span> <span class="o">+</span> <span class="n">semicolon</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">simulation</span> <span class="o">%=</span> <span class="n">declarationnt</span> <span class="o">+</span> <span class="n">semicolon</span> <span class="o">+</span> <span class="n">simulation</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">simulation</span> <span class="o">%=</span> <span class="n">asignationnt</span> <span class="o">+</span> <span class="n">semicolon</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">simulation</span> <span class="o">%=</span> <span class="n">asignationnt</span> <span class="o">+</span> <span class="n">semicolon</span> <span class="o">+</span> <span class="n">simulation</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">simulation</span> <span class="o">%=</span> <span class="n">ifnt</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">simulation</span> <span class="o">%=</span> <span class="n">ifnt</span> <span class="o">+</span> <span class="n">simulation</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">simulation</span> <span class="o">%=</span> <span class="n">whilent</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">simulation</span> <span class="o">%=</span> <span class="n">whilent</span> <span class="o">+</span> <span class="n">simulation</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">simulation</span> <span class="o">%=</span> <span class="n">functnt</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">simulation</span> <span class="o">%=</span> <span class="n">functnt</span> <span class="o">+</span> <span class="n">simulation</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">simulation</span> <span class="o">%=</span> <span class="n">crudcharnt</span> <span class="o">+</span> <span class="n">semicolon</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">simulation</span> <span class="o">%=</span> <span class="n">crudcharnt</span> <span class="o">+</span> <span class="n">semicolon</span> <span class="o">+</span> <span class="n">simulation</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">simulation</span> <span class="o">%=</span> <span class="n">funct</span> <span class="o">+</span> <span class="n">semicolon</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">simulation</span> <span class="o">%=</span> <span class="n">funct</span> <span class="o">+</span> <span class="n">semicolon</span> <span class="o">+</span> <span class="n">simulation</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="n">block</span> <span class="o">%=</span> <span class="n">declarationnt</span> <span class="o">+</span> <span class="n">semicolon</span> <span class="o">+</span> <span class="n">block</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">block</span> <span class="o">%=</span> <span class="n">asignationnt</span> <span class="o">+</span> <span class="n">semicolon</span> <span class="o">+</span> <span class="n">block</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">block</span> <span class="o">%=</span> <span class="n">ifnt</span> <span class="o">+</span> <span class="n">block</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">block</span> <span class="o">%=</span> <span class="n">whilent</span> <span class="o">+</span> <span class="n">block</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">block</span> <span class="o">%=</span> <span class="n">crudcharnt</span> <span class="o">+</span> <span class="n">semicolon</span> <span class="o">+</span> <span class="n">block</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">block</span> <span class="o">%=</span> <span class="n">factor</span> <span class="o">+</span> <span class="n">semicolon</span> <span class="o">+</span> <span class="n">block</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">block</span> <span class="o">%=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">Epsilon</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[]</span>
+
+    <span class="n">arg_list</span> <span class="o">%=</span> <span class="n">cond</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">arg_list</span> <span class="o">%=</span> <span class="n">arg_list</span> <span class="o">+</span> <span class="n">colon</span> <span class="o">+</span> <span class="n">cond</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span>
+    <span class="n">arg_list</span> <span class="o">%=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">Epsilon</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span>  <span class="p">[]</span>
+
+
+    <span class="n">declarationnt</span> <span class="o">%=</span> <span class="n">typet</span> <span class="o">+</span> <span class="n">var</span> <span class="o">+</span> <span class="n">equal</span> <span class="o">+</span> <span class="n">typet</span> <span class="o">+</span> <span class="n">open_parenthesis</span> <span class="o">+</span> <span class="n">arg_list</span> <span class="o">+</span> <span class="n">closed_parenthesis</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">DeclarationEntity</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+    <span class="n">declarationnt</span> <span class="o">%=</span> <span class="n">typet</span> <span class="o">+</span> <span class="n">var</span> <span class="o">+</span> <span class="n">equal</span> <span class="o">+</span> <span class="n">arith_expr</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">DeclarationVar</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>  
+    
+    <span class="n">asignationnt</span> <span class="o">%=</span> <span class="n">var</span> <span class="o">+</span> <span class="n">equal</span> <span class="o">+</span> <span class="n">arith_expr</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">AsignationVar</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>  
+
+    <span class="n">arith_expr</span> <span class="o">%=</span> <span class="n">arith_expr</span> <span class="o">+</span> <span class="n">plus</span> <span class="o">+</span> <span class="n">term</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">PlusNode</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">arith_expr</span> <span class="o">%=</span> <span class="n">arith_expr</span> <span class="o">+</span> <span class="n">minus</span> <span class="o">+</span> <span class="n">term</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">MinusNode</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">arith_expr</span> <span class="o">%=</span> <span class="n">term</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">term</span> <span class="o">%=</span> <span class="n">term</span> <span class="o">+</span> <span class="n">star</span> <span class="o">+</span> <span class="n">factor</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">StarNode</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">term</span> <span class="o">%=</span> <span class="n">term</span> <span class="o">+</span> <span class="n">div</span> <span class="o">+</span> <span class="n">factor</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">DivNode</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">term</span> <span class="o">%=</span> <span class="n">cond</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">factor</span> <span class="o">%=</span> <span class="n">open_parenthesis</span> <span class="o">+</span> <span class="n">arith_expr</span> <span class="o">+</span> <span class="n">closed_parenthesis</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">factor</span> <span class="o">%=</span> <span class="n">string</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">StringNode</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">factor</span> <span class="o">%=</span> <span class="n">number</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">NumberNode</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">factor</span> <span class="o">%=</span> <span class="n">true</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">BooleanNode</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">factor</span> <span class="o">%=</span> <span class="n">false</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">BooleanNode</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">factor</span> <span class="o">%=</span> <span class="n">var</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">VariableNode</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">factor</span> <span class="o">%=</span> <span class="n">funct</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">factor</span> <span class="o">%=</span> <span class="n">listnt</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">factor</span> <span class="o">%=</span> <span class="n">listindexed</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">factor</span> <span class="o">%=</span> <span class="n">funct_name</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">FunctionName</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">listnt</span> <span class="o">%=</span> <span class="n">open_square</span> <span class="o">+</span> <span class="n">arg_list</span> <span class="o">+</span> <span class="n">closed_square</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">ListNode</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">listindexed</span> <span class="o">%=</span> <span class="n">factor</span> <span class="o">+</span> <span class="n">open_square</span> <span class="o">+</span> <span class="n">factor</span> <span class="o">+</span> <span class="n">closed_square</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">IndexListNode</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+    
+    <span class="n">ifnt</span> <span class="o">%=</span> <span class="n">ift</span> <span class="o">+</span> <span class="n">open_parenthesis</span> <span class="o">+</span> <span class="n">cond</span> <span class="o">+</span><span class="n">closed_parenthesis</span> <span class="o">+</span> <span class="n">open_bracket</span> <span class="o">+</span> <span class="n">block</span> <span class="o">+</span> <span class="n">closed_bracket</span> <span class="o">+</span> <span class="n">elseblock</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">IfElse</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
+
+    <span class="n">elseblock</span> <span class="o">%=</span> <span class="n">elset</span> <span class="o">+</span> <span class="n">open_bracket</span> <span class="o">+</span> <span class="n">block</span> <span class="o">+</span> <span class="n">closed_bracket</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>   
+    <span class="n">elseblock</span> <span class="o">%=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">Epsilon</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[]</span>
+
+    <span class="n">cond</span> <span class="o">%=</span> <span class="n">factor</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> 
+    <span class="n">cond</span> <span class="o">%=</span> <span class="n">nott</span> <span class="o">+</span> <span class="n">cond</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">Not</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">cond</span> <span class="o">%=</span> <span class="n">factor</span> <span class="o">+</span> <span class="n">andt</span> <span class="o">+</span> <span class="n">cond</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">And</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> 
+    <span class="n">cond</span> <span class="o">%=</span> <span class="n">factor</span> <span class="o">+</span> <span class="n">ort</span> <span class="o">+</span> <span class="n">cond</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">Or</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>  
+    <span class="n">cond</span> <span class="o">%=</span> <span class="n">factor</span> <span class="o">+</span> <span class="n">lessthan</span> <span class="o">+</span> <span class="n">factor</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">LessThan</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>  
+    <span class="n">cond</span> <span class="o">%=</span> <span class="n">factor</span> <span class="o">+</span> <span class="n">morethan</span> <span class="o">+</span> <span class="n">factor</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">MoreThan</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>  
+    <span class="n">cond</span> <span class="o">%=</span> <span class="n">factor</span> <span class="o">+</span> <span class="n">equalequal</span> <span class="o">+</span> <span class="n">factor</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">EqualEqual</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>  
+
+    <span class="n">funct</span> <span class="o">%=</span> <span class="n">funct_name</span> <span class="o">+</span> <span class="n">open_parenthesis</span> <span class="o">+</span> <span class="n">arg_list</span> <span class="o">+</span> <span class="n">closed_parenthesis</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">InstanceFunction</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> 
+    <span class="n">funct</span> <span class="o">%=</span> <span class="n">factor</span> <span class="o">+</span> <span class="n">point</span> <span class="o">+</span> <span class="n">funct_name</span> <span class="o">+</span> <span class="n">open_parenthesis</span> <span class="o">+</span> <span class="n">arg_list</span> <span class="o">+</span> <span class="n">closed_parenthesis</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">InstanceFunction</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> 
+
+
+    <span class="n">whilent</span> <span class="o">%=</span> <span class="n">whilet</span> <span class="o">+</span> <span class="n">open_parenthesis</span> <span class="o">+</span> <span class="n">cond</span> <span class="o">+</span><span class="n">closed_parenthesis</span> <span class="o">+</span> <span class="n">open_bracket</span> <span class="o">+</span> <span class="n">block</span> <span class="o">+</span> <span class="n">closed_bracket</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">WhileNode</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+
+
+    <span class="n">functnt</span> <span class="o">%=</span> <span class="n">typet</span> <span class="o">+</span> <span class="n">funct_name</span> <span class="o">+</span> <span class="n">open_parenthesis</span> <span class="o">+</span> <span class="n">arg_types_list</span> <span class="o">+</span> <span class="n">closed_parenthesis</span> <span class="o">+</span> <span class="n">open_bracket</span> <span class="o">+</span> <span class="n">block</span> <span class="o">+</span> <span class="n">closed_bracket</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">ast_nodes</span><span class="o">.</span><span class="n">FuncDeclaration</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="n">s</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+
+    <span class="n">arg_types_list</span> <span class="o">%=</span> <span class="n">type_var</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">arg_types_list</span> <span class="o">%=</span> <span class="n">arg_types_list</span> <span class="o">+</span> <span class="n">colon</span> <span class="o">+</span> <span class="n">type_var</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span>
+    <span class="n">arg_types_list</span> <span class="o">%=</span> <span class="n">Gram</span><span class="o">.</span><span class="n">Epsilon</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[]</span>
+    
+    <span class="n">type_var</span> <span class="o">%=</span> <span class="n">typet</span> <span class="o">+</span> <span class="n">var</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+    <span class="n">type_var</span> <span class="o">%=</span> <span class="n">entity</span> <span class="o">+</span> <span class="n">var</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">h</span><span class="p">,</span><span class="n">s</span><span class="p">:</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+
+    <span class="k">return</span> <span class="n">Gram</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Parser">Parser<a class="anchor-link" href="#Parser">&#182;</a></h2><p>El parser construye las tablas action y goto, a partir, de la gramática, para después pasarle la lista de tokens y ver que se corresponda a lo definido en la gramática y no haya errores sintácticos.</p>
+<p>Ahora analizaremos como se construyó el parser.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">cmp.utils</span> <span class="kn">import</span> <span class="n">ContainerSet</span>
+<span class="kn">from</span> <span class="nn">cmp.pycompiler</span> <span class="kn">import</span> <span class="n">Item</span>
+<span class="kn">from</span> <span class="nn">cmp.automata</span> <span class="kn">import</span> <span class="n">State</span><span class="p">,</span> <span class="n">multiline_formatter</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="First">First<a class="anchor-link" href="#First">&#182;</a></h3><p>El conjunto first puede ser computado para los terminales, no terminales y producciones de la gramática, los first se inicializan vacíos y se van actualizando siguiendo las reglas vistas en conferencias:</p>
+<ul>
+<li>Si X $\rightarrow$ W1 | W2 | ... | Wn entonces por definición, First(X) = $\cup_i$ First($W_i$).</li>
+<li>Si X $\rightarrow \epsilon$ entonces $\epsilon \in$ First(X).</li>
+<li>Si W = xZ donde x es un terminal, entonces trivialmente First(W) = { x }.</li>
+<li>Si W = YZ donde Y es un no-terminal y Z una forma oracional, entonces First(Y) $\subseteq$ First(W).</li>
+<li>Si W = YZ y $\epsilon \in$ First(Y) entonces First(Z) $\subseteq$ First(W).</li>
+</ul>
+<p>El algoritmo se hizo en dos partes, primeramente se hizo el método compute_local_first, donde se calculará el First(alpha), siendo alpha una forma oracional, después de esto se hace el método compute_first para calcular todos los conjuntos first, donde se van actualizando los conjuntos iniciales según lo que devuelve compute_local_first.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">compute_local_first</span><span class="p">(</span><span class="n">firsts</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+    <span class="n">first_alpha</span> <span class="o">=</span> <span class="n">ContainerSet</span><span class="p">()</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">alpha_is_epsilon</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">.</span><span class="n">IsEpsilon</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">alpha_is_epsilon</span> <span class="o">=</span> <span class="kc">False</span>
+    
+    <span class="c1"># alpha == epsilon ? First(alpha) = { epsilon }</span>
+    <span class="k">if</span> <span class="n">alpha_is_epsilon</span><span class="p">:</span>
+        <span class="n">first_alpha</span><span class="o">.</span><span class="n">set_epsilon</span><span class="p">()</span>
+
+    <span class="c1"># alpha = X1 ... XN</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">alpha</span><span class="p">:</span>
+            <span class="n">first_symbol</span> <span class="o">=</span> <span class="n">firsts</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+    <span class="c1"># First(Xi) subconjunto First(alpha)</span>
+            <span class="n">first_alpha</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">first_symbol</span><span class="p">)</span>
+    <span class="c1"># epsilon pertenece a First(X1)...First(Xi) ? First(Xi+1) subconjunto de First(X) y First(alpha)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">first_symbol</span><span class="o">.</span><span class="n">contains_epsilon</span><span class="p">:</span>
+                <span class="k">break</span>
+    <span class="c1"># epsilon pertenece a First(X1)...First(XN) ? epsilon pertence a First(X) y al First(alpha)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">first_alpha</span><span class="o">.</span><span class="n">set_epsilon</span><span class="p">()</span>
+
+    <span class="c1"># First(alpha)</span>
+    <span class="k">return</span> <span class="n">first_alpha</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">compute_firsts</span><span class="p">(</span><span class="n">G</span><span class="p">):</span>
+    <span class="n">firsts</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">change</span> <span class="o">=</span> <span class="kc">True</span>
+    
+    <span class="c1"># init First(Vt)</span>
+    <span class="k">for</span> <span class="n">terminal</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">terminals</span><span class="p">:</span>
+        <span class="n">firsts</span><span class="p">[</span><span class="n">terminal</span><span class="p">]</span> <span class="o">=</span> <span class="n">ContainerSet</span><span class="p">(</span><span class="n">terminal</span><span class="p">)</span>
+        
+    <span class="c1"># init First(Vn)</span>
+    <span class="k">for</span> <span class="n">nonterminal</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nonTerminals</span><span class="p">:</span>
+        <span class="n">firsts</span><span class="p">[</span><span class="n">nonterminal</span><span class="p">]</span> <span class="o">=</span> <span class="n">ContainerSet</span><span class="p">()</span>
+    
+    <span class="k">while</span> <span class="n">change</span><span class="p">:</span>
+        <span class="n">change</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="c1"># P: X -&gt; alpha</span>
+        <span class="k">for</span> <span class="n">production</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">Productions</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">production</span><span class="o">.</span><span class="n">Left</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="n">production</span><span class="o">.</span><span class="n">Right</span>
+            
+            <span class="c1"># get current First(X)</span>
+            <span class="n">first_X</span> <span class="o">=</span> <span class="n">firsts</span><span class="p">[</span><span class="n">X</span><span class="p">]</span>
+                
+            <span class="c1"># init First(alpha)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">first_alpha</span> <span class="o">=</span> <span class="n">firsts</span><span class="p">[</span><span class="n">alpha</span><span class="p">]</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">first_alpha</span> <span class="o">=</span> <span class="n">firsts</span><span class="p">[</span><span class="n">alpha</span><span class="p">]</span> <span class="o">=</span> <span class="n">ContainerSet</span><span class="p">()</span>
+            
+            <span class="c1"># CurrentFirst(alpha)???</span>
+            <span class="n">local_first</span> <span class="o">=</span> <span class="n">compute_local_first</span><span class="p">(</span><span class="n">firsts</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+            
+            <span class="c1"># update First(X) and First(alpha) from CurrentFirst(alpha)</span>
+            <span class="n">change</span> <span class="o">|=</span> <span class="n">first_alpha</span><span class="o">.</span><span class="n">hard_update</span><span class="p">(</span><span class="n">local_first</span><span class="p">)</span>
+            <span class="n">change</span> <span class="o">|=</span> <span class="n">first_X</span><span class="o">.</span><span class="n">hard_update</span><span class="p">(</span><span class="n">local_first</span><span class="p">)</span>
+                    
+    <span class="c1"># First(Vt) + First(Vt) + First(RightSides)</span>
+    <span class="k">return</span> <span class="n">firsts</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Shift-Reduce">Shift Reduce<a class="anchor-link" href="#Shift-Reduce">&#182;</a></h3><p>La implementación de este parser es básicamente el concepto visto en conferencia puesto en código.</p>
+<p>Si se reconoce la tupla (el estado y el tipo del token en que está), indexa en la tabla action esta tupla que nos da la próxima operación a hacer (shift o reduce) y el estado al que se mueve en la siguiente iteración.</p>
+<p>Se crea una clase ShiftReduceParser donde redefinimos el método <strong>call</strong> a partir de lo antes dicho.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="k">class</span> <span class="nc">ShiftReduceParser</span><span class="p">:</span>
+    <span class="n">SHIFT</span> <span class="o">=</span> <span class="s1">&#39;SHIFT&#39;</span>
+    <span class="n">REDUCE</span> <span class="o">=</span> <span class="s1">&#39;REDUCE&#39;</span>
+    <span class="n">OK</span> <span class="o">=</span> <span class="s1">&#39;OK&#39;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">G</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goto</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_build_parsing_table</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    
+    <span class="k">def</span> <span class="nf">_build_parsing_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="p">[</span> <span class="mi">0</span> <span class="p">]</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">operations</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">lookahead</span> <span class="o">=</span> <span class="n">w</span><span class="p">[</span><span class="n">cursor</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">stack</span><span class="p">,</span> <span class="s1">&#39;&lt;---||---&gt;&#39;</span><span class="p">,</span> <span class="n">w</span><span class="p">[</span><span class="n">cursor</span><span class="p">:])</span>
+            
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">action</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">[(</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="p">[</span><span class="n">lookahead</span><span class="o">.</span><span class="n">token_type</span><span class="p">])]</span>
+                <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">SHIFT</span><span class="p">:</span>
+                    <span class="n">operations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SHIFT</span><span class="p">)</span>
+                    <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+                    <span class="n">cursor</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">REDUCE</span><span class="p">:</span>
+                    <span class="n">operations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">REDUCE</span><span class="p">)</span>
+                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">tag</span><span class="o">.</span><span class="n">Right</span><span class="p">:</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                    <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">goto</span><span class="p">[</span><span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">tag</span><span class="o">.</span><span class="n">Left</span><span class="p">]</span>
+                    <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+
+
+                <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">output</span><span class="p">,</span><span class="n">operations</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">NameError</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Syntax error at line </span><span class="si">{</span><span class="n">lookahead</span><span class="o">.</span><span class="n">line</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Clausura-LR1">Clausura LR1<a class="anchor-link" href="#Clausura-LR1">&#182;</a></h3><p>Para realizarla primeramente, nos apoyaremos en dos métodos que implementamos el expand y el compress.</p>
+<ul>
+<li><p>expand ( Y $\to \alpha$ . X $\delta$, c) = { X $\to$ . $\beta$, b | b $\in$ First($\delta$ c) } este devuelve un conjunto de items que sugiere incluir.</p>
+</li>
+<li><p>compress coge un conjunto de items LR1 y devuelve el mismo conjunto pero los items que tienen el mismo centro están unidos.</p>
+</li>
+</ul>
+<p>Conociendo el concepto de clausura LR1 visto en conferencia, básicamente se traduce a hacer expand por los items y después hacerle compress a el conjunto.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">Compilacion.parse.auxiliar</span> <span class="kn">import</span> <span class="n">expand</span><span class="p">,</span> <span class="n">compress</span>
+
+<span class="k">def</span> <span class="nf">closure_lr1</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">firsts</span><span class="p">):</span>
+    <span class="n">closure</span> <span class="o">=</span> <span class="n">ContainerSet</span><span class="p">(</span><span class="o">*</span><span class="n">items</span><span class="p">)</span>
+    
+    <span class="n">changed</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">while</span> <span class="n">changed</span><span class="p">:</span>
+        <span class="n">changed</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="n">new_items</span> <span class="o">=</span> <span class="n">ContainerSet</span><span class="p">()</span>
+        
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">closure</span><span class="p">:</span>
+            <span class="n">new_items</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">expand</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">firsts</span><span class="p">))</span>
+
+        <span class="n">changed</span> <span class="o">=</span> <span class="n">closure</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_items</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">compress</span><span class="p">(</span><span class="n">closure</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Goto-LR1">Goto LR1<a class="anchor-link" href="#Goto-LR1">&#182;</a></h3><p>Goto(I,X) = CL($\{$ Y $\rightarrow$ $\alpha$ X. $\beta$, c | Y $\rightarrow$ $\alpha$ .X $\beta$, c $\in$ I })</p>
+<p>El método setea just_kernel = true para calcular solamente el conjunto de items kernel y no todo el conjunto, sino, se tiene el conjunto first para calcular la clausura lr1.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">goto_lr1</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">firsts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">just_kernel</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">just_kernel</span> <span class="ow">or</span> <span class="n">firsts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;`firsts` must be provided if `just_kernel=False`&#39;</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">NextItem</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span> <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">NextSymbol</span> <span class="o">==</span> <span class="n">symbol</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">items</span> <span class="k">if</span> <span class="n">just_kernel</span> <span class="k">else</span> <span class="n">closure_lr1</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">firsts</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Aut%C3%B3mata-LR1">Aut&#243;mata LR1<a class="anchor-link" href="#Aut%C3%B3mata-LR1">&#182;</a></h3><p>Para construir el autómata partimos del estado inicial Program' -&gt; .Program,$, luego se van haciendo trancisiones con los terminales y no terminales, usando como función de trancisión goto_lr1.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">build_LR1_automaton</span><span class="p">(</span><span class="n">G</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">startSymbol</span><span class="o">.</span><span class="n">productions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Grammar must be augmented&#39;</span>
+    
+    <span class="n">firsts</span> <span class="o">=</span> <span class="n">compute_firsts</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="n">firsts</span><span class="p">[</span><span class="n">G</span><span class="o">.</span><span class="n">EOF</span><span class="p">]</span> <span class="o">=</span> <span class="n">ContainerSet</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">EOF</span><span class="p">)</span>
+    
+    <span class="n">start_production</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">startSymbol</span><span class="o">.</span><span class="n">productions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">start_item</span> <span class="o">=</span> <span class="n">Item</span><span class="p">(</span><span class="n">start_production</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lookaheads</span><span class="o">=</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">EOF</span><span class="p">,))</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">([</span><span class="n">start_item</span><span class="p">])</span>
+    
+    <span class="n">closure</span> <span class="o">=</span> <span class="n">closure_lr1</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">firsts</span><span class="p">)</span>
+    <span class="n">automaton</span> <span class="o">=</span> <span class="n">State</span><span class="p">(</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">closure</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+    
+    <span class="n">pending</span> <span class="o">=</span> <span class="p">[</span> <span class="n">start</span> <span class="p">]</span>
+    <span class="n">visited</span> <span class="o">=</span> <span class="p">{</span> <span class="n">start</span><span class="p">:</span> <span class="n">automaton</span> <span class="p">}</span>
+    
+    <span class="k">while</span> <span class="n">pending</span><span class="p">:</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="n">pending</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="n">current_state</span> <span class="o">=</span> <span class="n">visited</span><span class="p">[</span><span class="n">current</span><span class="p">]</span>
+        
+        <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">terminals</span> <span class="o">+</span> <span class="n">G</span><span class="o">.</span><span class="n">nonTerminals</span><span class="p">:</span>
+            <span class="n">kernels</span> <span class="o">=</span> <span class="n">goto_lr1</span><span class="p">(</span><span class="n">current_state</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">just_kernel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">kernels</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">next_state</span> <span class="o">=</span> <span class="n">visited</span><span class="p">[</span><span class="n">kernels</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">pending</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kernels</span><span class="p">)</span>
+                <span class="n">visited</span><span class="p">[</span><span class="n">pending</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">next_state</span> <span class="o">=</span> <span class="n">State</span><span class="p">(</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">goto_lr1</span><span class="p">(</span><span class="n">current_state</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">firsts</span><span class="p">)),</span> <span class="kc">True</span><span class="p">)</span>
+            
+            <span class="n">current_state</span><span class="o">.</span><span class="n">add_transition</span><span class="p">(</span><span class="n">symbol</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">next_state</span><span class="p">)</span>
+    
+    <span class="n">automaton</span><span class="o">.</span><span class="n">set_formatter</span><span class="p">(</span><span class="n">multiline_formatter</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">automaton</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="LR1-Can%C3%B3nico">LR1 Can&#243;nico<a class="anchor-link" href="#LR1-Can%C3%B3nico">&#182;</a></h3><p>Las tablas goto y action se llenan a partir de las reglas vistas en conferencias:</p>
+<ul>
+<li><p>Sea "$X \to \alpha .c \omega, s$" un item del estado $I_i$ y $Goto(I_i,c) = I_j$.<br>
+Entonces $ACTION[I_i,c] = `S_j`$.</p>
+</li>
+<li><p>Sea "$X \to \alpha ., s$" un item del estado $I_i$.<br>
+Entonces $ACTION[I_i,s] = `R_k`$ (producción <code>k</code> es $X \to \alpha$).</p>
+</li>
+<li><p>Sea $I_i$ el estado que contiene el item "$S' \to S., \$$" ($S'$ distinguido).  
+Entonces $ACTION[I_i,\$] = `OK`$.</p>
+</li>
+<li><p>Sea "$X \to \alpha .Y \omega, s$" item del estado $I_i$ y $Goto(I_i,Y) = I_j$.<br>
+Entonces $GOTO[I_i,Y] = j$.</p>
+</li>
+</ul>
+<p>El algoritmo es básicamente, un grupo de if else siguiendo las reglas antes mencionadas. El algoritmo se hace en un método llamado _build_parsing_table que está dentro de una clase LR1Parser que hereda de la clase ShiftReduceParser.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="k">class</span> <span class="nc">LR1Parser</span><span class="p">(</span><span class="n">ShiftReduceParser</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">_build_parsing_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">G</span><span class="o">.</span><span class="n">AugmentedGrammar</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        
+        <span class="n">automaton</span> <span class="o">=</span> <span class="n">build_LR1_automaton</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">automaton</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n\t</span><span class="s1"> &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">state</span><span class="p">),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="n">i</span>
+
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">automaton</span><span class="p">:</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">idx</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">state</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">IsReduceItem</span><span class="p">:</span>
+                    <span class="n">prod</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">production</span>
+                    <span class="k">if</span> <span class="n">prod</span><span class="o">.</span><span class="n">Left</span> <span class="o">==</span> <span class="n">G</span><span class="o">.</span><span class="n">startSymbol</span><span class="p">:</span>
+                        <span class="n">LR1Parser</span><span class="o">.</span><span class="n">_register</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">,</span> <span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">G</span><span class="o">.</span><span class="n">EOF</span><span class="p">),</span> <span class="p">(</span><span class="n">ShiftReduceParser</span><span class="o">.</span><span class="n">OK</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">lookahead</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">lookaheads</span><span class="p">:</span>
+                            <span class="n">LR1Parser</span><span class="o">.</span><span class="n">_register</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">,</span> <span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">lookahead</span><span class="p">),</span> <span class="p">(</span><span class="n">ShiftReduceParser</span><span class="o">.</span><span class="n">REDUCE</span><span class="p">,</span> <span class="n">prod</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">next_symbol</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">NextSymbol</span>
+                    <span class="k">if</span> <span class="n">next_symbol</span><span class="o">.</span><span class="n">IsTerminal</span><span class="p">:</span>
+                        <span class="n">LR1Parser</span><span class="o">.</span><span class="n">_register</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">,</span> <span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">next_symbol</span><span class="p">),</span> <span class="p">(</span><span class="n">ShiftReduceParser</span><span class="o">.</span><span class="n">SHIFT</span><span class="p">,</span> <span class="n">node</span><span class="p">[</span><span class="n">next_symbol</span><span class="o">.</span><span class="n">Name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">idx</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">LR1Parser</span><span class="o">.</span><span class="n">_register</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">goto</span><span class="p">,</span> <span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">next_symbol</span><span class="p">),</span> <span class="n">node</span><span class="p">[</span><span class="n">next_symbol</span><span class="o">.</span><span class="n">Name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">idx</span><span class="p">)</span>
+                <span class="k">pass</span>
+        
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_register</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">table</span> <span class="ow">or</span> <span class="n">table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">==</span> <span class="n">value</span><span class="p">,</span> <span class="s1">&#39;Shift-Reduce or Reduce-Reduce conflict!!!&#39;</span>
+        <span class="n">table</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="An%C3%A1lisis-sem%C3%A1ntico">An&#225;lisis sem&#225;ntico<a class="anchor-link" href="#An%C3%A1lisis-sem%C3%A1ntico">&#182;</a></h2><p>En esta parte se verificarán los posibles errores semánticos que pueda tener el lenguaje, esto se realiza a través de type_collector, type_builder y type_checker. Los recorridos semánticos por el AST se realizan utilizando el visitor que se encuentra en la carpeta cmp, con este como decorador en los métodos visit que tenemos por cada nodo se van visitando todos los nodos del árbol. Cuando se encuentra un error semántico lo devolvemos y paramos la ejecución.</p>
+
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Type_collector">Type_collector<a class="anchor-link" href="#Type_collector">&#182;</a></h3><p>Este módulo guardará en un contexto todos los tipos que pertenezcan al lenguaje, además de los métodos predefinidos que tiene el mismo.</p>
+<p>Aquí dejamos algunos ejemplos de los tipos y funciones predefinidas.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">cmp.visitor</span> <span class="k">as</span> <span class="nn">visitor</span>
+<span class="kn">from</span> <span class="nn">Compilacion.astree.AST_Nodes</span> <span class="kn">import</span> <span class="n">ast_nodes</span> <span class="k">as</span> <span class="n">nodes</span>
+
+<span class="nd">@visitor</span><span class="o">.</span><span class="n">when</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">ProgramNode</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+
+    <span class="n">species_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">create_type</span><span class="p">(</span><span class="s1">&#39;Species&#39;</span><span class="p">)</span>
+    <span class="n">land_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">create_type</span><span class="p">(</span><span class="s1">&#39;Land&#39;</span><span class="p">)</span>
+    <span class="n">society_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">create_type</span><span class="p">(</span><span class="s1">&#39;Society&#39;</span><span class="p">)</span>
+    <span class="n">string_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">create_type</span><span class="p">(</span><span class="s1">&#39;String&#39;</span><span class="p">)</span>
+    <span class="n">boolean_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">create_type</span><span class="p">(</span><span class="s1">&#39;Boolean&#39;</span><span class="p">)</span>
+    <span class="n">number_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">create_type</span><span class="p">(</span><span class="s1">&#39;Number&#39;</span><span class="p">)</span>
+
+        
+    <span class="n">land_type</span><span class="o">.</span><span class="n">define_method</span><span class="p">(</span><span class="s1">&#39;_deleteInfluence&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;entity_1_name&#39;</span><span class="p">,</span> <span class="s1">&#39;characteristic_1_name&#39;</span><span class="p">,</span> <span class="s1">&#39;entity_2_name&#39;</span><span class="p">,</span> <span class="s1">&#39;characteristic_2_name&#39;</span><span class="p">],</span> <span class="p">[</span> <span class="n">string_type</span><span class="p">,</span> <span class="n">string_type</span><span class="p">,</span> <span class="n">string_type</span><span class="p">,</span> <span class="n">string_type</span><span class="p">],</span> <span class="n">boolean_type</span><span class="p">)</span>
+    <span class="n">land_type</span><span class="o">.</span><span class="n">define_method</span><span class="p">(</span><span class="s1">&#39;_changeCharacteristic&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;liminf&#39;</span><span class="p">,</span> <span class="s1">&#39;limsup&#39;</span><span class="p">,</span> <span class="s1">&#39;mutab&#39;</span><span class="p">,</span> <span class="s1">&#39;dist&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">string_type</span><span class="p">,</span> <span class="n">list_type</span><span class="p">,</span> <span class="n">number_type</span><span class="p">,</span> <span class="n">number_type</span><span class="p">,</span> <span class="n">number_type</span><span class="p">,</span> <span class="n">number_type</span><span class="p">],</span> <span class="n">boolean_type</span><span class="p">)</span>
+    <span class="n">society_type</span><span class="o">.</span><span class="n">define_method</span><span class="p">(</span><span class="s1">&#39;_changeCharacteristic&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;liminf&#39;</span><span class="p">,</span> <span class="s1">&#39;limsup&#39;</span><span class="p">,</span> <span class="s1">&#39;mutab&#39;</span><span class="p">,</span> <span class="s1">&#39;dist&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">string_type</span><span class="p">,</span> <span class="n">list_type</span><span class="p">,</span> <span class="n">number_type</span><span class="p">,</span> <span class="n">number_type</span><span class="p">,</span> <span class="n">number_type</span><span class="p">,</span> <span class="n">number_type</span><span class="p">],</span> <span class="n">boolean_type</span><span class="p">)</span>
+    <span class="n">species_type</span><span class="o">.</span><span class="n">define_method</span><span class="p">(</span><span class="s1">&#39;_changeCharacteristic&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;liminf&#39;</span><span class="p">,</span> <span class="s1">&#39;limsup&#39;</span><span class="p">,</span> <span class="s1">&#39;mutab&#39;</span><span class="p">,</span> <span class="s1">&#39;dist&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">string_type</span><span class="p">,</span> <span class="n">list_type</span><span class="p">,</span> <span class="n">number_type</span><span class="p">,</span> <span class="n">number_type</span><span class="p">,</span> <span class="n">number_type</span><span class="p">,</span> <span class="n">number_type</span><span class="p">],</span> <span class="n">boolean_type</span><span class="p">)</span>
+    <span class="n">land_type</span><span class="o">.</span><span class="n">define_method</span><span class="p">(</span><span class="s1">&#39;_deleteCharacteristic&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">string_type</span><span class="p">],</span> <span class="n">boolean_type</span><span class="p">)</span>
+    <span class="n">society_type</span><span class="o">.</span><span class="n">define_method</span><span class="p">(</span><span class="s1">&#39;_deleteCharacteristic&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">string_type</span><span class="p">],</span> <span class="n">boolean_type</span><span class="p">)</span>
+    <span class="n">species_type</span><span class="o">.</span><span class="n">define_method</span><span class="p">(</span><span class="s1">&#39;_deleteCharacteristic&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">string_type</span><span class="p">],</span> <span class="n">boolean_type</span><span class="p">)</span>
+
+        
+    <span class="k">return</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Type_builder">Type_builder<a class="anchor-link" href="#Type_builder">&#182;</a></h3><p>En este recorrido tomaremos todas las declaraciones de variables, las declaraciones de entidades y las declaraciones de funciones, que se irán guardando en el contexto.</p>
+<p>Dejamos de ejemplo el recorrido al nodo DeclarationEntity.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">cmp.visitor</span> <span class="k">as</span> <span class="nn">visitor</span>
+<span class="kn">from</span> <span class="nn">Compilacion.astree.AST_Nodes</span> <span class="kn">import</span> <span class="n">ast_nodes</span> <span class="k">as</span> <span class="n">nodes</span>
+<span class="kn">from</span> <span class="nn">cmp.semantic</span> <span class="kn">import</span> <span class="n">SemanticError</span>
+
+<span class="nd">@visitor</span><span class="o">.</span><span class="n">when</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">DeclarationEntity</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">node</span><span class="p">):</span>
+    <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">):</span>
+        <span class="k">return</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">attrType</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">entity</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_type</span><span class="o">.</span><span class="n">define_attribute</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">var</span><span class="p">,</span> <span class="n">attrType</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">SemanticError</span> <span class="k">as</span> <span class="n">se</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">se</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">se</span>
+        
+    <span class="k">return</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Type_checker">Type_checker<a class="anchor-link" href="#Type_checker">&#182;</a></h3><p>En esta parte se verifica que las variables, funciones y entidades instanciadas ya se encuentren declaradas en su scope o en alguno superior, también se verifica que los tipos sean correctos, o sea, que estén bien declarados o instanciados, por ejemplo, Boolean a = 5 da error semántico, pues el tipo declarado no coincide con el asignado, este y otros errores son los que revisa el type_checker.</p>
+<p>El siguiente ejemplo muestra el chequeo del nodo AsignationVar.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">cmp.visitor</span> <span class="k">as</span> <span class="nn">visitor</span>
+<span class="kn">from</span> <span class="nn">Compilacion.astree.AST_Nodes</span> <span class="kn">import</span> <span class="n">ast_nodes</span> <span class="k">as</span> <span class="n">nodes</span>
+<span class="kn">from</span> <span class="nn">cmp.semantic</span> <span class="kn">import</span> <span class="n">SemanticError</span><span class="p">,</span> <span class="n">TypeCompatible</span>
+
+
+<span class="n">WRONG_SIGNATURE</span> <span class="o">=</span> <span class="s1">&#39;Method &quot;</span><span class="si">%s</span><span class="s1">&quot; already defined in &quot;</span><span class="si">%s</span><span class="s1">&quot; with a different signature.&#39;</span>
+<span class="n">SELF_IS_READONLY</span> <span class="o">=</span> <span class="s1">&#39;Variable &quot;self&quot; is read-only.&#39;</span>
+<span class="n">LOCAL_ALREADY_DEFINED</span> <span class="o">=</span> <span class="s1">&#39;Variable &quot;</span><span class="si">%s</span><span class="s1">&quot; is already defined in method &quot;</span><span class="si">%s</span><span class="s1">&quot;.&#39;</span>
+<span class="n">INCOMPATIBLE_TYPES</span> <span class="o">=</span> <span class="s1">&#39;Cannot convert &quot;</span><span class="si">%s</span><span class="s1">&quot; into &quot;</span><span class="si">%s</span><span class="s1">&quot;.&#39;</span>
+<span class="n">VARIABLE_NOT_DEFINED</span> <span class="o">=</span> <span class="s1">&#39;Variable &quot;</span><span class="si">%s</span><span class="s1">&quot; is not defined in &quot;</span><span class="si">%s</span><span class="s1">&quot;.&#39;</span>
+<span class="n">INVALID_OPERATION</span> <span class="o">=</span> <span class="s1">&#39;Operation &quot;</span><span class="si">%s</span><span class="s1">&quot; is not defined between &quot;</span><span class="si">%s</span><span class="s1">&quot; and &quot;</span><span class="si">%s</span><span class="s1">&quot;.&#39;</span>
+<span class="n">INVALID_RETURN</span> <span class="o">=</span> <span class="s1">&#39;Return value is not an asignation&quot;.&#39;</span>
+<span class="n">INVALID_PARAMS</span> <span class="o">=</span> <span class="s1">&#39;Invalid params&#39;</span>
+<span class="n">INVALID_NAME</span> <span class="o">=</span> <span class="s2">&quot;Inavlid name </span><span class="si">%s</span><span class="s2">&quot;</span>
+
+<span class="nd">@visitor</span><span class="o">.</span><span class="n">when</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">AsignationVar</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
+    <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">):</span>
+        <span class="k">return</span>
+    <span class="n">var</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">find_variable</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">var</span><span class="p">)</span>
+
+    <span class="n">type_expr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">arith_expr</span><span class="p">,</span> <span class="n">scope</span><span class="o">.</span><span class="n">create_child</span><span class="p">())</span>
+    <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">):</span>
+        <span class="k">return</span>
+
+    <span class="k">if</span> <span class="n">var</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">VARIABLE_NOT_DEFINED</span> <span class="o">%</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">var</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_method</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">TypeCompatible</span><span class="p">()</span>
+
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">type_expr</span><span class="o">.</span><span class="n">conforms_to</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">type</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">INCOMPATIBLE_TYPES</span> <span class="o">%</span> <span class="p">(</span><span class="n">type_expr</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">var</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">TypeCompatible</span><span class="p">()</span>
+            
+
+    <span class="k">return</span> <span class="n">type_expr</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Transpilado">Transpilado<a class="anchor-link" href="#Transpilado">&#182;</a></h2><p>Para transpilar nuestro lenguaje a python hacemos otro recorrido por el AST, en este caso iremos formando un string, donde cada nodo del AST aportará un pedacito a este, cada nodo sabe como transpilarse a python (sabe convertirse en un string que será el código en python de ese nodo), por tanto, al finalizar este recorrido tendremos en un string todo el código que nos entran pero transfomado a python.</p>
+<p>Aquí dejamos un ejemplo de cómo se transpila a python, mostramos el nodo de declarar una variable.</p>
+
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-python"><pre><span></span><span class="nd">@visitor</span><span class="o">.</span><span class="n">when</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">DeclarationVar</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">visit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">scope</span><span class="p">,</span> <span class="n">ident</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">declared_var</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">var</span><span class="p">)</span>
+
+    <span class="n">var_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+
+    <span class="n">decl</span> <span class="o">=</span> <span class="s2">&quot;z&quot;</span> <span class="o">+</span> <span class="n">node</span><span class="o">.</span><span class="n">var</span> <span class="o">+</span> <span class="s2">&quot; = &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">arith_expr</span><span class="p">,</span> <span class="n">scope</span><span class="o">.</span><span class="n">create_child</span><span class="p">(),</span> <span class="n">ident</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">scope</span><span class="o">.</span><span class="n">define_variable</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">var</span><span class="p">,</span> <span class="n">var_type</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">decl</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
 </div>
 </body>
 
