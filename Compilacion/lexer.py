@@ -110,16 +110,16 @@ class Lexer:
         return [Token(lex, ttype, line) for lex, ttype, line in self.tokenize(text) if ttype not in self.ignored_tokens]
 
 '''
-Esta clase guardara las propiedades sintacticas de mi lenguaje
+Esta clase guardara las propiedades sintacticas del lenguaje
 '''
 class MyLexer(Lexer):
     def __init__(self):
         self.regexs = {
         'var'       : r'[a-z][a-zA-Z0-9_]*'         ,
         'type'      : r'[A-Z][a-zA-Z0-9_]*'         ,
-        'funct_name': r'_[a-zA-Z0-9_]*'         ,
+        'funct_name': r'_[a-zA-Z0-9_]*'             ,
         'string'    : r'\"'                         ,
-        'number'    : r'(\(-\d+(\.\d+)?\))|(\d+(\.\d+)?)'                        ,
+        'number'    : r'(\(-\d+(\.\d+)?\))|(\d+(\.\d+)?)',
         'newline'   : r'\n'                         ,
         'whitespace': r' +'                         ,
         'tabulation': r'\t+'                        ,
