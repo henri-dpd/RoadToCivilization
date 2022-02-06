@@ -2,7 +2,7 @@
 
 La idea central es que sea un lenguaje parecido a C#, donde puedas hacer en primera instancia las cosas básicas de este lenguaje.
 
-Los tipos del lenguaje son: Number, String, Boolean, List, Species, Society, Land. Además se tiene un tipo padre Simulation invisible al usuario en donde se tienen todas las funciones build_in. Los tipos empiezan siempre con una letra mayúsculas
+Los tipos del lenguaje son: *Number, String, Boolean, List, Species, Society, Land*. Además se tiene un tipo padre Simulation invisible al usuario en donde se tienen todas las funciones build_in. Los tipos empiezan siempre con una letra mayúsculas
 
 ``` c
 Type name = value;
@@ -76,7 +76,9 @@ Recibe por argumento el string del nombre y la instancia de la especie a la que 
 Estos tipos tienen funciones para trabajar sus caracteristicas, dependencias e influencias, para ello se tienen las funciones:
 * ``_changeCharacteristic``: Añade o cambia una caracteristica, recibe por entrada nombre de la misma, valor, límites(inferior y superior), mutabilidad y función de distribución.
 * ``_deleteCharacteristic``: Elimina una caracteristica, recibe por entrada nombre de la misma
-* ``_getCharacteristic``: Toma el valor de una caracteristica, recibe por entrada nombre de la misma
+* ``_getCharacteristic``: Toma el valor de una caracteristica de una entidad, recibe por entrada nombre de la misma
+* ``_getCharacteristicSummation``: Toma el valor de la sumatoria de un caracteristica de las sociedades que pertenecen a una especie, recibe por entrada nombre de la misma
+* ``_getCharacteristicMean``: Toma el valor de la media de un caracteristica de las sociedades que pertenecen a una especie, recibe por entrada nombre de la misma
 * ``_addDependence``: Añade una dependencia(solo los land), recibe por entrada el nombre de la entidad y caraccteristica de a, el nombre de la entidad y caracteristica b, c y las funciones plus y mult
 * ``_addInfluence``: Añade una influencia(solo los land), recibe por entrada el nombre de la entidad y caraccteristica de a, el nombre de la entidad y caracteristica b, c y las funciones plus y mult
 * ``_deleteDependence``: Elimina una dependencia(solo los land), recibe por entrada el nombre de la entidad y caraccteristica de a, el nombre de la entidad y caracteristica b
@@ -100,7 +102,7 @@ Ejemplo:
 ``` c
 Number a = _random("normal",[3,5])
 ```
-
+Las distribuciones que se pueden pedir son: "uniform", "exponential", "gamma", "normal", "binomial", "geometric".
 
 Quedando esto dicho, vamos ahora a ver qué podemos hacer mientras corre una simulación.
 
@@ -125,7 +127,7 @@ _end(_cond_function)
 ```
 Donde la Simulación termina en este momento.
 
-Para añadir/eliminar entidades y dependencias a la simulación se tienen las funciones
+Para añadir/eliminar entidades y dependencias a la simulación se tienen las funciones:
 * ``_addSociety``
 * ``_addSpecies``
 * ``_addLand``
@@ -137,9 +139,20 @@ Para añadir/eliminar entidades y dependencias a la simulación se tienen las fu
 * ``_addInfluences``
 * ``_deleteInfluences``
 
-y para las funciones de distribución y suma y multiplicación se tienen las funciones ya implementadas
+Para modificar si una sociedad tiene la capacidad de evolucionar se usa la función ``enableEvolution``.
+
+y para las funciones de distribución y suma y multiplicación se tienen las funciones ya implementadas.
 * ``_distribution``
 * ``_plus``
 * ``_multiplication``
 
 Aunque el usuario pude implementar sus propias funciones para usarlas en su lugar.
+
+Para obtener la cantidad de días que han pasado se usa la función ``actualDay`` que no recibe entrada.
+
+Se puede obtener un string de objetos de tipo *Number, Boolean, List* usando las funciones: 
+* *_numberToString*
+* *_booleanToString*
+* *_listToString*
+
+se puede obtener el tamaño de una lista con el método: ``getLenght``
