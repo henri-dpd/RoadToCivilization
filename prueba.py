@@ -13,7 +13,7 @@ from runner import *
 code = ''
 path =  os.getcwd() + '/plantillas'
 
-file_name = "plantilla8.txt"
+file_name = "plantilla7.txt"
 
 with open(path + '/' + file_name, "r") as file:
     code = file.read()
@@ -72,13 +72,13 @@ else:
                 ex = Execute(context)
                 program = ex.visit(ast)
                 print(program)
-                exec(program)
-                """
+                #exec(program)
+                
                 try:
                     exec(program)
                 except Exception as error:
                     print(repr(error))
-                """
+                
                 
 
             else:
