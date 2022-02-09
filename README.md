@@ -6,23 +6,31 @@ Desarrolladores:
 - Airelys Collazo Pérez (C312)
 - Henri Daniel Peña Dequero (C311)
 
-Como bien el título ya da a entender, nuestra propuesta es un Simulador de Civilizaciones, a partir del uso de herramientas de las tres asignaturas
 
-Crear un simulador que nos permita analizar el comportamiento de una civilización, dadas las condiciones de un terreno, y su evolución con el paso del tiempo. La civilización estará dotada de una serie de variables que explican su funcionamiento y avance, dígase el índice de mortalidad, natalidad, gestación, promedio de vida, avance tecnológico, potencial adaptativo (dependiendo del medio ambiente definido), etc, y estará dotada de un comportamiento, dígase tendencia de movimiento, agresividad, actividades laborales principales, etc. Igualmente será posible establecer especies de menor o mayor alcance con respecto a una civilización, o sea, será posible establecer a especies atrasadas (ejemplo: moluscos, artrópodos, etc), especies intermedias (ejemplo: perros, gatos) y una especie avanzada (ejemplo: humanos). La idea no es que se establezcan en el nivel según los ejemplos anteriores, sino que, a partir de un lenguaje definido por nosotros y un compilador para el mismo, puedan ser creadas especies con gran cantidad de características, incluso que el usuario defina el comportamiento de la mayor parte de las variables. Propondremos realizar la evolución de la civilización en el tiempo utilizando herramientas de inteligencia artificial, así como el uso de estas herramientas en otras partes del trabajo a medida que avancemos.
+La problemática del proyecto es lograr que el usuario pueda definir un medio 
+ambiente dividido por espacios donde interactúen distintas unidades de especies 
+distintas entre sí y con el mismo medio, teniendo un lenguaje con el que puedan 
+definir todo lo necesario para lograr esta convivencia.
+El enfoque para su resolución será que el usuario sea capaz de definir especies a modo 
+general, luego, establezca sociedades de las mismas, que funcionarán a nivel atómico y 
+serán colocadas en un tablero bidimensional separado por casillas. La idea para que la 
+simulación cobre vida será que se defina una serie de características con valores para 
+cada una de las especies (las cuales por supuestos tendrán sus sociedades), y mediante 
+dos funciones se establezca una correspondencia entre estas características para 
+lograr una repercusión de unas hacia otras de forma episódica, obteniendo así una 
+simulación que mueve sus parámetros y valores de forma diaria.
+Para la realización de estas funciones se contará con un lenguaje que permita 
+establecerlas tal y como se haría en un lenguaje de programación de alto nivel (no con 
+la misma complejidad, pero sí con la misma idea), e igualmente se pueda de forma 
+cómoda agregar los distintos elementos a la simulación con sus respectivos valores y 
+funciones.
+Para que se acerque más al mundo real, simularemos un desconocimiento del medio 
+exterior por parte de las sociedades (dígase como medio exterior tanto otras 
+sociedades como el propio tablero), donde las mismas mediante un algoritmo de 
+inteligencia artificial irán aprendiendo de lo que les afecta y cómo contrarrestarlo, 
+formulando ideas de si influyen en su propia población de manera positiva o negativa.
 
-Una vez que cumplamos con la base de nuestro simulador, nos tomaremos como meta lograr las siguientes ideas por capas:
-- Implementar un sistema de desastres naturales, dígase huracanes, terremotos, etc.
-- Implementar un sistema de enfermedades naturales, ya hereditarias, infecciosas.
-- Implementar un sistema de ambientación. Esto incluirá terrenos con características climáticas, estaciones, etc.
-- Implementar la posibilidad de permitir diferentes intervalos de tiempos de avance en la simulación (ejemplo: días, semanas, meses, años, décadas, etc).
-- Lograr la existencia de más de una civilización, lo cual da paso a establecer un sistema de interacción entre dos civilizaciones distintas (dígase problemas menores, guerras, alianzas, uniones, etc)
-- Posibilitar la transición entre el estado de evolución de una especie, dígase de atrasado a intermedio, o de intermedio a civilizado.
-- Habilitar la existencia de subgrupos dentro de una misma especie. Sectores dedicados a cierta parte de la civilización (ejemplo: obreros, filósofos, artesanos, etc), grupos problemáticos, grupos desertores, etc.
-- Habilitar la evolución de las enfermedades, adaptación, surgimiento, cambio (tanto de enfermedades hereditarias como infecciosas).
-- Habilitar el cambio climático y evolución de este.
+**Repositorio**: https://github.com/henri-dpd/RoadToCivilization.git
 
-El lenguaje, aún no definido claro está, lograremos que no se limite a la creación de la simulación, sino que también pueda ser capaz de modificar dinámicamente el comportamiento y evolución de todo lo que es posible implementar en esta simulación.
-
-Concretamente queremos crear un software que a nivel de problaciones de especies en un ambiente definido pueda simular el desarrollo de las mismas de tal manera que podamos obtener, a través de técnicas de visualización, las estadísticas de los parámetros de interés en el tiempo y espacio que querramos conociendo todas las interacciones entre la disímiles especies y/o poblaciones y el medio en que encuentran, además un entorno controlable en cualquier momento a partir del lenguaje creado específicamente para nuestro problema.
-
-Espereamos el proyecto sea de su agrado, muchas gracias por leer.
+**Reporte**: https://github.com/henri-dpd/RoadToCivilization/blob/main/PDF/report.pdf
+**Documentación**: https://github.com/henri-dpd/RoadToCivilization/blob/main/PDF/
